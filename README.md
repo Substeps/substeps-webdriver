@@ -1,4 +1,4 @@
-substeps-webdriver [![Build Status](https://travis-ci.org/G2G3Digital/substeps-webdriver.svg)](https://travis-ci.org/G2G3Digital/substeps-webdriver) [![Maven Central](https://img.shields.io/maven-central/v/com.technophobia.substeps/webdriver-substeps.png?label=webdriver-substeps)](https://maven-badges.herokuapp.com/maven-central/com.technophobia.substeps/webdriver-substeps) 
+substeps-webdriver [![Build Status](https://travis-ci.org/Substeps/substeps-webdriver.svg)](https://travis-ci.org/Substeps/substeps-webdriver) [![Maven Central](https://img.shields.io/maven-central/v/org.substeps/webdriver-substeps.png?label=webdriver-substeps)](https://maven-badges.herokuapp.com/maven-central/org.substeps/webdriver-substeps) 
 ==================
 
 Webdriver based step implementations. 
@@ -7,8 +7,19 @@ Substeps documentation can be found [here](http://substeps.technophobia.com/ "Su
 
 There is also a [Substeps Google group](http://groups.google.com/group/substeps?hl=en-GB "Substeps Google group") if you have any queries and where new releases will ne announced.
 
-Release Notes
-=============
+Substeps.org Release Notes
+==========================
+
+1.0.0
+-----
+* Forked from G2G3.Digital as no longer being maintained.  Group renamed to org.substeps and version number reset to 1.0
+
+
+
+
+
+com.technophobia release notes
+------------------------------
 
 1.1.4
 -----

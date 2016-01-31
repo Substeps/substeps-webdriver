@@ -1,18 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.technophobia.substeps</groupId>
+	<groupId>org.substeps</groupId>
 	<artifactId>webdriver-substeps</artifactId>
-	<version>1.1.4-SNAPSHOT</version>
+	<version>1.0.0-SNAPSHOT</version>
 
 	<packaging>jar</packaging>
 	<name>Webdriver Substeps</name>
-	<description>Webdriver specific implementations of SubSteps</description>
+	<description>Webdriver specific implementations of Substeps</description>
 
-	<organization>
-		<name>Technophobia Ltd</name>
-		<url>www.technophobia.com/</url>
-	</organization>
+    <scm>
+        <connection>scm:git:https://github.com:Substeps/substeps-webdriver.git</connection>
+        <developerConnection>scm:git:git@github.com:Substeps/substeps-webdriver.git</developerConnection>
+        <url>https://github.com/Substeps/substeps-webdriver.git</url>
+
+        <tag>HEAD</tag>
+    </scm>
+
+
+    <organization>
+        <name>Substeps</name>
+        <url>https://github.com/Substeps/</url>
+    </organization>
+
+
+    <!--
+        Original organization
+        <organization>
+            <name>Technophobia Ltd</name>
+            <url>www.technophobia.com/</url>
+        </organization>
+    -->
 
 	<licenses>
 		<license>
@@ -93,6 +111,8 @@
 
 	<properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <java.version>1.8</java.version>
+
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
 		<selenium.version>2.48.2</selenium.version>
@@ -100,15 +120,9 @@
 		<hamcrest.version>1.3.RC2</hamcrest.version>
 		<junit.version>4.11</junit.version>
 
-        <substeps.framework.version>2.0.0</substeps.framework.version>
+        <substeps.framework.version>1.0.0</substeps.framework.version>
 
         <slf4j.version>1.7.13</slf4j.version>
-<!--
-		<substeps.api.version>1.1.3</substeps.api.version>
-		<substeps.core.version>1.1.3</substeps.core.version>
-		<substeps.runners.version>1.1.3</substeps.runners.version>
-    <substeps.glossary.version>1.1.3</substeps.glossary.version>
--->
 
 		<guava.version>18.0</guava.version>
 		<mockito.version>1.9.0-rc1</mockito.version>
@@ -135,7 +149,15 @@
 
 	</properties>
 
-	<pluginRepositories>
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+
+    <pluginRepositories>
 		<pluginRepository>
 			<id>sonatype-nexus-snapshots</id>
 			<name>Sonatype Nexus Snapshots</name>
@@ -148,21 +170,21 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>com.technophobia.substeps</groupId>
+			<groupId>org.substeps</groupId>
 			<artifactId>substeps-core-api</artifactId>
 			<version>${substeps.framework.version}</version>
 		</dependency>
 
 		<!-- Dependency on core must be TEST scope only -->
 		<dependency>
-			<groupId>com.technophobia.substeps</groupId>
+			<groupId>org.substeps</groupId>
 			<artifactId>substeps-core</artifactId>
 			<version>${substeps.framework.version}</version>
 			<scope>test</scope>
 		</dependency>
 
 		<dependency>
-			<groupId>com.technophobia.substeps</groupId>
+			<groupId>org.substeps</groupId>
 			<artifactId>substeps-junit-runner</artifactId>
 			<version>${substeps.framework.version}</version>
 			<scope>test</scope>
@@ -229,6 +251,7 @@
     <profiles>
 
     <!-- A profile used by default for internal dev, using the repos set up in proeprties defined above, rather than the OSS nexus repos -->
+<!--
         <profile>
             <id>internalDev</id>
 
@@ -247,6 +270,7 @@
             </distributionManagement>
 
         </profile>
+-->
 
 
         <profile>
@@ -255,26 +279,26 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <build>
-                <pluginManagement>
+<!--                <pluginManagement>
                     <plugins>
                         <plugin>
                             <groupId>org.apache.maven.plugins</groupId>
                             <artifactId>maven-compiler-plugin</artifactId>
                             <configuration>
                                  <compilerArgument>-g</compilerArgument>
-                                <!--<source>${compileSource}</source>-->
-                                <!--<target>${compileTarget}</target>-->
+                                &lt;!&ndash;<source>${compileSource}</source>&ndash;&gt;
+                                &lt;!&ndash;<target>${compileTarget}</target>&ndash;&gt;
                             </configuration>
                         </plugin>
                     </plugins>
 
-                </pluginManagement>
+                </pluginManagement>-->
 
 
                 <plugins>
 
                     <plugin>
-                        <groupId>com.technophobia.substeps</groupId>
+                        <groupId>org.substeps</groupId>
                         <artifactId>substeps-maven-plugin</artifactId>
                         <version>${substeps.framework.version}</version>
 
@@ -289,7 +313,7 @@
 
 <!--
 		                            <jvmArgs>
-		                            	<jvmArg>-javaagent:${sonar.jacoco.jar}=destfile=${sonar.jacoco.itReportPath},includes=com.technophobia.substeps.*</jvmArg>
+		                            	<jvmArg>-javaagent:${sonar.jacoco.jar}=destfile=${sonar.jacoco.itReportPath},includes=org.substeps.*</jvmArg>
 		                            </jvmArgs>
 -->
 
@@ -367,7 +391,7 @@
 
 
                 <plugin>
-                    <groupId>com.technophobia.substeps</groupId>
+                    <groupId>org.substeps</groupId>
                     <artifactId>substeps-glossary-builder</artifactId>
                     <version>${substeps.framework.version}</version>
 
@@ -412,19 +436,74 @@
         </build>
     </profile>
 
+
+        <profile>
+            <id>release</id>
+            <build>
+                <plugins>
+                    <!-- Release Configuration -->
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+
+                                <!-- TODO: Add Travis-CI configuration for GPG access -->
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+
+
     </profiles>
 
 	<build>
 		<finalName>${project.artifactId}</finalName>
 		<plugins>
 
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<encoding>${project.build.sourceEncoding}</encoding>
-				</configuration>
-			</plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.3</version>
+
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+            </plugin>
 
 
 			<plugin>
@@ -436,7 +515,6 @@
 					<localCheckout>true</localCheckout>
 					<pushChanges>false</pushChanges>
 				</configuration>
-
 			</plugin>
 
 
@@ -459,11 +537,8 @@
                             <placement>a</placement>
                             <head>Example usage in substeps:</head>
                         </tag>
-
                     </tags>
-
                 </configuration>
-
 
                 <executions>
 					<execution>
@@ -491,22 +566,60 @@
 
 
             <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <version>2.6</version>
-                        <configuration>
-                          <includes>
-                            <include>**/*Test.java</include>
-                          </includes>
-                          <excludes>
-                            <exclude>**/SelfTests.java</exclude>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.6</version>
+                <configuration>
+                    <includes>
+                        <include>**/*Test.java</include>
+                    </includes>
+                    <excludes>
+                        <exclude>**/SelfTests.java</exclude>
 
-                          </excludes>
-                        </configuration>
-                    </plugin>
+                    </excludes>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>1.6.6</version>
+
+                <extensions>true</extensions>
+                <configuration>
+
+                    <serverId>oss.sonatype.org</serverId>
+                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                    <tags>
+                        <javaVersion>r${java.version}</javaVersion>
+                    </tags>
+
+                    <!-- TODO: Turn back on after first Travis release -->
+                    <autoReleaseAfterClose>false</autoReleaseAfterClose>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.5.3</version>
+
+                <configuration>
+                    <tagNameFormat>@{project.version}</tagNameFormat>
+                    <autoVersionSubmodules>true</autoVersionSubmodules>
+                    <useReleaseProfile>false</useReleaseProfile>
+                    <releaseProfiles>release</releaseProfiles>
+                    <goals>deploy</goals>
+                    <pushChanges>false</pushChanges>
+                    <localCheckout>true</localCheckout>
+
+                    <!-- TODO: Add Travis-CI configuration for SCM access -->
+                </configuration>
+            </plugin>
 
 
-		</plugins>
+
+        </plugins>
 		<pluginManagement>
 			<plugins>
 				<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
@@ -520,7 +633,7 @@
 								<pluginExecution>
 									<pluginExecutionFilter>
 										<groupId>
-											com.technophobia.substeps
+											org.substeps
 										</groupId>
 										<artifactId>
 											substeps-glossary-builder
@@ -567,10 +680,4 @@
 		</plugins>
 	</reporting>
 
-	<scm>
-		<connection>${webdriver-substeps.scm}</connection>
-        <developerConnection>${webdriver-substeps.scm}</developerConnection>
-        <url>${webdriver-substeps.scm.url}</url>
-	  <tag>HEAD</tag>
-  </scm>
 </project>
