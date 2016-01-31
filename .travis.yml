@@ -6,5 +6,5 @@ jdk:
   - oraclejdk8
 
 script:
-  - mvn verify
+  - mvn deploy --settings travis/settings.xml
 
