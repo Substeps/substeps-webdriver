@@ -8,6 +8,7 @@
 	<packaging>jar</packaging>
 	<name>Webdriver Substeps</name>
 	<description>Webdriver specific implementations of Substeps</description>
+    <url>https://github.com/Substeps/substeps-webdriver</url>
 
     <scm>
         <connection>scm:git:https://github.com:Substeps/substeps-webdriver.git</connection>
