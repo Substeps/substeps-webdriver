@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.substeps</groupId>
 	<artifactId>webdriver-substeps</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>1.0.1-SNAPSHOT</version>
 
 	<packaging>jar</packaging>
 	<name>Webdriver Substeps</name>
@@ -389,8 +389,6 @@
         <build>
             <plugins>
 
-
-
                 <plugin>
                     <groupId>org.substeps</groupId>
                     <artifactId>substeps-glossary-builder</artifactId>
@@ -612,7 +610,7 @@
                     <releaseProfiles>release</releaseProfiles>
                     <goals>deploy</goals>
                     <pushChanges>false</pushChanges>
-                    <localCheckout>true</localCheckout>
+                    <!--<localCheckout>true</localCheckout>-->
 
                     <!-- TODO: Add Travis-CI configuration for SCM access -->
                 </configuration>
