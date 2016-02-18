@@ -18,7 +18,6 @@
  */
 package com.technophobia.webdriver.substeps.impl;
 
-import static com.technophobia.webdriver.substeps.runner.DefaultExecutionSetupTearDown.getThreadLocalWebDriver;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,14 +48,6 @@ public class FinderWebDriverSubStepImplementations extends AbstractWebDriverSubS
     private static final Logger logger = LoggerFactory.getLogger(FinderWebDriverSubStepImplementations.class);
 
 
-    public FinderWebDriverSubStepImplementations() {
-        super();
-    }
-
-
-    public FinderWebDriverSubStepImplementations(final Supplier<WebDriverContext> webDriverContextSupplier) {
-        super(webDriverContextSupplier);
-    }
 
 
     /**
@@ -419,7 +410,7 @@ public class FinderWebDriverSubStepImplementations extends AbstractWebDriverSubS
         // TODO - turn this into a function
 
         // look for elems with the right tag
-        final List<WebElement> tagElems = getThreadLocalWebDriver().findElements(By.tagName(tag));
+        final List<WebElement> tagElems = webDriver().findElements(By.tagName(tag));
 
         checkElements("expecting some elements of tag: " + tag, tagElems);
 

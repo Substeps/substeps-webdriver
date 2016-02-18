@@ -28,15 +28,7 @@ import com.technophobia.webdriver.util.WebDriverContext;
 public class StartupWebDriverSubStepImplementations extends
         AbstractWebDriverSubStepImplementations {
 
-    public StartupWebDriverSubStepImplementations() {
-        super();
-    }
 
-
-    public StartupWebDriverSubStepImplementations(
-            final Supplier<WebDriverContext> webDriverContextSupplier) {
-        super(webDriverContextSupplier);
-    }
 
 
     /**

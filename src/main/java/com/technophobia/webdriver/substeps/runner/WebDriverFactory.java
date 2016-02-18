@@ -20,6 +20,7 @@
 package com.technophobia.webdriver.substeps.runner;
 
 
+import com.technophobia.webdriver.util.WebDriverContext;
 import org.openqa.selenium.WebDriver;
 
 public interface WebDriverFactory {
@@ -30,4 +31,7 @@ public interface WebDriverFactory {
 
     DriverType driverType();
 
+    void shutdownWebDriver(WebDriverContext webDriverContext);
+
+    boolean resetWebDriver(WebDriverContext webDriverContext);
 }

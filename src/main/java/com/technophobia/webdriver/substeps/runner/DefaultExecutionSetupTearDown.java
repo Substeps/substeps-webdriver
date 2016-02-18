@@ -37,26 +37,21 @@ public class DefaultExecutionSetupTearDown {
 
     private static final Logger logger = LoggerFactory.getLogger(DefaultExecutionSetupTearDown.class);
 
+
+    private final MutableSupplier<WebDriverContext> webDriverContextSupplier = new ExecutionContextSupplier<WebDriverContext>(
+            Scope.SUITE, WebDriverContext.EXECUTION_CONTEXT_KEY);
+
+//    public static Supplier<WebDriverContext> currentWebDriverContext() {
+//        return webDriverContextSupplier;
+//    }
+
+
+    private final MutableSupplier<WebDriverFactory> webDriverFactorySupplier  = new ExecutionContextSupplier(Scope.SUITE, "webDriverFactory");
+
     private final WebdriverSubstepsConfiguration configuration;
     private long startTimeMillis;
 
-    private static final MutableSupplier<WebDriverContext> webDriverContextSupplier = new ExecutionContextSupplier<WebDriverContext>(
-            Scope.SUITE, WebDriverContext.EXECUTION_CONTEXT_KEY);
 
-
-    public static Supplier<WebDriverContext> currentWebDriverContext() {
-        return webDriverContextSupplier;
-    }
-
-
-    public static WebDriver getThreadLocalWebDriver() {
-        return getThreadLocalWebDriverContext().getWebDriver();
-    }
-
-
-    public static WebDriverContext getThreadLocalWebDriverContext() {
-        return webDriverContextSupplier.get();
-    }
 
     public DefaultExecutionSetupTearDown() {
         this(WebdriverSubstepsPropertiesConfiguration.INSTANCE);
@@ -87,9 +82,9 @@ public class DefaultExecutionSetupTearDown {
 
         logger.info("env prop: " + env);
 
+        WebDriverFactory factory = this.createWebDriverFactory();
+        this.webDriverFactorySupplier.set(factory);
 
-        WebDriverFactory factory = createWebDriverFactory();
-        ExecutionContext.put(Scope.SUITE, WebDriverFactory.WEB_DRIVER_FACTORY_KEY, factory);
     }
 
 
@@ -102,7 +97,8 @@ public class DefaultExecutionSetupTearDown {
         boolean createNewWebDriver = shouldStartup(webDriverContext);
 
         if (createNewWebDriver) {
-            WebDriverFactory factory = (WebDriverFactory) ExecutionContext.get(Scope.SUITE, WebDriverFactory.WEB_DRIVER_FACTORY_KEY);
+
+            WebDriverFactory factory = (WebDriverFactory)this.webDriverFactorySupplier.get();
             webDriverContextSupplier.set(new WebDriverContext(factory.driverType(), factory.createWebDriver()));
         }
     }
@@ -116,12 +112,17 @@ public class DefaultExecutionSetupTearDown {
 
         if (webDriverContext != null) {
 
-            boolean doShutdown = shouldShutdown(webDriverContext);
+            boolean doShutdown = this.shouldShutdown(webDriverContext);
+            WebDriverFactory factory = this.webDriverFactorySupplier.get();
 
-            if (doShutdown) {
-                webDriverContext.shutdownWebDriver();
-            } else {
-                webDriverContext.resetWebDriver();
+            if(doShutdown) {
+                factory.shutdownWebDriver(webDriverContext);
+                webDriverContextSupplier.set(null);
+            }
+            else if(!factory.resetWebDriver(webDriverContext)) {
+
+                factory.shutdownWebDriver(webDriverContext);
+                webDriverContextSupplier.set(null);
             }
         }
 

@@ -18,7 +18,6 @@
  */
 package com.technophobia.webdriver.substeps.impl;
 
-import static com.technophobia.webdriver.substeps.runner.DefaultExecutionSetupTearDown.getThreadLocalWebDriverContext;
 import static org.hamcrest.CoreMatchers.is;
 
 import java.util.List;
@@ -58,14 +57,7 @@ public class FormWebDriverSubStepImplementations extends
     }
 
 
-    public FormWebDriverSubStepImplementations(
-            final ActionWebDriverSubStepImplementations actions,
-            final FinderWebDriverSubStepImplementations locator,
-            final Supplier<WebDriverContext> driverContextSupplier) {
-        super(driverContextSupplier);
-        this.actions = actions;
-        this.locator = locator;
-    }
+
 
 
     /**
@@ -289,7 +281,7 @@ public class FormWebDriverSubStepImplementations extends
     public void setRadioButtonChecked(final String checked) {
 
         // assumes current element is not null and a radio button
-        final WebElement currentElem = getThreadLocalWebDriverContext()
+        final WebElement currentElem =  webDriverContext()
                 .getCurrentElement();
 
         AssertionWebDriverSubStepImplementations.assertElementIs(currentElem,
@@ -312,7 +304,7 @@ public class FormWebDriverSubStepImplementations extends
     public void setSetCheckedBoxChecked(final String checked) {
 
         // assumes current element is not null and a radio button
-        final WebElement currentElem = getThreadLocalWebDriverContext()
+        final WebElement currentElem =  webDriverContext()
                 .getCurrentElement();
 
         AssertionWebDriverSubStepImplementations.assertElementIs(currentElem,

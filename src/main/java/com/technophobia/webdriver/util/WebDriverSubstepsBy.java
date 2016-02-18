@@ -91,7 +91,7 @@ public abstract class WebDriverSubstepsBy {
         return new BySomethingContainingText(By.xpath(xpath), text);
     }
 
-    static abstract class BaseBy extends By {
+    public static abstract class BaseBy extends By {
 
         @Override
         public final List<WebElement> findElements(final SearchContext context) {
@@ -107,7 +107,7 @@ public abstract class WebDriverSubstepsBy {
         public abstract List<WebElement> findElementsBy(final SearchContext context);
     }
 
-    static abstract class XPathBy extends BaseBy {
+    public static abstract class XPathBy extends BaseBy {
 
         @Override
         public List<WebElement> findElementsBy(final SearchContext context) {
@@ -308,7 +308,7 @@ public abstract class WebDriverSubstepsBy {
         }
     }
 
-    static class ByIdAndText extends XPathBy {
+    public static class ByIdAndText extends XPathBy {
 
         protected final String text;
         protected final String id;

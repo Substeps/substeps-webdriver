@@ -18,7 +18,7 @@
  */
 package com.technophobia.webdriver.substeps.impl;
 
-import static com.technophobia.webdriver.substeps.runner.DefaultExecutionSetupTearDown.getThreadLocalWebDriverContext;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.text.IsEqualIgnoringCase.equalToIgnoringCase;
 
@@ -41,14 +41,7 @@ import com.technophobia.webdriver.util.WebDriverSubstepsBy;
 @StepImplementations(requiredInitialisationClasses = DefaultExecutionSetupTearDown.class)
 public class TableSubStepImplementations extends AbstractWebDriverSubStepImplementations {
 
-    public TableSubStepImplementations() {
-        super();
-    }
 
-
-    public TableSubStepImplementations(final Supplier<WebDriverContext> webDriverContextSupplier) {
-        super(webDriverContextSupplier);
-    }
 
 
     /*
@@ -88,7 +81,7 @@ public class TableSubStepImplementations extends AbstractWebDriverSubStepImpleme
     public WebElement findTableBodyRow(@StepParameter(converter = IntegerConverter.class) final Integer row) {
 
         // assumes current element is already set
-        final WebElement currentElem = getThreadLocalWebDriverContext().getCurrentElement();
+        final WebElement currentElem =  webDriverContext().getCurrentElement();
 
         AssertionWebDriverSubStepImplementations.assertElementIs(currentElem, "table");
 
@@ -97,7 +90,7 @@ public class TableSubStepImplementations extends AbstractWebDriverSubStepImpleme
         final WebElement rowElement = getTableRow(tbody, row);
 
         Assert.assertNotNull("expecting a table row element", rowElement);
-        getThreadLocalWebDriverContext().setCurrentElement(rowElement);
+         webDriverContext().setCurrentElement(rowElement);
 
         return rowElement;
     }
@@ -158,7 +151,7 @@ public class TableSubStepImplementations extends AbstractWebDriverSubStepImpleme
             @StepParameter(converter = IntegerConverter.class) final Integer row, final String text) {
 
         // assumes current element is already set
-        final WebElement currentElem = getThreadLocalWebDriverContext().getCurrentElement();
+        final WebElement currentElem =  webDriverContext().getCurrentElement();
 
         AssertionWebDriverSubStepImplementations.assertElementIs(currentElem, "table");
 

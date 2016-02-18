@@ -22,6 +22,7 @@ package com.technophobia.webdriver.substeps.runner;
 import java.lang.reflect.Field;
 import java.util.logging.Level;
 
+import com.technophobia.webdriver.util.WebDriverContext;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;
 import org.openqa.selenium.WebDriver;
@@ -184,4 +185,23 @@ public class DefaultWebDriverFactory implements WebDriverFactory {
         }
     }
 
+    public void shutdownWebDriver(WebDriverContext webDriverContext) {
+        LOG.debug("Shutting WebDriver down");
+        WebDriver webDriver = webDriverContext.getWebDriver();
+        if(webDriver != null) {
+            webDriver.manage().deleteAllCookies();
+            webDriver.quit();
+        }
+
+    }
+
+    public boolean resetWebDriver(WebDriverContext webDriverContext) {
+        LOG.debug("Resetting WebDriver");
+        WebDriver webDriver = webDriverContext.getWebDriver();
+        if(webDriver != null) {
+            webDriver.manage().deleteAllCookies();
+        }
+
+        return true;
+    }
 }
