@@ -5,5 +5,6 @@ sudo: false
 jdk:
   - oraclejdk8
 
-script: .travis/build.sh
+script:
+  - travis/build.sh
 
