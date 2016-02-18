@@ -10,7 +10,15 @@ There is also a [Substeps Google group](http://groups.google.com/group/substeps?
 Substeps.org Release Notes
 ==========================
 
-1.0.0
+1.0.2
+-----
+* Delegated the shutdown of webdrivers to the factory to allow for projects to override and provide specialisms
+* refactored out some statics that weren't essential and making it difficult to test the setup and tear down
+* Made some of the base By's accessible to implementing projects.
+
+
+
+1.0.0 / 1
 -----
 * Forked from G2G3.Digital as no longer being maintained.  Group renamed to org.substeps and version number reset to 1.0
 

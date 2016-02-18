@@ -21,6 +21,9 @@ package com.technophobia.webdriver.substeps.impl;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.technophobia.substeps.model.Scope;
+import com.technophobia.substeps.runner.ExecutionContextSupplier;
+import com.technophobia.substeps.runner.MutableSupplier;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
@@ -35,17 +38,19 @@ import com.technophobia.webdriver.util.WebDriverContext;
 
 public abstract class AbstractWebDriverSubStepImplementations implements ProvidesScreenshot {
 
-    private final Supplier<WebDriverContext> webDriverContextSupplier;
+
+    private final MutableSupplier<WebDriverContext> webDriverContextSupplier = new ExecutionContextSupplier<WebDriverContext>(
+            Scope.SUITE, WebDriverContext.EXECUTION_CONTEXT_KEY);
 
 
-    public AbstractWebDriverSubStepImplementations() {
-        this(DefaultExecutionSetupTearDown.currentWebDriverContext());
-    }
+//    public AbstractWebDriverSubStepImplementations() {
+//        this(DefaultExecutionSetupTearDown.currentWebDriverContext());
+//    }
 
 
-    public AbstractWebDriverSubStepImplementations(final Supplier<WebDriverContext> webDriverContextSupplier) {
-        this.webDriverContextSupplier = webDriverContextSupplier;
-    }
+//    public AbstractWebDriverSubStepImplementations(final Supplier<WebDriverContext> webDriverContextSupplier) {
+//        this.webDriverContextSupplier = webDriverContextSupplier;
+//    }
 
 
     protected boolean elementHasExpectedAttributes(final WebElement e, final Map<String, String> expectedAttributes) {

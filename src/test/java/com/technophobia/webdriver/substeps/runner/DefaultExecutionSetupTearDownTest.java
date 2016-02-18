@@ -1,9 +1,11 @@
 package com.technophobia.webdriver.substeps.runner;
 
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import static org.hamcrest.CoreMatchers.is;
+
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,8 +15,11 @@ import org.openqa.selenium.WebDriver;
 
 import com.technophobia.substeps.model.Scope;
 import com.technophobia.substeps.runner.ExecutionContext;
-import com.technophobia.substeps.runner.MutableSupplier;
 import com.technophobia.webdriver.util.WebDriverContext;
+import org.openqa.selenium.firefox.FirefoxDriver;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 /**
  * Tests interaction of webdriver.shutdown, webdriver.reuse, and
@@ -24,6 +29,8 @@ import com.technophobia.webdriver.util.WebDriverContext;
 public class DefaultExecutionSetupTearDownTest {
 
     private DefaultExecutionSetupTearDown std;
+    private  Method shutdownMethod;
+    private Method shouldStartupMethod;
 
     @Mock
     private WebdriverSubstepsConfiguration config;
@@ -41,13 +48,22 @@ public class DefaultExecutionSetupTearDownTest {
 
 
     @Before
-    public void initialiseDependencies() {
+    public void initialiseDependencies() throws NoSuchMethodException {
+
+        shutdownMethod = DefaultExecutionSetupTearDown.class.getDeclaredMethod("shouldShutdown", WebDriverContext.class);
+
+        shutdownMethod.setAccessible(true);
+
+        shouldStartupMethod = DefaultExecutionSetupTearDown.class.getDeclaredMethod("shouldStartup", WebDriverContext.class);
+
+        shouldStartupMethod.setAccessible(true);
+
         this.std = new DefaultExecutionSetupTearDown(this.config);
 
         // initialise context with visual webdriver and set test state to failed
         this.context = new WebDriverContext(DefaultDriverType.FIREFOX, this.webDriver);
 
-        ((MutableSupplier<WebDriverContext>) DefaultExecutionSetupTearDown.currentWebDriverContext()).set(this.context);
+        ExecutionContext.put(Scope.SUITE, "webDriverFactory", this.context);
 
         // creating a new webdriver instance will use the factory.
         ExecutionContext.put(Scope.SUITE, WebDriverFactory.WEB_DRIVER_FACTORY_KEY, this.factory);
@@ -58,7 +74,7 @@ public class DefaultExecutionSetupTearDownTest {
      * Global shutdown enabled - should always shutdown
      */
     @Test
-    public void shouldShutdownIfGlobalShutdownEnabledAndReuseEnabledAndCloseOnFailEnabled() {
+    public void shouldShutdownIfGlobalShutdownEnabledAndReuseEnabledAndCloseOnFailEnabled() throws InvocationTargetException, IllegalAccessException {
         when(this.config.shutDownWebdriver()).thenReturn(true);
         when(this.config.reuseWebDriver()).thenReturn(true);
         when(this.config.closeVisualWebDriveronFail()).thenReturn(true);
@@ -67,10 +83,10 @@ public class DefaultExecutionSetupTearDownTest {
 
         this.context.setFailed();
 
-        this.std.basePostScenariotearDown();
+        boolean rtn = (Boolean)shutdownMethod.invoke(this.std, this.context);
 
-        verify(this.options).deleteAllCookies();
-        verify(this.webDriver).quit();
+        Assert.assertThat("shouldShutdownIfGlobalShutdownEnabledAndReuseEnabledAndCloseOnFailEnabled", rtn, is(true));
+
     }
 
 
@@ -78,7 +94,7 @@ public class DefaultExecutionSetupTearDownTest {
      * Global shutdown enabled - should always shutdown
      */
     @Test
-    public void shouldShutdownIfGlobalShutdownEnabledAndReuseDisabledAndCloseOnFailEnabled() {
+    public void shouldShutdownIfGlobalShutdownEnabledAndReuseDisabledAndCloseOnFailEnabled() throws InvocationTargetException, IllegalAccessException {
         when(this.config.shutDownWebdriver()).thenReturn(true);
         when(this.config.reuseWebDriver()).thenReturn(false);
         when(this.config.closeVisualWebDriveronFail()).thenReturn(true);
@@ -87,10 +103,9 @@ public class DefaultExecutionSetupTearDownTest {
 
         this.context.setFailed();
 
-        this.std.basePostScenariotearDown();
+        boolean rtn = (Boolean)shutdownMethod.invoke(this.std, this.context);
 
-        verify(this.options).deleteAllCookies();
-        verify(this.webDriver).quit();
+        Assert.assertThat("shouldShutdownIfGlobalShutdownEnabledAndReuseDisabledAndCloseOnFailEnabled", rtn, is(true));
     }
 
 
@@ -98,7 +113,7 @@ public class DefaultExecutionSetupTearDownTest {
      * Global shutdown enabled - should always shutdown
      */
     @Test
-    public void shouldShutdownIfGlobalShutdownEnabledAndReuseEnabledAndCloseOnFailDisabled() {
+    public void shouldShutdownIfGlobalShutdownEnabledAndReuseEnabledAndCloseOnFailDisabled() throws InvocationTargetException, IllegalAccessException {
         when(this.config.shutDownWebdriver()).thenReturn(true);
         when(this.config.reuseWebDriver()).thenReturn(true);
         when(this.config.closeVisualWebDriveronFail()).thenReturn(false);
@@ -107,10 +122,10 @@ public class DefaultExecutionSetupTearDownTest {
 
         this.context.setFailed();
 
-        this.std.basePostScenariotearDown();
+        boolean rtn = (Boolean)shutdownMethod.invoke(this.std, this.context);
 
-        verify(this.options).deleteAllCookies();
-        verify(this.webDriver).quit();
+        Assert.assertThat("shouldShutdownIfGlobalShutdownEnabledAndReuseEnabledAndCloseOnFailDisabled", rtn, is(true));
+
     }
 
 
@@ -119,7 +134,7 @@ public class DefaultExecutionSetupTearDownTest {
      * failed tests, and wants to reuse instances in subsequent tests.
      */
     @Test
-    public void shouldNotShutdownIfGlobalShutdownDisabledAndReuseEnabledAndCloseOnFailEnabled() {
+    public void shouldNotShutdownIfGlobalShutdownDisabledAndReuseEnabledAndCloseOnFailEnabled() throws InvocationTargetException, IllegalAccessException {
         when(this.config.shutDownWebdriver()).thenReturn(false);
         when(this.config.reuseWebDriver()).thenReturn(true);
         when(this.config.closeVisualWebDriveronFail()).thenReturn(true);
@@ -128,10 +143,10 @@ public class DefaultExecutionSetupTearDownTest {
 
         this.context.setFailed();
 
-        this.std.basePostScenariotearDown();
+        boolean rtn = (Boolean)shutdownMethod.invoke(this.std, this.context);
 
-        verify(this.options).deleteAllCookies();
-        verify(this.webDriver, never()).quit();
+        Assert.assertThat("shouldNotShutdownIfGlobalShutdownDisabledAndReuseEnabledAndCloseOnFailEnabled", rtn, is(false));
+
     }
 
 
@@ -141,7 +156,7 @@ public class DefaultExecutionSetupTearDownTest {
      * shutdown anyway.
      */
     @Test
-    public void shouldShutdownIfGlobalShutdownDisabledAndReuseDisabledAndCloseOnFailEnabled() {
+    public void shouldShutdownIfGlobalShutdownDisabledAndReuseDisabledAndCloseOnFailEnabled() throws InvocationTargetException, IllegalAccessException {
         when(this.config.shutDownWebdriver()).thenReturn(false);
         when(this.config.reuseWebDriver()).thenReturn(false);
         when(this.config.closeVisualWebDriveronFail()).thenReturn(true);
@@ -150,55 +165,79 @@ public class DefaultExecutionSetupTearDownTest {
 
         this.context.setFailed();
 
-        this.std.basePostScenariotearDown();
+        boolean rtn = (Boolean)shutdownMethod.invoke(this.std, this.context);
 
-        verify(this.options).deleteAllCookies();
-        verify(this.webDriver).quit();
+        Assert.assertThat("shouldShutdownIfGlobalShutdownDisabledAndReuseDisabledAndCloseOnFailEnabled", rtn, is(true));
     }
 
 
-    /**
-     * Case where user wants to keep browser open for failed tests (possibly to
-     * see page on failure), and doesn't want the browser to be reused - don't
-     * shutdown.
-     */
+    public static class TestWebDriverFactory implements WebDriverFactory{
+
+        @Override
+        public WebDriver createWebDriver() {
+            return new FirefoxDriver();
+        }
+
+        @Override
+        public DriverType driverType() {
+            return DefaultDriverType.FIREFOX;
+        }
+
+        @Override
+        public void shutdownWebDriver(WebDriverContext webDriverContext) {
+
+        }
+
+        @Override
+        public boolean resetWebDriver(WebDriverContext webDriverContext) {
+            return false;
+        }
+    }
+
+
+
+
+
+
     @Test
-    public void shouldNotShutdownIfGlobalShutdownDisabledAndReuseDisabledAndCloseOnFailDisabled() {
+    public void testShutdownConditions() throws InvocationTargetException, IllegalAccessException {
+
+        //
+
+        /**
+         * Case where user wants to keep browser open for failed tests (possibly to
+         * see page on failure), and doesn't want the browser to be reused - don't
+         * shutdown.
+         */
         when(this.config.shutDownWebdriver()).thenReturn(false);
         when(this.config.closeVisualWebDriveronFail()).thenReturn(false);
         when(this.config.reuseWebDriver()).thenReturn(false);
 
-        when(this.webDriver.manage()).thenReturn(this.options);
-
         this.context.setFailed();
 
-        this.std.basePostScenariotearDown();
+        boolean rtn = (Boolean)shutdownMethod.invoke(this.std, this.context);
 
-        verify(this.options).deleteAllCookies();
-        verify(this.webDriver, never()).quit();
-    }
+        Assert.assertThat("should Not Shutdown If Global Shutdown Disabled And Reuse Disabled And Close On Fail Disabled", rtn, is(false));
 
 
-    /**
-     * Case where user wants to keep browser open for failed tests (possibly to
-     * see page on failure), but does want the browser to be reused - don't
-     * shutdown because the test has failed
-     */
-    @Test
-    public void shouldNotShutdownIfGlobalShutdownDisabledAndReuseEnabledAndCloseOnFailDisabled() {
+        /**
+         * Case where user wants to keep browser open for failed tests (possibly to
+         * see page on failure), but does want the browser to be reused - don't
+         * shutdown because the test has failed
+         */
+
         when(this.config.shutDownWebdriver()).thenReturn(false);
         when(this.config.reuseWebDriver()).thenReturn(true);
         when(this.config.closeVisualWebDriveronFail()).thenReturn(false);
 
-        when(this.webDriver.manage()).thenReturn(this.options);
+        rtn = (Boolean)shutdownMethod.invoke(this.std, this.context);
 
-        this.context.setFailed();
+        Assert.assertThat("should Not Shutdown If Global Shutdown Disabled And Reuse Enabled And Close On Fail Disabled", rtn, is(false));
 
-        this.std.basePostScenariotearDown();
-
-        verify(this.options).deleteAllCookies();
-        verify(this.webDriver, never()).quit();
     }
+
+
+
 
 
     /**
@@ -208,17 +247,15 @@ public class DefaultExecutionSetupTearDownTest {
      * instance
      */
     @Test
-    public void shouldNotShutdownIfGlobalShutdownDisabledAndReuseEnabledAndCloseOnFailDisabledAndTestPasses() {
+    public void shouldNotShutdownIfGlobalShutdownDisabledAndReuseEnabledAndCloseOnFailDisabledAndTestPasses() throws InvocationTargetException, IllegalAccessException {
         when(this.config.shutDownWebdriver()).thenReturn(false);
         when(this.config.reuseWebDriver()).thenReturn(true);
         when(this.config.closeVisualWebDriveronFail()).thenReturn(false);
 
-        when(this.webDriver.manage()).thenReturn(this.options);
 
-        this.std.basePostScenariotearDown();
+        boolean rtn = (Boolean)shutdownMethod.invoke(this.std, this.context);
 
-        verify(this.options).deleteAllCookies();
-        verify(this.webDriver, never()).quit();
+        Assert.assertThat("shouldNotShutdownIfGlobalShutdownDisabledAndReuseEnabledAndCloseOnFailDisabledAndTestPasses", rtn, is(false));
     }
 
 
@@ -228,12 +265,14 @@ public class DefaultExecutionSetupTearDownTest {
      * Clean start - no webdriver context yet.
      */
     @Test
-    public void shouldStartupOnCleanStartBeforeWebDriverContextIsInitialised() {
-        ((MutableSupplier<WebDriverContext>) DefaultExecutionSetupTearDown.currentWebDriverContext()).set(null);
+    public void shouldStartupOnCleanStartBeforeWebDriverContextIsInitialised() throws InvocationTargetException, IllegalAccessException {
 
-        this.std.basePreScenarioSetup();
+        ExecutionContext.put(Scope.SUITE, "webDriverFactory", null);
 
-        verify(this.factory).createWebDriver();
+        boolean rtn = (Boolean)shouldStartupMethod.invoke(this.std, this.context);
+
+        Assert.assertThat("shouldStartupOnCleanStartBeforeWebDriverContextIsInitialised", rtn, is(true));
+
     }
 
 
@@ -241,15 +280,17 @@ public class DefaultExecutionSetupTearDownTest {
      * Global shutdown enabled - should always startup
      */
     @Test
-    public void shouldStartupIfGlobalShutdownEnabledAndReuseEnabledAndCloseOnFailEnabled() {
+    public void shouldStartupIfGlobalShutdownEnabledAndReuseEnabledAndCloseOnFailEnabled() throws InvocationTargetException, IllegalAccessException {
         when(this.config.shutDownWebdriver()).thenReturn(true);
         when(this.config.closeVisualWebDriveronFail()).thenReturn(true);
         when(this.config.reuseWebDriver()).thenReturn(true);
 
         this.context.setFailed();
-        this.std.basePreScenarioSetup();
 
-        verify(this.factory).createWebDriver();
+        boolean rtn = (Boolean)shouldStartupMethod.invoke(this.std, this.context);
+
+        Assert.assertThat("shouldStartupIfGlobalShutdownEnabledAndReuseEnabledAndCloseOnFailEnabled", rtn, is(true));
+
     }
 
 
@@ -257,15 +298,18 @@ public class DefaultExecutionSetupTearDownTest {
      * Global shutdown enabled - should always startup
      */
     @Test
-    public void shouldStartupIfGlobalShutdownEnabledAndReuseDisabledAndCloseOnFailEnabled() {
+    public void shouldStartupIfGlobalShutdownEnabledAndReuseDisabledAndCloseOnFailEnabled() throws InvocationTargetException, IllegalAccessException {
         when(this.config.shutDownWebdriver()).thenReturn(true);
         when(this.config.reuseWebDriver()).thenReturn(false);
         when(this.config.closeVisualWebDriveronFail()).thenReturn(true);
 
         this.context.setFailed();
-        this.std.basePreScenarioSetup();
 
-        verify(this.factory).createWebDriver();
+        boolean rtn = (Boolean)shouldStartupMethod.invoke(this.std, this.context);
+
+        Assert.assertThat("shouldStartupIfGlobalShutdownEnabledAndReuseDisabledAndCloseOnFailEnabled", rtn, is(true));
+
+
     }
 
 
@@ -273,15 +317,17 @@ public class DefaultExecutionSetupTearDownTest {
      * Global shutdown enabled - should always startup
      */
     @Test
-    public void shouldStartupIfGlobalShutdownEnabledAndReuseEnabledAndCloseOnFailDisabled() {
+    public void shouldStartupIfGlobalShutdownEnabledAndReuseEnabledAndCloseOnFailDisabled() throws InvocationTargetException, IllegalAccessException {
         when(this.config.shutDownWebdriver()).thenReturn(true);
         when(this.config.reuseWebDriver()).thenReturn(true);
         when(this.config.closeVisualWebDriveronFail()).thenReturn(false);
 
         this.context.setFailed();
-        this.std.basePreScenarioSetup();
 
-        verify(this.factory).createWebDriver();
+        boolean rtn = (Boolean)shouldStartupMethod.invoke(this.std, this.context);
+
+        Assert.assertThat("shouldStartupIfGlobalShutdownEnabledAndReuseEnabledAndCloseOnFailDisabled", rtn, is(true));
+
     }
 
 
@@ -291,15 +337,17 @@ public class DefaultExecutionSetupTearDownTest {
      * not startup because we'll reuse the existing instance.
      */
     @Test
-    public void shouldNotStartupIfGlobalShutdownDisabledAndReuseEnabledAndCloseOnFailEnabled() {
+    public void shouldNotStartupIfGlobalShutdownDisabledAndReuseEnabledAndCloseOnFailEnabled() throws InvocationTargetException, IllegalAccessException {
         when(this.config.shutDownWebdriver()).thenReturn(false);
         when(this.config.reuseWebDriver()).thenReturn(true);
         when(this.config.closeVisualWebDriveronFail()).thenReturn(true);
 
         this.context.setFailed();
-        this.std.basePreScenarioSetup();
 
-        verify(this.factory, never()).createWebDriver();
+        boolean rtn = (Boolean)shouldStartupMethod.invoke(this.std, this.context);
+
+        Assert.assertThat("shouldNotStartupIfGlobalShutdownDisabledAndReuseEnabledAndCloseOnFailEnabled", rtn, is(false));
+
     }
 
 
@@ -327,15 +375,17 @@ public class DefaultExecutionSetupTearDownTest {
      * startup because previous test failed and browser is being kept open.
      */
     @Test
-    public void shouldStartupIfGlobalShutdownDisabledAndReuseDisabledAndCloseOnFailDisabled() {
+    public void shouldStartupIfGlobalShutdownDisabledAndReuseDisabledAndCloseOnFailDisabled() throws InvocationTargetException, IllegalAccessException {
         when(this.config.shutDownWebdriver()).thenReturn(false);
         when(this.config.closeVisualWebDriveronFail()).thenReturn(false);
         when(this.config.reuseWebDriver()).thenReturn(false);
 
         this.context.setFailed();
-        this.std.basePreScenarioSetup();
 
-        verify(this.factory).createWebDriver();
+        boolean rtn = (Boolean)shouldStartupMethod.invoke(this.std, this.context);
+
+        Assert.assertThat("shouldStartupIfGlobalShutdownDisabledAndReuseDisabledAndCloseOnFailDisabled", rtn, is(true));
+
     }
 
 
@@ -345,15 +395,16 @@ public class DefaultExecutionSetupTearDownTest {
      * startup because previous test failed and browser is being kept open.
      */
     @Test
-    public void shouldStartupIfGlobalShutdownDisabledAndReuseEnabledAndCloseOnFailDisabled() {
+    public void shouldStartupIfGlobalShutdownDisabledAndReuseEnabledAndCloseOnFailDisabled() throws InvocationTargetException, IllegalAccessException {
         when(this.config.shutDownWebdriver()).thenReturn(false);
         when(this.config.reuseWebDriver()).thenReturn(true);
         when(this.config.closeVisualWebDriveronFail()).thenReturn(false);
 
         this.context.setFailed();
-        this.std.basePreScenarioSetup();
 
-        verify(this.factory).createWebDriver();
+        boolean rtn = (Boolean)shouldStartupMethod.invoke(this.std, this.context);
+
+        Assert.assertThat("shouldStartupIfGlobalShutdownDisabledAndReuseEnabledAndCloseOnFailDisabled", rtn, is(true));
     }
 
 
@@ -364,14 +415,14 @@ public class DefaultExecutionSetupTearDownTest {
      * instance
      */
     @Test
-    public void shouldNotStartupIfGlobalShutdownDisabledAndReuseEnabledAndCloseOnFailDisabledAndTestPasses() {
+    public void shouldNotStartupIfGlobalShutdownDisabledAndReuseEnabledAndCloseOnFailDisabledAndTestPasses() throws InvocationTargetException, IllegalAccessException {
         when(this.config.shutDownWebdriver()).thenReturn(false);
         when(this.config.reuseWebDriver()).thenReturn(true);
         when(this.config.closeVisualWebDriveronFail()).thenReturn(false);
 
-        this.std.basePreScenarioSetup();
+        boolean rtn = (Boolean)shouldStartupMethod.invoke(this.std, this.context);
 
-        verify(this.factory, never()).createWebDriver();
+        Assert.assertThat("shouldNotStartupIfGlobalShutdownDisabledAndReuseEnabledAndCloseOnFailDisabledAndTestPasses", rtn, is(false));
     }
 
 }

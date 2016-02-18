@@ -18,8 +18,7 @@
  */
 package com.technophobia.webdriver.substeps.impl;
 
-import static com.technophobia.webdriver.substeps.runner.DefaultExecutionSetupTearDown.getThreadLocalWebDriver;
-import static com.technophobia.webdriver.substeps.runner.DefaultExecutionSetupTearDown.getThreadLocalWebDriverContext;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.not;
@@ -55,14 +54,7 @@ public class AssertionWebDriverSubStepImplementations extends AbstractWebDriverS
     private final FinderWebDriverSubStepImplementations finder = new FinderWebDriverSubStepImplementations();
 
 
-    public AssertionWebDriverSubStepImplementations() {
-        super();
-    }
 
-
-    public AssertionWebDriverSubStepImplementations(final Supplier<WebDriverContext> webDriverContextSupplier) {
-        super(webDriverContextSupplier);
-    }
 
 
     /**
@@ -76,7 +68,7 @@ public class AssertionWebDriverSubStepImplementations extends AbstractWebDriverS
     @Step("AssertCurrentElement text=\"([^\"]*)\"")
     public void assertTextInCurrentElement(final String expected) {
         logger.debug("Asserting the current element has the text " + expected);
-        Assert.assertThat(getThreadLocalWebDriverContext().getCurrentElement().getText(), is(expected));
+        Assert.assertThat( webDriverContext().getCurrentElement().getText(), is(expected));
     }
 
 
@@ -91,7 +83,7 @@ public class AssertionWebDriverSubStepImplementations extends AbstractWebDriverS
     @Step("AssertCurrentInput value=\"([^\"]*)\"")
     public void assertValueInCurrentInput(final String expected) {
         logger.debug("Asserting the current input has the value" + expected);
-        Assert.assertThat(getThreadLocalWebDriverContext().getCurrentElement()
+        Assert.assertThat( webDriverContext().getCurrentElement()
                 .getAttribute("value"), is(expected));
     }
     
@@ -107,7 +99,7 @@ public class AssertionWebDriverSubStepImplementations extends AbstractWebDriverS
     @Step("AssertCurrentElement text contains \"([^\"]*)\"")
     public void assertTextInCurrentElementContains(final String expected) {
         logger.debug("Asserting current element contains the text " + expected);
-        Assert.assertThat(getThreadLocalWebDriverContext().getCurrentElement().getText(), containsString(expected));
+        Assert.assertThat( webDriverContext().getCurrentElement().getText(), containsString(expected));
     }
 
 
@@ -125,7 +117,8 @@ public class AssertionWebDriverSubStepImplementations extends AbstractWebDriverS
     @Step("AssertCurrentElement attribute=\"([^\"]*)\" value=\"([^\"]*)\"")
     public void assertAttributeInCurrentElement(final String attribute, final String expected) {
         logger.debug("Asserting current element has the attribute " + attribute + "with value " + expected);
-        final String attributeValue = getThreadLocalWebDriverContext().getCurrentElement().getAttribute(attribute);
+       
+        final String attributeValue =  webDriverContext().getCurrentElement().getAttribute(attribute);
         Assert.assertNotNull("Expecting to find attribute " + attribute + " on current element", attributeValue);
         Assert.assertThat(attributeValue, is(expected));
     }
@@ -194,7 +187,7 @@ public class AssertionWebDriverSubStepImplementations extends AbstractWebDriverS
     public void pageSourceContains(final String expected) {
         logger.debug("Checking page source for expeted content [" + expected + "]");
 
-        final String pageSource = getThreadLocalWebDriver().getPageSource();
+        final String pageSource = webDriver().getPageSource();
 
         Assert.assertThat(pageSource, containsString(expected));
     }
@@ -212,7 +205,7 @@ public class AssertionWebDriverSubStepImplementations extends AbstractWebDriverS
     public void assertCheckBoxIsChecked(final String checkedString) {
 
         // check that the current element is not null and is a radio btn
-        final WebElement currentElem = getThreadLocalWebDriverContext().getCurrentElement();
+        final WebElement currentElem =  webDriverContext().getCurrentElement();
 
         assertElementIs(currentElem, "input", "checkbox");
 
@@ -238,7 +231,7 @@ public class AssertionWebDriverSubStepImplementations extends AbstractWebDriverS
     public void assertRadioButtonIsChecked(final String checkedString) {
 
         // check that the current element is not null and is a radio btn
-        final WebElement currentElem = getThreadLocalWebDriverContext().getCurrentElement();
+        final WebElement currentElem =  webDriverContext().getCurrentElement();
 
         assertElementIs(currentElem, "input", "radio");
 
@@ -265,7 +258,7 @@ public class AssertionWebDriverSubStepImplementations extends AbstractWebDriverS
     @Step("AssertCurrentElement has attributes=\\[(.*)\\]")
     public void assertCurrentElementHasAttributes(final String attributeString) {
 
-        final WebElement currentElem = getThreadLocalWebDriverContext().getCurrentElement();
+        final WebElement currentElem =  webDriverContext().getCurrentElement();
 
         final Map<String, String> expectedAttributes = StepImplementationUtils.convertToMap(attributeString);
 
@@ -431,7 +424,8 @@ public class AssertionWebDriverSubStepImplementations extends AbstractWebDriverS
      */
     @Step("AssertNotPresent text=\"([^\"]*)\"")
     public void assertNotPresent(final String text) {
-        final String pageSource = getThreadLocalWebDriver().getPageSource();
+
+        final String pageSource = webDriver().getPageSource();
         Assert.assertThat(pageSource, not(containsString(text)));
     }
 
@@ -446,7 +440,7 @@ public class AssertionWebDriverSubStepImplementations extends AbstractWebDriverS
      */
     public WebElement waitForElementToContainSomeText(final By by) {
 
-        final WebDriverWait wait = new WebDriverWait(getThreadLocalWebDriver(), 10);
+        final WebDriverWait wait = new WebDriverWait(webDriver(), 10);
         final Function<WebDriver, WebElement> condition2 = new Function<WebDriver, WebElement>() {
             public WebElement apply(final WebDriver driver) {
                 final WebElement rtn = driver.findElement(by);

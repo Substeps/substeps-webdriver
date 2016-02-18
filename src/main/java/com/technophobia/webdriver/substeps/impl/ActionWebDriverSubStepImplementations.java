@@ -59,11 +59,7 @@ public class ActionWebDriverSubStepImplementations extends AbstractWebDriverSubS
     }
 
 
-    public ActionWebDriverSubStepImplementations(final FinderWebDriverSubStepImplementations locator,
-            final Supplier<WebDriverContext> webDriverContextSupplier) {
-        super(webDriverContextSupplier);
-        this.locator = locator;
-    }
+
 
 
     /**
