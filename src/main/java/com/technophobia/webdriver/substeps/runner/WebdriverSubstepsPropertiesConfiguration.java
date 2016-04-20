@@ -29,7 +29,7 @@ import com.technophobia.substeps.model.Configuration;
 
 public enum WebdriverSubstepsPropertiesConfiguration implements WebdriverSubstepsConfiguration {
 
-    INSTANCE; // uninstantiable
+    INSTANCE ; // uninstantiable
 
     private final Logger LOG = LoggerFactory.getLogger(WebdriverSubstepsPropertiesConfiguration.class);
 
@@ -39,6 +39,7 @@ public enum WebdriverSubstepsPropertiesConfiguration implements WebdriverSubstep
     private final String driverLocale;
     private final boolean reuseWebdriver;
     private final String htmlUnitProxyHost;
+    private final String chromeDriverPath;
     private final boolean shutdownWebdriver;
     private final boolean htmlunitDisableJs;
     private final Integer htmlUnitProxyPort;
@@ -48,6 +49,7 @@ public enum WebdriverSubstepsPropertiesConfiguration implements WebdriverSubstep
     private final int networkProxyPort;
 
     private long defaultWebDriverTimeoutSecs;
+
 
     private WebdriverSubstepsPropertiesConfiguration() {
 
@@ -77,6 +79,7 @@ public enum WebdriverSubstepsPropertiesConfiguration implements WebdriverSubstep
         networkProxyHost = Configuration.INSTANCE.getString("network.proxy.host");
         networkProxyPort = Configuration.INSTANCE.getInt("network.proxy.port");
 
+        chromeDriverPath = Configuration.INSTANCE.getString("chromedriver.path");
         try {
             webdriverFactoryClass = Class.forName(Configuration.INSTANCE.getString("webdriver.factory.class")).asSubclass(WebDriverFactory.class);
         } catch (ClassNotFoundException ex) {
@@ -170,5 +173,10 @@ public enum WebdriverSubstepsPropertiesConfiguration implements WebdriverSubstep
             return string.substring(0, string.length() - 1);
         }
         return string;
+    }
+
+    @Override
+    public String getChromeDriverPath() {
+        return chromeDriverPath;
     }
 }

@@ -26,7 +26,9 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.SearchContext;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.htmlunit.HtmlUnitWebElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -93,14 +95,25 @@ public abstract class WebDriverSubstepsBy {
 
     public static abstract class BaseBy extends By {
 
+        private static Logger logger = LoggerFactory.getLogger(BaseBy.class);
+
         @Override
         public final List<WebElement> findElements(final SearchContext context) {
-            List<WebElement> matchingElems = findElementsBy(context);
 
-            if (matchingElems == null) {
-                matchingElems = Collections.emptyList();
+            List<WebElement> matchingElems = null;
+            try {
+                matchingElems = findElementsBy(context);
+            }
+            catch (StaleElementReferenceException e){
+                logger.debug("StaleElementReferenceException looking for elements");
             }
 
+            // NB. returning non null will prevent any wait from waiting.. HTML unit is a bit tricky in this respect as it expects an empty collection,
+            // not compatible with any waits...
+
+            if (matchingElems == null && context instanceof HtmlUnitWebElement) {
+                matchingElems = Collections.EMPTY_LIST;
+            }
             return matchingElems;
         }
 

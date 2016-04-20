@@ -61,6 +61,7 @@ public class DefaultWebDriverFactory implements WebDriverFactory {
         switch (configuration.driverType()) {
             case FIREFOX: {
                 final DesiredCapabilities firefoxCapabilities = DesiredCapabilities.firefox();
+
                 setNetworkCapabilities(firefoxCapabilities);
 
                 setLoggingPreferences(firefoxCapabilities);
@@ -94,6 +95,14 @@ public class DefaultWebDriverFactory implements WebDriverFactory {
 
             }
             case CHROME: {
+
+                String preset = System.getProperty("webdriver.chrome.driver");
+
+                if (preset == null) {
+                    String driverPath = configuration.getChromeDriverPath();
+                    Assert.assertNotNull("Chromedriver path not set as a -Dwebdriver.chrome.driver parameter or in config", driverPath);
+                    System.setProperty("webdriver.chrome.driver", driverPath);
+                }
 
                 final DesiredCapabilities chromeCapabilities = DesiredCapabilities.chrome();
                 setNetworkCapabilities(chromeCapabilities);
