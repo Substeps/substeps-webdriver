@@ -40,4 +40,6 @@ public interface WebdriverSubstepsConfiguration {
     int getNetworkProxyPort();
     
     Class<? extends WebDriverFactory> getWebDriverFactoryClass();
+
+    String getChromeDriverPath();
 }

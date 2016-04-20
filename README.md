@@ -15,8 +15,9 @@ Substeps.org Release Notes
 * Delegated the shutdown of webdrivers to the factory to allow for projects to override and provide specialisms
 * refactored out some statics that weren't essential and making it difficult to test the setup and tear down
 * Made some of the base By's accessible to implementing projects.
-
-
+* Added chromedriver.path properties to config
+* Selenium upgrade
+* Made BaseBy public to allow extension outside of this project
 
 1.0.0 / 1
 -----

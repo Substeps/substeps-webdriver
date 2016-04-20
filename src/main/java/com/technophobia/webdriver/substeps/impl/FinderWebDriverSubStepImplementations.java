@@ -655,7 +655,7 @@ public class FinderWebDriverSubStepImplementations extends AbstractWebDriverSubS
 
             // do we care if there are more than one matching child ? lets go
             // with no..
-            if (!children.isEmpty()) {
+            if (children!= null && !children.isEmpty()) {
 
                 if (matchingElements == null) {
                     matchingElements = new ArrayList<WebElement>();
