@@ -1,6 +1,8 @@
 substeps-webdriver [![Build Status](https://travis-ci.org/Substeps/substeps-webdriver.svg)](https://travis-ci.org/Substeps/substeps-webdriver) [![Maven Central](https://img.shields.io/maven-central/v/org.substeps/webdriver-substeps.png?label=webdriver-substeps)](https://maven-badges.herokuapp.com/maven-central/org.substeps/webdriver-substeps) 
 ==================
 
+[![Join the chat at https://gitter.im/Substeps/substeps-webdriver](https://badges.gitter.im/Substeps/substeps-webdriver.svg)](https://gitter.im/Substeps/substeps-webdriver?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Webdriver based step implementations. 
 
 Substeps documentation can be found [here](http://substeps.technophobia.com/ "Substeps documentation").  
