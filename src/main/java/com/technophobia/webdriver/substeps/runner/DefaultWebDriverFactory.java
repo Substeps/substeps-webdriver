@@ -28,6 +28,7 @@ import org.junit.Assert;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.logging.LogType;
@@ -60,18 +61,39 @@ public class DefaultWebDriverFactory implements WebDriverFactory {
 
         switch (configuration.driverType()) {
             case FIREFOX: {
+
+                FirefoxProfile fp = new FirefoxProfile();
+                fp.setPreference("browser.startup.homepage", "about:blank");
+                fp.setPreference("startup.homepage_welcome_url", "about:blank");
+                fp.setPreference("startup.homepage_welcome_url.additional", "about:blank");
+                fp.setPreference("browser.startup.homepage_override.mston‌​e", "ignore");
+
+                fp.setPreference("gecko.mstone", "ignore");
+
+                String preset = System.getProperty("webdriver.gecko.driver");
+
+                if (preset == null) {
+                    String driverPath = configuration.getGeckoDriverPath();
+                    Assert.assertNotNull("Geckodriver path not set as a -Dwebdriver.gecko.driver parameter or in config", driverPath);
+                    System.setProperty("webdriver.gecko.driver", driverPath);
+                }
+
+
                 final DesiredCapabilities firefoxCapabilities = DesiredCapabilities.firefox();
 
                 setNetworkCapabilities(firefoxCapabilities);
 
                 setLoggingPreferences(firefoxCapabilities);
 
+                firefoxCapabilities.setCapability(FirefoxDriver.PROFILE, fp);
+
                 webDriver = new FirefoxDriver(firefoxCapabilities);
+
                 break;
 
             }
             case HTMLUNIT: {
-                final HtmlUnitDriver htmlUnitDriver = new HtmlUnitDriver(BrowserVersion.FIREFOX_38);
+                final HtmlUnitDriver htmlUnitDriver = new HtmlUnitDriver(BrowserVersion.FIREFOX_45);
                 htmlUnitDriver.setJavascriptEnabled(!configuration.isJavascriptDisabledWithHTMLUnit());
 
                 // Run via a proxy - firstly try deprecated HTML unit only

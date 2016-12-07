@@ -48,6 +48,8 @@ public enum WebdriverSubstepsPropertiesConfiguration implements WebdriverSubstep
     private final String networkProxyHost;
     private final int networkProxyPort;
 
+    private final String geckoDriverPath;
+
     private long defaultWebDriverTimeoutSecs;
 
 
@@ -80,6 +82,8 @@ public enum WebdriverSubstepsPropertiesConfiguration implements WebdriverSubstep
         networkProxyPort = Configuration.INSTANCE.getInt("network.proxy.port");
 
         chromeDriverPath = Configuration.INSTANCE.getString("chromedriver.path");
+
+        geckoDriverPath = Configuration.INSTANCE.getString("geckodriver.path");
         try {
             webdriverFactoryClass = Class.forName(Configuration.INSTANCE.getString("webdriver.factory.class")).asSubclass(WebDriverFactory.class);
         } catch (ClassNotFoundException ex) {
@@ -178,5 +182,10 @@ public enum WebdriverSubstepsPropertiesConfiguration implements WebdriverSubstep
     @Override
     public String getChromeDriverPath() {
         return chromeDriverPath;
+    }
+
+    @Override
+    public String getGeckoDriverPath(){
+        return geckoDriverPath;
     }
 }
