@@ -5,14 +5,18 @@ sudo: false
 jdk:
   - oraclejdk8
 
-addons:
-  apt:
-    packages:
-    - chromium-chromedriver
+#addons:
+#  apt:
+#    packages:
+#    - chromium-chromedriver
+#
+#before_install:
+#  - wget https://chromedriver.storage.googleapis.com/2.25/chromedriver_linux64.zip
+#  - unzip chromedriver_linux64.zip
 
 before_install:
-  - wget https://chromedriver.storage.googleapis.com/2.25/chromedriver_linux64.zip
-  - unzip chromedriver_linux64.zip
+  - wget https://github.com/mozilla/geckodriver/releases/download/v0.11.1/geckodriver-v0.11.1-linux64.tar.gz
+  - tar -xf geckodriver-v0.11.1-linux64.tar.gz
 
 before_script:
   - "export DISPLAY=:99.0"
