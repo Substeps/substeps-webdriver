@@ -297,9 +297,9 @@
 
         <profile>
             <id>self-test</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
+            <!--<activation>-->
+                <!--<activeByDefault>true</activeByDefault>-->
+            <!--</activation>-->
 
             <build>
 <!--                <pluginManagement>
