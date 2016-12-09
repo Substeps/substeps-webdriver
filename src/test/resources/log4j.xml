@@ -10,6 +10,7 @@
   </appender>
 
 
+<!--
 <logger name="com.gargoylesoftware.htmlunit" additivity="false">
   <level value="fatal"/>
   <appender-ref ref="console" />
@@ -20,11 +21,18 @@
   <level value="FATAL"/>
   <appender-ref ref="console" />
 </logger>
+-->
 
-<logger name="com.gargoylesoftware.htmlunit.DefaultCssErrorHandler" additivity="false">
-  <level value="FATAL"/>
-  <appender-ref ref="console" />
-</logger>
+<!--<logger name="com.gargoylesoftware.htmlunit" additivity="false">-->
+  <!--<level value="DEBUG"/>-->
+  <!--<appender-ref ref="console" />-->
+<!--</logger>-->
+
+
+  <!--<logger name="org.openqa.selenium.htmlunit" additivity="false">-->
+    <!--<level value="DEBUG"/>-->
+    <!--<appender-ref ref="console" />-->
+  <!--</logger>-->
 
 
 <logger name="com.technophobia.webdriver" additivity="false">

@@ -11,6 +11,12 @@ There is also a [Substeps Google group](http://groups.google.com/group/substeps?
 
 Substeps.org Release Notes
 ==========================
+1.0.3
+-----
+* Firefox webdriver starts with blank page rather than the 'learn more' page
+* Updated to selenium-3.1.  Added geckodriver configuration path
+* Added Remote webdriver capability and corresponding properties
+* Modified tests to use hosted github page (to make testing with something like saucelabs possible)
 
 1.0.2
 -----

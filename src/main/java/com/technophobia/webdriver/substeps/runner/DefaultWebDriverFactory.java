@@ -20,20 +20,26 @@
 package com.technophobia.webdriver.substeps.runner;
 
 import java.lang.reflect.Field;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.logging.Level;
 
+import com.technophobia.substeps.model.exception.SubstepsConfigurationException;
 import com.technophobia.webdriver.util.WebDriverContext;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;
+import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.logging.LogType;
 import org.openqa.selenium.logging.LoggingPreferences;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,18 +66,39 @@ public class DefaultWebDriverFactory implements WebDriverFactory {
 
         switch (configuration.driverType()) {
             case FIREFOX: {
+
+                FirefoxProfile fp = new FirefoxProfile();
+                fp.setPreference("browser.startup.homepage", "about:blank");
+                fp.setPreference("startup.homepage_welcome_url", "about:blank");
+                fp.setPreference("startup.homepage_welcome_url.additional", "about:blank");
+                fp.setPreference("browser.startup.homepage_override.mston‌​e", "ignore");
+
+                fp.setPreference("gecko.mstone", "ignore");
+
+                String preset = System.getProperty("webdriver.gecko.driver");
+
+                if (preset == null) {
+                    String driverPath = configuration.getGeckoDriverPath();
+                    Assert.assertNotNull("Geckodriver path not set as a -Dwebdriver.gecko.driver parameter or in config", driverPath);
+                    System.setProperty("webdriver.gecko.driver", driverPath);
+                }
+
+
                 final DesiredCapabilities firefoxCapabilities = DesiredCapabilities.firefox();
 
                 setNetworkCapabilities(firefoxCapabilities);
 
                 setLoggingPreferences(firefoxCapabilities);
 
+                firefoxCapabilities.setCapability(FirefoxDriver.PROFILE, fp);
+
                 webDriver = new FirefoxDriver(firefoxCapabilities);
+
                 break;
 
             }
             case HTMLUNIT: {
-                final HtmlUnitDriver htmlUnitDriver = new HtmlUnitDriver(BrowserVersion.FIREFOX_38);
+                final HtmlUnitDriver htmlUnitDriver = new HtmlUnitDriver(BrowserVersion.FIREFOX_45);
                 htmlUnitDriver.setJavascriptEnabled(!configuration.isJavascriptDisabledWithHTMLUnit());
 
                 // Run via a proxy - firstly try deprecated HTML unit only
@@ -127,6 +154,34 @@ public class DefaultWebDriverFactory implements WebDriverFactory {
                 webDriver = new InternetExplorerDriver(ieCapabilities);
                 break;
             }
+            case REMOTE : {
+
+                final String USERNAME = "iantmoore";
+                final String ACCESS_KEY = "8d4cd22e-d6bd-4753-8e10-4e92437b0fcd";
+                final String sauceLabsUrl = "https://" + USERNAME + ":" + ACCESS_KEY + "@ondemand.saucelabs.com:443/wd/hub";
+
+                ;
+                ;
+                ;
+                ;
+                   // chrome
+                DesiredCapabilities caps = new DesiredCapabilities(configuration.getRemoteDriverBaseCapability(), "", Platform.ANY);
+
+                caps.setCapability("platform", configuration.getRemoteDriverPlatform()); // "Linux"
+                caps.setCapability("version", configuration.getRemoteDriverVersion()); // "48.0"
+
+                URL url;
+
+                try {
+                    url = new URL(configuration.getRemoteDriverUrl());
+                } catch (MalformedURLException e) {
+                    throw new SubstepsConfigurationException(e);
+                }
+
+                webDriver = new RemoteWebDriver(url, caps);
+                break;
+            }
+
             default: {
                 throw new IllegalArgumentException("unknown driver type " + configuration.driverType());
             }

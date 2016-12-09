@@ -21,7 +21,8 @@ Scenario: a scenario
 	Given I enter "some text" into the text field
 	Then the text field will contain "some text"	
 	And the field located beneath the heading has the text 'some child text'
-	And I can click the link "a text link" and see "clicked a link"  
+	And I can click the link "a text link" and see "clicked a link"
+
 
 	Given radio button with text "radio - option 1" is checked
 	Given radio button with text "radio - option 2" is not checked
@@ -50,8 +51,8 @@ Scenario: a scenario
 	
 ##################################################################	
 	# these tests need to be last as they go off to google
-	Given I go to an external page such as Google
-	Then the page title is "Google"
+	Given I go to an external page such as Github
+    And the raw README is loaded
     
     # Do not add more steps here
 

@@ -48,7 +48,13 @@ public enum WebdriverSubstepsPropertiesConfiguration implements WebdriverSubstep
     private final String networkProxyHost;
     private final int networkProxyPort;
 
+    private final String geckoDriverPath;
+
     private long defaultWebDriverTimeoutSecs;
+    private String remoteDriverUrl;
+    private String remoteDriverPlatform;
+    private String remoteDriverVersion;
+    private String remoteDriverBaseCapability;
 
 
     private WebdriverSubstepsPropertiesConfiguration() {
@@ -80,11 +86,19 @@ public enum WebdriverSubstepsPropertiesConfiguration implements WebdriverSubstep
         networkProxyPort = Configuration.INSTANCE.getInt("network.proxy.port");
 
         chromeDriverPath = Configuration.INSTANCE.getString("chromedriver.path");
+
+        geckoDriverPath = Configuration.INSTANCE.getString("geckodriver.path");
         try {
             webdriverFactoryClass = Class.forName(Configuration.INSTANCE.getString("webdriver.factory.class")).asSubclass(WebDriverFactory.class);
         } catch (ClassNotFoundException ex) {
             throw new IllegalStateException("'webdriver.factory.class' is invalid.", ex);
         }
+
+        remoteDriverUrl = Configuration.INSTANCE.getString("remote.driver.url");
+        remoteDriverPlatform = Configuration.INSTANCE.getString("remote.driver.platform");
+        remoteDriverVersion = Configuration.INSTANCE.getString("remote.driver.version");
+        remoteDriverBaseCapability = Configuration.INSTANCE.getString("remote.driver.base.capability");
+
 
         LOG.info("Using properties:\n" + Configuration.INSTANCE.getConfigurationInfo());
     }
@@ -178,5 +192,31 @@ public enum WebdriverSubstepsPropertiesConfiguration implements WebdriverSubstep
     @Override
     public String getChromeDriverPath() {
         return chromeDriverPath;
+    }
+
+    @Override
+    public String getGeckoDriverPath(){
+        return geckoDriverPath;
+    }
+
+    @Override
+    public String getRemoteDriverUrl(){
+        
+        return remoteDriverUrl;
+    }
+
+    @Override
+    public String getRemoteDriverPlatform(){
+        return remoteDriverPlatform;
+    }
+
+    @Override
+    public String getRemoteDriverVersion(){
+        return remoteDriverVersion;
+    }
+
+    @Override
+    public String getRemoteDriverBaseCapability(){
+        return remoteDriverBaseCapability;
     }
 }
