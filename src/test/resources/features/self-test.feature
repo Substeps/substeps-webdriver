@@ -51,8 +51,8 @@ Scenario: a scenario
 	
 ##################################################################	
 	# these tests need to be last as they go off to google
-	Given I go to an external page such as Google
-	Then the page title is "Google"
+	Given I go to an external page such as Github
+    And the raw README is loaded
     
     # Do not add more steps here
 

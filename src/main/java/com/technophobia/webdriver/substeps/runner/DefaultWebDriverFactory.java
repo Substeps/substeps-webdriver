@@ -20,11 +20,15 @@
 package com.technophobia.webdriver.substeps.runner;
 
 import java.lang.reflect.Field;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.logging.Level;
 
+import com.technophobia.substeps.model.exception.SubstepsConfigurationException;
 import com.technophobia.webdriver.util.WebDriverContext;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;
+import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -35,6 +39,7 @@ import org.openqa.selenium.logging.LogType;
 import org.openqa.selenium.logging.LoggingPreferences;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -149,6 +154,34 @@ public class DefaultWebDriverFactory implements WebDriverFactory {
                 webDriver = new InternetExplorerDriver(ieCapabilities);
                 break;
             }
+            case REMOTE : {
+
+                final String USERNAME = "iantmoore";
+                final String ACCESS_KEY = "8d4cd22e-d6bd-4753-8e10-4e92437b0fcd";
+                final String sauceLabsUrl = "https://" + USERNAME + ":" + ACCESS_KEY + "@ondemand.saucelabs.com:443/wd/hub";
+
+                ;
+                ;
+                ;
+                ;
+                   // chrome
+                DesiredCapabilities caps = new DesiredCapabilities(configuration.getRemoteDriverBaseCapability(), "", Platform.ANY);
+
+                caps.setCapability("platform", configuration.getRemoteDriverPlatform()); // "Linux"
+                caps.setCapability("version", configuration.getRemoteDriverVersion()); // "48.0"
+
+                URL url;
+
+                try {
+                    url = new URL(configuration.getRemoteDriverUrl());
+                } catch (MalformedURLException e) {
+                    throw new SubstepsConfigurationException(e);
+                }
+
+                webDriver = new RemoteWebDriver(url, caps);
+                break;
+            }
+
             default: {
                 throw new IllegalArgumentException("unknown driver type " + configuration.driverType());
             }

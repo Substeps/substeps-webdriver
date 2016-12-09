@@ -191,26 +191,31 @@
 			<scope>test</scope>
 		</dependency>
 
-        <dependency>
-            <groupId>net.sourceforge.htmlunit</groupId>
-            <artifactId>htmlunit</artifactId>
-            <version>2.23</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>net.sourceforge.htmlunit</groupId>-->
+            <!--<artifactId>htmlunit</artifactId>-->
+            <!--<version>2.23</version>-->
+        <!--</dependency>-->
 
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>htmlunit-driver</artifactId>
-            <version>2.23</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>net.sourceforge.htmlunit</groupId>
-                    <artifactId>htmlunit</artifactId>
+            <version>2.23.1</version>
+            <!--<exclusions>-->
+                <!--<exclusion>-->
+                    <!--<groupId>net.sourceforge.htmlunit</groupId>-->
+                    <!--<artifactId>htmlunit</artifactId>-->
 
-                </exclusion>
+                <!--</exclusion>-->
 
-            </exclusions>
+            <!--</exclusions>-->
         </dependency>
 
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-support</artifactId>
+            <version>${selenium.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>org.mockito</groupId>

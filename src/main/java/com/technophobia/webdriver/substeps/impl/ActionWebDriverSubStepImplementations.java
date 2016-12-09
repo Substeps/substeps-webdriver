@@ -192,7 +192,7 @@ public class ActionWebDriverSubStepImplementations extends AbstractWebDriverSubS
         for (final WebElement e : elems) {
             // does this WebElement have the attributes that we need!
 
-            if (e.getAttribute("value").equals(buttonText)) {
+            if (e != null && buttonText.equals(e.getAttribute("value"))) {
                 if (matchingElems == null) {
                     matchingElems = new ArrayList<WebElement>();
                 }

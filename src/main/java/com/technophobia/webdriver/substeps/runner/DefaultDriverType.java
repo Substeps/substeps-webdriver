@@ -26,7 +26,7 @@ package com.technophobia.webdriver.substeps.runner;
  */
 public enum DefaultDriverType implements DriverType {
 
-	FIREFOX(true), HTMLUNIT(false), CHROME(true), IE(true);
+	FIREFOX(true), HTMLUNIT(false), CHROME(true), IE(true), REMOTE(true);
 
 	private DefaultDriverType(final boolean visual)
 	{
