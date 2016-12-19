@@ -37,15 +37,4 @@ public interface WebdriverSubstepsConfiguration {
     
     int getNetworkProxyPort();
 
-    String getChromeDriverPath();
-
-    String getGeckoDriverPath();
-
-    String getRemoteDriverUrl();
-
-    String getRemoteDriverPlatform();
-
-    String getRemoteDriverVersion();
-
-    String getRemoteDriverBaseCapability();
 }
