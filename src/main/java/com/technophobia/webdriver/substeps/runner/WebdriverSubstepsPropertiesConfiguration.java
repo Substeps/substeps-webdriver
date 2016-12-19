@@ -33,41 +33,34 @@ public enum WebdriverSubstepsPropertiesConfiguration implements WebdriverSubstep
 
     private final Logger LOG = LoggerFactory.getLogger(WebdriverSubstepsPropertiesConfiguration.class);
 
-    private final Class<? extends WebDriverFactory> webdriverFactoryClass;
-
     private final String baseUrl;
     private final String driverLocale;
     private final boolean reuseWebdriver;
     private final String htmlUnitProxyHost;
-    private final String chromeDriverPath;
     private final boolean shutdownWebdriver;
     private final boolean htmlunitDisableJs;
     private final Integer htmlUnitProxyPort;
-    private final DefaultDriverType driverType;
     private final boolean visualWebdriverCloseOnFail;
     private final String networkProxyHost;
     private final int networkProxyPort;
 
-    private final String geckoDriverPath;
 
     private long defaultWebDriverTimeoutSecs;
-    private String remoteDriverUrl;
-    private String remoteDriverPlatform;
-    private String remoteDriverVersion;
-    private String remoteDriverBaseCapability;
 
 
     private WebdriverSubstepsPropertiesConfiguration() {
 
-        final URL defaultURL = getClass().getResource("/default-webdriver-substeps.properties");
-
-        Assert.assertNotNull(defaultURL);
-
-        Configuration.INSTANCE.addDefaultProperties(defaultURL, "default-webdriver");
+//        final URL defaultURL = getClass().getResource("/default-webdriver-substeps.properties");
+//
+//        Assert.assertNotNull(defaultURL);
+//
+//        Configuration.INSTANCE.addDefaultProperties(defaultURL, "default-webdriver");
+        System.out.println("System.getProperty(\"environment\", \"localhost\") + \".properties\";" + System.getProperty("environment", "localhost") + ".properties");
 
         baseUrl = determineBaseURL(Configuration.INSTANCE.getString("base.url"));
 
-        driverType = DefaultDriverType.valueOf(Configuration.INSTANCE.getString("driver.type").toUpperCase());
+        System.out.println("config: \n" +
+        Configuration.INSTANCE.getConfigurationInfo());
 
         driverLocale = Configuration.INSTANCE.getString("webdriver.locale");
 
@@ -85,19 +78,7 @@ public enum WebdriverSubstepsPropertiesConfiguration implements WebdriverSubstep
         networkProxyHost = Configuration.INSTANCE.getString("network.proxy.host");
         networkProxyPort = Configuration.INSTANCE.getInt("network.proxy.port");
 
-        chromeDriverPath = Configuration.INSTANCE.getString("chromedriver.path");
 
-        geckoDriverPath = Configuration.INSTANCE.getString("geckodriver.path");
-        try {
-            webdriverFactoryClass = Class.forName(Configuration.INSTANCE.getString("webdriver.factory.class")).asSubclass(WebDriverFactory.class);
-        } catch (ClassNotFoundException ex) {
-            throw new IllegalStateException("'webdriver.factory.class' is invalid.", ex);
-        }
-
-        remoteDriverUrl = Configuration.INSTANCE.getString("remote.driver.url");
-        remoteDriverPlatform = Configuration.INSTANCE.getString("remote.driver.platform");
-        remoteDriverVersion = Configuration.INSTANCE.getString("remote.driver.version");
-        remoteDriverBaseCapability = Configuration.INSTANCE.getString("remote.driver.base.capability");
 
 
         LOG.info("Using properties:\n" + Configuration.INSTANCE.getConfigurationInfo());
@@ -106,11 +87,6 @@ public enum WebdriverSubstepsPropertiesConfiguration implements WebdriverSubstep
 
     public String baseURL() {
         return baseUrl;
-    }
-
-
-    public DefaultDriverType driverType() {
-        return driverType;
     }
 
 
@@ -153,10 +129,6 @@ public enum WebdriverSubstepsPropertiesConfiguration implements WebdriverSubstep
         return htmlUnitProxyPort;
     }
 
-    public Class<? extends WebDriverFactory> getWebDriverFactoryClass() {
-        return webdriverFactoryClass;
-    }
-
     public String getNetworkProxyHost() {
         return networkProxyHost;
     }
@@ -189,34 +161,5 @@ public enum WebdriverSubstepsPropertiesConfiguration implements WebdriverSubstep
         return string;
     }
 
-    @Override
-    public String getChromeDriverPath() {
-        return chromeDriverPath;
-    }
 
-    @Override
-    public String getGeckoDriverPath(){
-        return geckoDriverPath;
-    }
-
-    @Override
-    public String getRemoteDriverUrl(){
-        
-        return remoteDriverUrl;
-    }
-
-    @Override
-    public String getRemoteDriverPlatform(){
-        return remoteDriverPlatform;
-    }
-
-    @Override
-    public String getRemoteDriverVersion(){
-        return remoteDriverVersion;
-    }
-
-    @Override
-    public String getRemoteDriverBaseCapability(){
-        return remoteDriverBaseCapability;
-    }
 }

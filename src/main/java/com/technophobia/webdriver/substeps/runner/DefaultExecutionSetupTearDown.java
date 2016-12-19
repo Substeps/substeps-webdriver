@@ -18,6 +18,8 @@
  */
 package com.technophobia.webdriver.substeps.runner;
 
+import com.technophobia.substeps.model.Configuration;
+import com.typesafe.config.Config;
 import org.openqa.selenium.WebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +34,9 @@ import com.technophobia.substeps.runner.setupteardown.Annotations.AfterEveryScen
 import com.technophobia.substeps.runner.setupteardown.Annotations.BeforeAllFeatures;
 import com.technophobia.substeps.runner.setupteardown.Annotations.BeforeEveryScenario;
 import com.technophobia.webdriver.util.WebDriverContext;
+import org.substeps.webdriver.DriverFactory;
+import org.substeps.webdriver.DriverFactoryRegistry;
+import org.substeps.webdriver.FactoryInitialiser;
 
 public class DefaultExecutionSetupTearDown {
 
@@ -46,7 +51,7 @@ public class DefaultExecutionSetupTearDown {
 //    }
 
 
-    private final MutableSupplier<WebDriverFactory> webDriverFactorySupplier  = new ExecutionContextSupplier(Scope.SUITE, "webDriverFactory");
+    private final MutableSupplier<DriverFactory> webDriverFactorySupplier  = new ExecutionContextSupplier(Scope.SUITE, DriverFactory.DRIVER_FACTORY_KEY);
 
     private final WebdriverSubstepsConfiguration configuration;
     private long startTimeMillis;
@@ -65,6 +70,9 @@ public class DefaultExecutionSetupTearDown {
     @BeforeAllFeatures
     public final void beforeAllFeaturesSetup() {
 
+        // Initialise the webdriver factories
+        FactoryInitialiser.INSTANCE.toString();
+
         final INotificationDistributor notifier = (INotificationDistributor) ExecutionContext.get(Scope.SUITE,
                 INotificationDistributor.NOTIFIER_DISTRIBUTOR_KEY);
 
@@ -82,8 +90,10 @@ public class DefaultExecutionSetupTearDown {
 
         logger.info("env prop: " + env);
 
-        WebDriverFactory factory = this.createWebDriverFactory();
-        this.webDriverFactorySupplier.set(factory);
+        Config cfg = Configuration.INSTANCE.getConfig();
+        DriverFactory driverFactory = DriverFactoryRegistry.INSTANCE.getDriverFactory(cfg);
+
+        this.webDriverFactorySupplier.set(driverFactory);
 
     }
 
@@ -98,8 +108,11 @@ public class DefaultExecutionSetupTearDown {
 
         if (createNewWebDriver) {
 
-            WebDriverFactory factory = (WebDriverFactory)this.webDriverFactorySupplier.get();
-            webDriverContextSupplier.set(new WebDriverContext(factory.driverType(), factory.createWebDriver()));
+            DriverFactory driverFactory = this.webDriverFactorySupplier.get();
+
+            Config cfg = Configuration.INSTANCE.getConfig();
+
+            webDriverContextSupplier.set(new WebDriverContext(driverFactory.getKey(), driverFactory.create(cfg)));
         }
     }
 
@@ -113,7 +126,7 @@ public class DefaultExecutionSetupTearDown {
         if (webDriverContext != null) {
 
             boolean doShutdown = this.shouldShutdown(webDriverContext);
-            WebDriverFactory factory = this.webDriverFactorySupplier.get();
+            DriverFactory factory = this.webDriverFactorySupplier.get();
 
             if(doShutdown) {
                 factory.shutdownWebDriver(webDriverContext);
@@ -204,18 +217,6 @@ public class DefaultExecutionSetupTearDown {
 
     }
 
-    private WebDriverFactory createWebDriverFactory() {
-        Class<? extends WebDriverFactory> webDriverFactoryClass = configuration.getWebDriverFactoryClass();
-
-        logger.debug("Creating WebDriverFactory of type [{}]", webDriverFactoryClass.getName());
-
-        try {
-            return webDriverFactoryClass.newInstance();
-        } catch (InstantiationException ex) {
-            throw new IllegalStateException(String.format("Failed to create WebDriverFactory %s.", webDriverFactoryClass.getName()), ex);
-        } catch (IllegalAccessException ex) {
-            throw new IllegalStateException(String.format("Failed to create WebDriverFactory %s.", webDriverFactoryClass.getName()), ex);
-        }
-    }
+///
 
 }

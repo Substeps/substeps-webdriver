@@ -18,19 +18,19 @@
  */
 package com.technophobia.webdriver.util;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import com.technophobia.webdriver.substeps.runner.Condition;
+import com.technophobia.webdriver.substeps.runner.DriverType;
+import com.technophobia.webdriver.substeps.runner.WebdriverSubstepsPropertiesConfiguration;
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.substeps.webdriver.DriverFactoryKey;
 
-import com.technophobia.webdriver.substeps.runner.Condition;
-import com.technophobia.webdriver.substeps.runner.DriverType;
-import com.technophobia.webdriver.substeps.runner.WebdriverSubstepsPropertiesConfiguration;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A container used to hold the webdriver instance and the current element used
@@ -44,7 +44,7 @@ public class WebDriverContext {
 
     public static final String EXECUTION_CONTEXT_KEY = "_webdriver_context_key";
 
-    private final DriverType driverType;
+    private final DriverFactoryKey driverFactoryKey;
     private final WebDriver webDriver;
     private final WebDriverBrowserLogs browserLogs;
 
@@ -53,8 +53,8 @@ public class WebDriverContext {
 
     private Map<String, WebElement> elementStash = null;
 
-    public WebDriverContext(final DriverType driverType, final WebDriver webDriver) {
-        this.driverType = driverType;
+    public WebDriverContext(final DriverFactoryKey driverFactoryKey, final WebDriver webDriver) {
+        this.driverFactoryKey = driverFactoryKey;
         this.webDriver = webDriver;
         browserLogs = new WebDriverBrowserLogs(webDriver);
     }
@@ -73,7 +73,11 @@ public class WebDriverContext {
     }
 
     public DriverType getDriverType() {
-        return this.driverType;
+        return this.driverFactoryKey;
+    }
+
+    public DriverFactoryKey getDriverFactoryKey(){
+        return this.driverFactoryKey;
     }
 
     public void shutdownWebDriver() {
