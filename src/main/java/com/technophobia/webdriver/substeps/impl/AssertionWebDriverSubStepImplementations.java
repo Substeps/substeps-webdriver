@@ -26,7 +26,7 @@ import static org.hamcrest.Matchers.not;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -148,6 +148,7 @@ public class AssertionWebDriverSubStepImplementations extends AbstractWebDriverS
 
         for (final WebElement item : itemList) {
             final String itemAttributeValue = item.getAttribute(attributeName);
+
             if (StringUtils.isNotBlank(itemAttributeValue) && itemAttributeValue.contains(attributeValue)) {
                 found = true;
                 break;

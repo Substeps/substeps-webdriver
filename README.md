@@ -17,6 +17,8 @@ Substeps.org Release Notes
 * Updated to selenium-3.1.  Added geckodriver configuration path
 * Added Remote webdriver capability and corresponding properties
 * Modified tests to use hosted github page (to make testing with something like saucelabs possible)
+* Moved config over to use Typesafe config
+* Modified the Factory mechanism used to creat webdrivers - to allow better extensibility and customisation
 
 1.0.2
 -----

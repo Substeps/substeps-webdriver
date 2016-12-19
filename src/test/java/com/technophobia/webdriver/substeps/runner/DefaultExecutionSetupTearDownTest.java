@@ -5,10 +5,12 @@ import static org.mockito.Mockito.when;
 
 import static org.hamcrest.CoreMatchers.is;
 
+import com.typesafe.config.Config;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openqa.selenium.WebDriver;
@@ -17,6 +19,9 @@ import com.technophobia.substeps.model.Scope;
 import com.technophobia.substeps.runner.ExecutionContext;
 import com.technophobia.webdriver.util.WebDriverContext;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.substeps.webdriver.DriverFactory;
+import org.substeps.webdriver.DriverFactoryKey;
+import org.substeps.webdriver.FirefoxDriverFactory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -42,7 +47,7 @@ public class DefaultExecutionSetupTearDownTest {
     private WebDriver.Options options;
 
     @Mock
-    WebDriverFactory factory;
+    DriverFactory factory;
 
     private WebDriverContext context;
 
@@ -61,12 +66,12 @@ public class DefaultExecutionSetupTearDownTest {
         this.std = new DefaultExecutionSetupTearDown(this.config);
 
         // initialise context with visual webdriver and set test state to failed
-        this.context = new WebDriverContext(DefaultDriverType.FIREFOX, this.webDriver);
+        this.context = new WebDriverContext(FirefoxDriverFactory.KEY, this.webDriver);
 
         ExecutionContext.put(Scope.SUITE, "webDriverFactory", this.context);
 
         // creating a new webdriver instance will use the factory.
-        ExecutionContext.put(Scope.SUITE, WebDriverFactory.WEB_DRIVER_FACTORY_KEY, this.factory);
+        ExecutionContext.put(Scope.SUITE, DriverFactory.DRIVER_FACTORY_KEY, this.factory);
     }
 
 
@@ -171,28 +176,24 @@ public class DefaultExecutionSetupTearDownTest {
     }
 
 
-    public static class TestWebDriverFactory implements WebDriverFactory{
-
-        @Override
-        public WebDriver createWebDriver() {
-            return new FirefoxDriver();
-        }
-
-        @Override
-        public DriverType driverType() {
-            return DefaultDriverType.FIREFOX;
-        }
-
-        @Override
-        public void shutdownWebDriver(WebDriverContext webDriverContext) {
-
-        }
-
-        @Override
-        public boolean resetWebDriver(WebDriverContext webDriverContext) {
-            return false;
-        }
-    }
+//    public static class TestWebDriverFactory implements WebDriverFactory{
+//
+//        @Override
+//        public WebDriver createWebDriver() {
+//            return new FirefoxDriver();
+//        }
+//
+//
+//        @Override
+//        public void shutdownWebDriver(WebDriverContext webDriverContext) {
+//
+//        }
+//
+//        @Override
+//        public boolean resetWebDriver(WebDriverContext webDriverContext) {
+//            return false;
+//        }
+//    }
 
 
 
@@ -365,7 +366,8 @@ public class DefaultExecutionSetupTearDownTest {
         this.context.setFailed();
         this.std.basePreScenarioSetup();
 
-        verify(this.factory).createWebDriver();
+        ArgumentCaptor<Config> argument = ArgumentCaptor.forClass(Config.class);
+        verify(this.factory).create(argument.capture());
     }
 
 

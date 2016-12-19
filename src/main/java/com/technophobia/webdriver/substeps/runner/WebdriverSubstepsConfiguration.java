@@ -8,8 +8,6 @@ package com.technophobia.webdriver.substeps.runner;
 public interface WebdriverSubstepsConfiguration {
     String baseURL();
 
-    DefaultDriverType driverType();
-
     String driverLocale();
 
     boolean shutDownWebdriver();
@@ -38,8 +36,6 @@ public interface WebdriverSubstepsConfiguration {
     String getNetworkProxyHost();
     
     int getNetworkProxyPort();
-    
-    Class<? extends WebDriverFactory> getWebDriverFactoryClass();
 
     String getChromeDriverPath();
 

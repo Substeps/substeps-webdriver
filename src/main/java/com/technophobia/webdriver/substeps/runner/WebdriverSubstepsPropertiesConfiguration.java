@@ -33,8 +33,6 @@ public enum WebdriverSubstepsPropertiesConfiguration implements WebdriverSubstep
 
     private final Logger LOG = LoggerFactory.getLogger(WebdriverSubstepsPropertiesConfiguration.class);
 
-    private final Class<? extends WebDriverFactory> webdriverFactoryClass;
-
     private final String baseUrl;
     private final String driverLocale;
     private final boolean reuseWebdriver;
@@ -43,7 +41,6 @@ public enum WebdriverSubstepsPropertiesConfiguration implements WebdriverSubstep
     private final boolean shutdownWebdriver;
     private final boolean htmlunitDisableJs;
     private final Integer htmlUnitProxyPort;
-    private final DefaultDriverType driverType;
     private final boolean visualWebdriverCloseOnFail;
     private final String networkProxyHost;
     private final int networkProxyPort;
@@ -71,8 +68,6 @@ public enum WebdriverSubstepsPropertiesConfiguration implements WebdriverSubstep
         System.out.println("config: \n" +
         Configuration.INSTANCE.getConfigurationInfo());
 
-        driverType = DefaultDriverType.valueOf(Configuration.INSTANCE.getString("driver.type").toUpperCase());
-
         driverLocale = Configuration.INSTANCE.getString("webdriver.locale");
 
         shutdownWebdriver = Configuration.INSTANCE.getBoolean("webdriver.shutdown");
@@ -92,11 +87,6 @@ public enum WebdriverSubstepsPropertiesConfiguration implements WebdriverSubstep
         chromeDriverPath = Configuration.INSTANCE.getString("chromedriver.path");
 
         geckoDriverPath = Configuration.INSTANCE.getString("geckodriver.path");
-        try {
-            webdriverFactoryClass = Class.forName(Configuration.INSTANCE.getString("webdriver.factory.class")).asSubclass(WebDriverFactory.class);
-        } catch (ClassNotFoundException ex) {
-            throw new IllegalStateException("'webdriver.factory.class' is invalid.", ex);
-        }
 
         remoteDriverUrl = Configuration.INSTANCE.getString("remote.driver.url");
         remoteDriverPlatform = Configuration.INSTANCE.getString("remote.driver.platform");
@@ -110,11 +100,6 @@ public enum WebdriverSubstepsPropertiesConfiguration implements WebdriverSubstep
 
     public String baseURL() {
         return baseUrl;
-    }
-
-
-    public DefaultDriverType driverType() {
-        return driverType;
     }
 
 
@@ -155,10 +140,6 @@ public enum WebdriverSubstepsPropertiesConfiguration implements WebdriverSubstep
 
     public Integer getHtmlUnitProxyPort() {
         return htmlUnitProxyPort;
-    }
-
-    public Class<? extends WebDriverFactory> getWebDriverFactoryClass() {
-        return webdriverFactoryClass;
     }
 
     public String getNetworkProxyHost() {
