@@ -18,7 +18,9 @@ Substeps.org Release Notes
 * Added Remote webdriver capability and corresponding properties
 * Modified tests to use hosted github page (to make testing with something like saucelabs possible)
 * Moved config over to use Typesafe config
-* Modified the Factory mechanism used to creat webdrivers - to allow better extensibility and customisation
+* Modified the Factory mechanism used to create webdrivers - to allow better extensibility and customisation
+* Used WebdriverManager to handle downloading the appropriate drivers for chrome, firefox etc.  Will use latest unless specifc versions in localhost.conf.
+  see Chrome/Firefox Driver Factories for examples.
 
 1.0.2
 -----

@@ -1,6 +1,8 @@
 package org.substeps.webdriver;
 
 import com.typesafe.config.Config;
+import io.github.bonigarcia.wdm.ChromeDriverManager;
+import io.github.bonigarcia.wdm.FirefoxDriverManager;
 import org.junit.Assert;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -19,6 +21,9 @@ public class FirefoxDriverFactory extends BaseDriverFactory implements DriverFac
 
     public static DriverFactoryKey KEY = new DriverFactoryKey("FIREFOX", true, FirefoxDriverFactory.class);
 
+    private static final String FIREFOXDRIVER_VERSION_KEY = "firefoxdriver.version";
+
+
     @Override
     public DriverFactoryKey getKey() {
         return KEY;
@@ -29,6 +34,15 @@ public class FirefoxDriverFactory extends BaseDriverFactory implements DriverFac
 
         log.debug("creating firefox driver");
 
+        setupWebdriverManagerGithubAuth(cfg);
+
+        if (cfg.hasPath(FIREFOXDRIVER_VERSION_KEY)) {
+            FirefoxDriverManager.getInstance().setup(cfg.getString(FIREFOXDRIVER_VERSION_KEY));
+        }
+        else {
+            FirefoxDriverManager.getInstance().setup();
+        }
+
         FirefoxProfile fp = new FirefoxProfile();
         fp.setPreference("browser.startup.homepage", "about:blank");
         fp.setPreference("startup.homepage_welcome_url", "about:blank");
@@ -37,13 +51,6 @@ public class FirefoxDriverFactory extends BaseDriverFactory implements DriverFac
 
         fp.setPreference("gecko.mstone", "ignore");
 
-        String preset = System.getProperty("webdriver.gecko.driver");
-
-        if (preset == null) {
-            String driverPath = cfg.getString("geckodriver.path");
-            Assert.assertNotNull("Geckodriver path not set as a -Dwebdriver.gecko.driver parameter or in config", driverPath);
-            System.setProperty("webdriver.gecko.driver", driverPath);
-        }
 
         final DesiredCapabilities firefoxCapabilities = DesiredCapabilities.firefox();
 

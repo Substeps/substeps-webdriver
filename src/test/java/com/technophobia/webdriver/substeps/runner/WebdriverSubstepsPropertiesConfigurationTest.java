@@ -25,14 +25,29 @@ import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.*;
 
 /**
  * @author imoore
  */
 public class WebdriverSubstepsPropertiesConfigurationTest {
+
+    private static String presetEnv;
+
+    @BeforeClass
+    public static void captureEnvVar(){
+
+        presetEnv = System.getProperty("environment");
+        System.clearProperty("environment");
+    }
+
+    @AfterClass
+    public static void resetEnvVar(){
+
+        if (presetEnv != null) {
+            System.setProperty("environment", presetEnv);
+        }
+    }
 
     @Ignore
     @Test

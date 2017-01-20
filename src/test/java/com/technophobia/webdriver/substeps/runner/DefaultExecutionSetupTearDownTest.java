@@ -6,9 +6,7 @@ import static org.mockito.Mockito.when;
 import static org.hamcrest.CoreMatchers.is;
 
 import com.typesafe.config.Config;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
@@ -51,6 +49,22 @@ public class DefaultExecutionSetupTearDownTest {
 
     private WebDriverContext context;
 
+    private static String presetEnv;
+
+    @BeforeClass
+    public static void captureEnvVar(){
+
+        presetEnv = System.getProperty("environment");
+        System.clearProperty("environment");
+    }
+
+    @AfterClass
+    public static void resetEnvVar(){
+
+        if (presetEnv != null) {
+            System.setProperty("environment", presetEnv);
+        }
+    }
 
     @Before
     public void initialiseDependencies() throws NoSuchMethodException {

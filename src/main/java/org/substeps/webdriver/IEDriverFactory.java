@@ -1,6 +1,8 @@
 package org.substeps.webdriver;
 
 import com.typesafe.config.Config;
+import io.github.bonigarcia.wdm.FirefoxDriverManager;
+import io.github.bonigarcia.wdm.InternetExplorerDriverManager;
 import org.junit.Assert;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -20,6 +22,8 @@ public class IEDriverFactory extends BaseDriverFactory implements DriverFactory{
 
     public static DriverFactoryKey KEY = new DriverFactoryKey("IE", true, IEDriverFactory.class);
 
+    private static final String IEDRIVER_VERSION_KEY = "iedriver.version";
+
     @Override
     public DriverFactoryKey getKey() {
         return KEY;
@@ -29,6 +33,14 @@ public class IEDriverFactory extends BaseDriverFactory implements DriverFactory{
     public WebDriver create(Config cfg) {
 
         log.debug("creating IE driver");
+
+        if (cfg.hasPath(IEDRIVER_VERSION_KEY)) {
+            InternetExplorerDriverManager.getInstance().setup(cfg.getString(IEDRIVER_VERSION_KEY));
+        }
+        else {
+            InternetExplorerDriverManager.getInstance().setup();
+        }
+
 
         // apparently this is required to get around some IE security
         // restriction.
