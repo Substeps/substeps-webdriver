@@ -19,6 +19,7 @@ public class IEDriverFactory extends BaseDriverFactory implements DriverFactory{
 
     private static final Logger log = LoggerFactory.getLogger(IEDriverFactory.class);
 
+
     public static DriverFactoryKey KEY = new DriverFactoryKey("IE", true, IEDriverFactory.class);
 
     private static final String IEDRIVER_VERSION_KEY = "iedriver.version";
