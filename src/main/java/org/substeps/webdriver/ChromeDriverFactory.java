@@ -1,6 +1,7 @@
 package org.substeps.webdriver;
 
 import com.typesafe.config.Config;
+import io.github.bonigarcia.wdm.ChromeDriverManager;
 import org.junit.Assert;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -17,17 +18,18 @@ public class ChromeDriverFactory extends BaseDriverFactory implements DriverFact
 
     public static DriverFactoryKey KEY = new DriverFactoryKey("CHROME", true, ChromeDriverFactory.class);
 
+    private static final String CHROMEDRIVER_VERSION_KEY = "chromedriver.version";
+
     @Override
     public WebDriver create(Config cfg) {
 
         log.debug("creating chrome driver");
 
-        String preset = System.getProperty("webdriver.chrome.driver");
-
-        if (preset == null) {
-            String driverPath = cfg.getString("chromedriver.path");
-            Assert.assertNotNull("Chromedriver path not set as a -Dwebdriver.chrome.driver parameter or in config", driverPath);
-            System.setProperty("webdriver.chrome.driver", driverPath);
+        if (cfg.hasPath(CHROMEDRIVER_VERSION_KEY)) {
+           ChromeDriverManager.getInstance().setup(cfg.getString(CHROMEDRIVER_VERSION_KEY));
+        }
+        else {
+            ChromeDriverManager.getInstance().setup();
         }
 
         final DesiredCapabilities chromeCapabilities = DesiredCapabilities.chrome();

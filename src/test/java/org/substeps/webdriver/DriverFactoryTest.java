@@ -3,15 +3,30 @@ package org.substeps.webdriver;
 import com.technophobia.substeps.model.Configuration;
 import com.technophobia.webdriver.substeps.runner.WebdriverSubstepsPropertiesConfiguration;
 import com.typesafe.config.Config;
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.*;
 import org.openqa.selenium.WebDriver;
 
 /**
  * Created by ian on 12/12/16.
  */
 public class DriverFactoryTest {
+
+    private static String presetEnv;
+
+    @BeforeClass
+    public static void captureEnvVar(){
+
+        presetEnv = System.getProperty("environment");
+        System.clearProperty("environment");
+    }
+
+    @AfterClass
+    public static void resetEnvVar(){
+
+        if (presetEnv != null) {
+            System.setProperty("environment", presetEnv);
+        }
+    }
 
     @Test
     public void testWebDriverFactoryCreate() {
