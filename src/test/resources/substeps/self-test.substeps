@@ -175,4 +175,13 @@ Define: Check to see if I wait until the div I've just made visbile in 2 secs is
 	Click
 
 Define: blah <css_selector>
-	    FIndByCss "#whatevs .doodah"
+	    FindByCss "#whatevs .doodah"
+
+Define: And I can find an h4 tag with a css regex
+	    FindByTag "h4" with cssClassRegex ".* markerClass-\d .*"
+
+Define: And I can find an h4 tag with a css regex and text
+	    FindByTag "h4" with cssClassRegex ".* markerClass-\d .*" and text "Another heading"
+
+Define: Not exist
+        Does not exist

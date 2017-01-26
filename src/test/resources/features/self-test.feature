@@ -48,7 +48,10 @@ Scenario: a scenario
     
     And I can find a table with caption "There are 2 comments awaiting moderation"
     And I can find a table with an error caption 
-	
+
+	And I can find an h4 tag with a css regex
+	And I can find an h4 tag with a css regex and text
+
 ##################################################################	
 	# these tests need to be last as they go off to google
 	Given I go to an external page such as Github
