@@ -121,7 +121,7 @@
 		<hamcrest.version>1.3.RC2</hamcrest.version>
 		<junit.version>4.11</junit.version>
 
-        <substeps.framework.version>1.0.4</substeps.framework.version>
+        <substeps.framework.version>1.0.5-SNAPSHOT</substeps.framework.version>
 
         <slf4j.version>1.7.13</slf4j.version>
 
@@ -290,28 +290,6 @@
 
     <profiles>
 
-    <!-- A profile used by default for internal dev, using the repos set up in proeprties defined above, rather than the OSS nexus repos -->
-<!--
-        <profile>
-            <id>internalDev</id>
-
-            <distributionManagement>
-                <snapshotRepository>
-                    <id>${nexus.snapshot.artifacts}</id>
-                    <name>${nexus.snapshot.artifacts}</name>
-                    <url>${nexus.snapshot.url}</url>
-                    <uniqueVersion>false</uniqueVersion>
-                </snapshotRepository>
-                <repository>
-                    <id>${nexus.release.artifacts}</id>
-                    <name>${nexus.release.artifacts}</name>
-                    <url>${nexus.releases.url}</url>
-                </repository>
-            </distributionManagement>
-
-        </profile>
--->
-
 
         <profile>
             <id>self-test</id>
@@ -320,21 +298,6 @@
             <!--</activation>-->
 
             <build>
-<!--                <pluginManagement>
-                    <plugins>
-                        <plugin>
-                            <groupId>org.apache.maven.plugins</groupId>
-                            <artifactId>maven-compiler-plugin</artifactId>
-                            <configuration>
-                                 <compilerArgument>-g</compilerArgument>
-                                &lt;!&ndash;<source>${compileSource}</source>&ndash;&gt;
-                                &lt;!&ndash;<target>${compileTarget}</target>&ndash;&gt;
-                            </configuration>
-                        </plugin>
-                    </plugins>
-
-                </pluginManagement>-->
-
 
                 <plugins>
 
@@ -352,12 +315,6 @@
                                 </goals>
                                 <configuration>
 
-<!--
-		                            <jvmArgs>
-		                            	<jvmArg>-javaagent:${sonar.jacoco.jar}=destfile=${sonar.jacoco.itReportPath},includes=org.substeps.*</jvmArg>
-		                            </jvmArgs>
--->
-
                                 </configuration>
                             </execution>
 
@@ -374,10 +331,6 @@
                         <configuration>
 
                             <runTestsInForkedVM>false</runTestsInForkedVM>
-<!--
-                            <log4jConfigPath>${basedir}/src/test/resources/log4j.xml</log4jConfigPath>
--->
-
 
                             <executionConfigs>
 
@@ -474,6 +427,11 @@
                             <param>com.technophobia.webdriver.substeps.impl.FormWebDriverSubStepImplementations</param>
                             <param>com.technophobia.webdriver.substeps.impl.StartupWebDriverSubStepImplementations</param>
                             <param>com.technophobia.webdriver.substeps.impl.TableSubStepImplementations</param>
+                            <param>com.technophobia.webdriver.substeps.impl.CssStepImplementations</param>
+                            <param>com.technophobia.webdriver.substeps.impl.IFrameAndWindowSubstepImplementations</param>
+                            <param>com.technophobia.webdriver.substeps.impl.NewFinderStepImplementations</param>
+
+
                         </stepImplementationClassNames>
 
                         <glossaryPublisher implementation="com.technophobia.substeps.glossary.JsonSubstepsPublisher">
