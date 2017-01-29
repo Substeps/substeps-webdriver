@@ -24,6 +24,7 @@ import java.util.Map;
 import com.technophobia.substeps.model.Scope;
 import com.technophobia.substeps.runner.ExecutionContextSupplier;
 import com.technophobia.substeps.runner.MutableSupplier;
+import com.technophobia.webdriver.substeps.runner.WebdriverSubstepsPropertiesConfiguration;
 import org.junit.Assert;
 import org.openqa.selenium.*;
 
@@ -33,6 +34,8 @@ import com.google.common.collect.Maps;
 import com.technophobia.substeps.runner.ProvidesScreenshot;
 import com.technophobia.webdriver.substeps.runner.DefaultExecutionSetupTearDown;
 import com.technophobia.webdriver.util.WebDriverContext;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 public abstract class AbstractWebDriverSubStepImplementations implements ProvidesScreenshot {
 
@@ -49,6 +52,11 @@ public abstract class AbstractWebDriverSubStepImplementations implements Provide
 //    public AbstractWebDriverSubStepImplementations(final Supplier<WebDriverContext> webDriverContextSupplier) {
 //        this.webDriverContextSupplier = webDriverContextSupplier;
 //    }
+
+    protected <T> T waitUntil(ExpectedCondition<T> ec) {
+        WebDriverWait wait = new WebDriverWait(webDriver(), WebdriverSubstepsPropertiesConfiguration.INSTANCE.defaultTimeout());
+        return wait.until(ec);
+    }
 
 
     protected WebElement waitFor(By by, String... messages) {

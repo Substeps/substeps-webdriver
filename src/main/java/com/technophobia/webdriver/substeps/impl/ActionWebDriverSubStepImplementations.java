@@ -18,7 +18,21 @@
  */
 package com.technophobia.webdriver.substeps.impl;
 
-import static org.hamcrest.CoreMatchers.is;
+import com.technophobia.substeps.model.Configuration;
+import com.technophobia.substeps.model.SubSteps;
+import com.technophobia.substeps.model.SubSteps.Step;
+import com.technophobia.substeps.model.SubSteps.StepImplementations;
+import com.technophobia.webdriver.substeps.runner.Condition;
+import com.technophobia.webdriver.substeps.runner.DefaultExecutionSetupTearDown;
+import com.technophobia.webdriver.substeps.runner.WebdriverSubstepsPropertiesConfiguration;
+import com.technophobia.webdriver.util.WebDriverSubstepsBy;
+import org.junit.Assert;
+import org.openqa.selenium.*;
+import org.openqa.selenium.WebDriver.TargetLocator;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.net.URI;
@@ -26,29 +40,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.technophobia.substeps.model.Configuration;
-import com.technophobia.substeps.model.SubSteps;
-import com.technophobia.webdriver.substeps.runner.*;
-
-import com.technophobia.webdriver.util.WebDriverSubstepsBy;
-import org.junit.Assert;
-import org.openqa.selenium.Alert;
-import org.openqa.selenium.By;
-import org.openqa.selenium.ElementNotVisibleException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebDriver.TargetLocator;
-import org.openqa.selenium.WebDriverException;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.google.common.base.Supplier;
-import com.technophobia.substeps.model.SubSteps.Step;
-import com.technophobia.substeps.model.SubSteps.StepImplementations;
-import com.technophobia.webdriver.util.WebDriverContext;
+import static org.hamcrest.CoreMatchers.is;
 
 @StepImplementations(requiredInitialisationClasses = DefaultExecutionSetupTearDown.class)
 public class ActionWebDriverSubStepImplementations extends AbstractWebDriverSubStepImplementations {
@@ -142,8 +134,7 @@ public class ActionWebDriverSubStepImplementations extends AbstractWebDriverSubS
         WebElement currentElement = webDriverContext().getCurrentElement();
         Assert.assertNotNull("currentElement can't be null", currentElement );
 
-        WebDriverWait wait = new WebDriverWait(webDriver(), 15000);
-        wait.until( ExpectedConditions.elementToBeClickable(currentElement));
+        waitUntil( ExpectedConditions.elementToBeClickable(currentElement));
 
         currentElement.click();
 
@@ -197,10 +188,9 @@ public class ActionWebDriverSubStepImplementations extends AbstractWebDriverSubS
         waitFor(by, "expecting an element with tag", "button", "and text", text);
 
 
-        WebDriverWait wait = new WebDriverWait(this.webDriver(), 5);
 
         logger.debug("about to wait until element clickable");
-        wait.until(ExpectedConditions.elementToBeClickable(by));
+        waitUntil(ExpectedConditions.elementToBeClickable(by));
 
         logger.debug("element should be clickable");
 
@@ -269,9 +259,8 @@ public class ActionWebDriverSubStepImplementations extends AbstractWebDriverSubS
 
         final By by = WebDriverSubstepsBy.ByTagAndWithText("button", buttonText);
         waitFor(by, "expecting an element with tag", "button", "and text", buttonText);
-        WebDriverWait wait = new WebDriverWait(this.webDriver(), 5);
         logger.debug("about to wait until element clickable");
-        wait.until(ExpectedConditions.elementToBeClickable(by));
+        waitUntil(ExpectedConditions.elementToBeClickable(by));
         logger.debug("element should be clickable");
         this.webDriverContext().getCurrentElement().click();
     }
