@@ -88,6 +88,16 @@ public class CssStepImplementations  extends AbstractWebDriverSubStepImplementat
         }
     }
 
+
+    @SubSteps.Step("FindByCss \"([^\"]*)\"")
+    public void findWithCssClass(String cssClassName) {
+
+        By by = new By.ByClassName(cssClassName);
+        waitFor(by, "expecting an element with class ", cssClassName);
+
+    }
+
+
     @SubSteps.Step("FindByCssClass \"([^\"]*)\" with text \"([^\"]*)\"")
     public void findByCssClassWithText(final String cssClass, final String text) {
         By by = WebDriverSubstepsBy.ByCssWithText(cssClass, text);
@@ -245,7 +255,7 @@ public class CssStepImplementations  extends AbstractWebDriverSubStepImplementat
 
         }
 
-        Assert.assertNotNull("expecting an element back from the shizzle selector: " + secondCss, secondCss);
+        Assert.assertNotNull("expecting an element back from the css selector: " + secondCss, secondCss);
         this.webDriverContext().setCurrentElement(secondCss);
         return secondCss;
     }
@@ -258,15 +268,13 @@ public class CssStepImplementations  extends AbstractWebDriverSubStepImplementat
      */
     @SubSteps.Step("WaitFor CSS Selector \"([^\"]*)\" to be visibile")
     public void waitForCssSelector(String cssSelector) {
-        WebDriverWait wait = new WebDriverWait(webDriver(), (3));
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(cssSelector)));
+        waitUntil(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(cssSelector)));
     }
 
     @SubSteps.Step("WaitFor CSS Selector \"([^\"]*)\" to be invisibile")
     public void waitForCssSelectorToHide(String cssSelector) {
 
-        WebDriverWait wait = new WebDriverWait(webDriver(), 15000);
-        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.cssSelector(cssSelector)));
+        waitUntil(ExpectedConditions.invisibilityOfElementLocated(By.cssSelector(cssSelector)));
     }
 
 }

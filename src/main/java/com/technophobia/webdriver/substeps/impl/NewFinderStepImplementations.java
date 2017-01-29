@@ -4,13 +4,14 @@ import com.google.common.io.Files;
 import com.technophobia.substeps.model.Configuration;
 import com.technophobia.substeps.model.SubSteps;
 import com.technophobia.webdriver.substeps.runner.DefaultExecutionSetupTearDown;
-import com.technophobia.webdriver.substeps.runner.WebdriverSubstepsPropertiesConfiguration;
 import com.technophobia.webdriver.util.WebDriverSubstepsBy;
 import org.junit.Assert;
-import org.openqa.selenium.*;
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.NotFoundException;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,7 +20,6 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -35,12 +35,20 @@ public class NewFinderStepImplementations extends AbstractWebDriverSubStepImplem
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyMMddHHmm");
 
 
-    // the substeps one in is quoted..
+    // xpath query //*[contains(@id, 'f41_txt')]
+    // $x("//*[@id='sogei_mapping_left_container']")
+
+    // $x("//*[@id='sogei_mapping_left_container']//div[contains(text(),'BANDY')]")  selects the item
+
+    // Handy little ! xpath to get to the chevron to do the whatsit
+    // $x("//*[@id='sogei_mapping_left_container']//div[contains(text(),'BASKET')]/ancestor::div[contains(@class, 'mapperItem draggable')]//div[contains(@class, 'chevron')]")
+
+
     @SubSteps.Step("FindByXpath2 (.*)$")
     public WebElement findByXpath2(String xpath) {
 
         logger.debug("Looking for item with xpath " + xpath);
-        this.webDriverContext().setCurrentElement((WebElement)null);
+        this.webDriverContext().setCurrentElement(null);
         WebElement elem = this.webDriverContext().waitForElement(By.xpath(xpath));
         Assert.assertNotNull("expecting an element with xpath " + xpath, elem);
         this.webDriverContext().setCurrentElement(elem);
@@ -202,17 +210,17 @@ public class NewFinderStepImplementations extends AbstractWebDriverSubStepImplem
     @SubSteps.Step("WaitFor id \"([^\"]*)\" to hide")
     public void waitForElementToHide(String id) {
 
-        WebDriverWait wait = new WebDriverWait(webDriver(), 15000);
-        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.id(id)));
+        waitUntil(ExpectedConditions.invisibilityOfElementLocated(By.id(id)));
 
 
     }
 
+
+
     @SubSteps.Step("WaitFor id \"([^\"]*)\" to be visible")
     public void waitForElementToBeVisible(String id) {
 
-        WebDriverWait wait = new WebDriverWait(webDriver(), WebdriverSubstepsPropertiesConfiguration.INSTANCE.defaultTimeout());
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id(id)));
+        waitUntil(ExpectedConditions.visibilityOfElementLocated(By.id(id)));
     }
 
 
@@ -225,5 +233,21 @@ public class NewFinderStepImplementations extends AbstractWebDriverSubStepImplem
         logger.warn("silent test success...");
     }
 
+
+    @SubSteps.Step("FindByTag \"([^\"]*)\" with text \"([^\"]*)\"")
+    public void findByTagAndText(final String tag, String text) {
+
+        final By by = WebDriverSubstepsBy.ByTagAndWithText(tag, text);
+
+        waitFor(by, "expecting an element with tag", tag, "and text", text);
+    }
+
+    @SubSteps.Step("FindByTag \"([^\"]*)\" containing text \"([^\"]*)\"")
+    public void findByTagContainingText(final String tag, String text) {
+
+        final By by = WebDriverSubstepsBy.ByTagContainingText(tag, text);
+
+        waitFor(by, "expecting an element with tag", tag, "and text", text);
+    }
 
 }
