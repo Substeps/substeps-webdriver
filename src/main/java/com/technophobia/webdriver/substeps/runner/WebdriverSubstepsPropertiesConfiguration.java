@@ -50,17 +50,9 @@ public enum WebdriverSubstepsPropertiesConfiguration implements WebdriverSubstep
 
     private WebdriverSubstepsPropertiesConfiguration() {
 
-//        final URL defaultURL = getClass().getResource("/default-webdriver-substeps.properties");
-//
-//        Assert.assertNotNull(defaultURL);
-//
-//        Configuration.INSTANCE.addDefaultProperties(defaultURL, "default-webdriver");
-//        System.out.println("System.getProperty(\"environment\", \"localhost\") + \".properties\";" + System.getProperty("environment", "localhost") + ".properties");
 
         baseUrl = determineBaseURL(Configuration.INSTANCE.getString("base.url"));
 
-        System.out.println("config: \n" +
-        Configuration.INSTANCE.getConfigurationInfo());
 
         driverLocale = Configuration.INSTANCE.getString("webdriver.locale");
 

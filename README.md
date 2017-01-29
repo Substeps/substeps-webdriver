@@ -11,6 +11,11 @@ There is also a [Substeps Google group](http://groups.google.com/group/substeps?
 
 Substeps.org Release Notes
 ==========================
+
+1.0.4
+-----
+* More step implementations...
+
 1.0.3
 -----
 * Firefox webdriver starts with blank page rather than the 'learn more' page
