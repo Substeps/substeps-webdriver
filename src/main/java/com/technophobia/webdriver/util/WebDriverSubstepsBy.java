@@ -22,8 +22,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
+import org.hamcrest.Matcher;
+import org.hamcrest.Matchers;
 import org.openqa.selenium.By;
 import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.StaleElementReferenceException;
@@ -487,6 +490,281 @@ public abstract class WebDriverSubstepsBy {
 
             return matchingElems;
         }
-    }    
-    
+    }
+
+
+
+    public static ByTagWithCssClassWildcard ByTagWithCssClassWildcard(final String tagName,
+                                                                      final String cssClassRegEx) {
+        return new ByTagWithCssClassWildcard(tagName, cssClassRegEx, null);
+    }
+
+    public static ByTagWithCssClassWildcardAndTextMatching ByTagWithCssClassWildcardContainingText(final String tagName,
+                                                                                                   final String cssClassRegEx, String text){
+        return new ByTagWithCssClassWildcardAndTextMatching(tagName, cssClassRegEx, null, Matchers.containsString(text));
+    }
+
+    public static ByTagWithCssClassWildcard ByTagWithCssClassWildcard(final String tagName,
+                                                                      final String cssClassRegEx,
+                                                                      final String cssClassExcludesRegex) {
+        return new ByTagWithCssClassWildcard(tagName, cssClassRegEx, cssClassExcludesRegex);
+    }
+
+    public static ByCssWithText ByCssWithText(final String cssClassName, final String expectedText) {
+        return new ByCssWithText(cssClassName, expectedText);
+    }
+
+    public static ByCssContainingText ByCssContainingText(final String cssClassName, final String expectedText) {
+        return new ByCssContainingText(cssClassName, expectedText);
+    }
+
+
+    public static ByCssSelectorWithText ByCssSelectorWithText(final String cssSelector, final String expectedText) {
+        return new ByCssSelectorWithText(cssSelector, expectedText);
+    }
+
+    public static ByIdWithTextMatchingRegex ByIdWithTextMatchingRegex(final String id, final String regEx){
+        return new ByIdWithTextMatchingRegex(id, regEx);
+    }
+
+
+    static class ByTagWithCssClassWildcard extends BaseBy {
+
+        private final String tagName;
+        private final Pattern cssClassRegEx;
+        private final Pattern cssClassExcludesRegEx;
+
+        private static Logger logger = LoggerFactory.getLogger(ByTagWithCssClassWildcard.class);
+
+        ByTagWithCssClassWildcard(final String tagName, final String cssClassRegEx, final String cssClassExcludesRegEx) {
+            this.tagName = tagName;
+            this.cssClassRegEx = Pattern.compile(cssClassRegEx);
+
+            if (cssClassExcludesRegEx != null){
+                this.cssClassExcludesRegEx = Pattern.compile(cssClassExcludesRegEx);
+            }
+            else {
+                this.cssClassExcludesRegEx = null;
+            }
+        }
+
+
+        @Override
+        public List<WebElement> findElementsBy(final SearchContext context) {
+
+            List<WebElement> matchingElems = null;
+            boolean done = false;
+            while (!done) {
+                try {
+                    final List<WebElement> tagElements = context.findElements(By.tagName(this.tagName));
+
+                    for (final WebElement e : tagElements) {
+
+                        String classString = e.getAttribute("class");
+
+                        //System.out.println("got div class: " + classString);
+
+                        if ((cssClassRegEx.matcher(classString).matches() && cssClassExcludesRegEx == null) ||
+                                (cssClassRegEx.matcher(classString).matches() && cssClassExcludesRegEx != null && !cssClassExcludesRegEx.matcher(classString).matches())) {
+
+                            if (matchingElems == null) {
+                                matchingElems = new ArrayList<WebElement>();
+                            }
+                            matchingElems.add(e);
+                        }
+                    }
+                    done = true;
+
+                } catch (StaleElementReferenceException e) {
+                    logger.debug("got a stale element exception");
+                }
+            }
+            return matchingElems;
+        }
+    }
+
+
+    static class ByTagWithCssClassWildcardAndTextMatching extends BaseBy {
+
+        private final String tagName;
+        private final Pattern cssClassRegEx;
+        private final Pattern cssClassExcludesRegEx;
+        private final Matcher<String> stringMatcher;
+
+
+        ByTagWithCssClassWildcardAndTextMatching(final String tagName, final String cssClassRegEx,
+                                                 final String cssClassExcludesRegEx, final Matcher<String> stringMatcher) {
+            this.tagName = tagName;
+            this.cssClassRegEx = Pattern.compile(cssClassRegEx);
+            this.stringMatcher = stringMatcher;
+
+            if (cssClassExcludesRegEx != null){
+                this.cssClassExcludesRegEx = Pattern.compile(cssClassExcludesRegEx);
+            }
+            else {
+                this.cssClassExcludesRegEx = null;
+            }
+        }
+
+
+        @Override
+        public List<WebElement> findElementsBy(final SearchContext context) {
+
+            List<WebElement> matchingElems = null;
+
+            final List<WebElement> tagElements = context.findElements(By.tagName(this.tagName));
+
+            for (final WebElement e : tagElements) {
+
+                String classString = e.getAttribute("class");
+                if (this.stringMatcher.matches(e.getText()) && ( (cssClassRegEx.matcher(classString).matches() && cssClassExcludesRegEx == null) ||
+                        (cssClassRegEx.matcher(classString).matches() && cssClassExcludesRegEx != null && !cssClassExcludesRegEx.matcher(classString).matches()))){
+
+                    if (matchingElems == null) {
+                        matchingElems = new ArrayList<WebElement>();
+                    }
+                    matchingElems.add(e);
+                }
+            }
+
+            return matchingElems;
+        }
+    }
+
+    public static class ByIdWithTextMatchingRegex extends BaseBy {
+        private static Logger logger = LoggerFactory.getLogger(ByIdWithTextMatchingRegex.class);
+        protected final Pattern pattern;
+        protected final String id;
+
+        ByIdWithTextMatchingRegex(String id, String regEx) {
+            this.id = id;
+            this.pattern = Pattern.compile(regEx);
+        }
+
+
+        public List<WebElement> findElementsBy(SearchContext context) {
+            List<WebElement> elems = context.findElements(By.id(this.id));
+
+            if(elems != null) {
+                if (elems.size() == 1){
+                    String text = elems.get(0).getText();
+
+                    if (pattern.matcher(text).matches()){
+                        return elems;
+                    }
+                    else {
+                        logger.debug("no reg ex match on text: " + text + " for regex: " + pattern.pattern());
+                    }
+                }
+                else {
+                    logger.error("To many elements found for Id: " + id);
+                }
+            }
+            return null;
+        }
+    }
+
+
+    static class ByCssWithText extends BaseBy {
+
+        private final String cssClassName;
+        private final String expectedText;
+
+
+        ByCssWithText(final String cssClassName, final String expectedText) {
+            this.cssClassName = cssClassName;
+            this.expectedText = expectedText;
+        }
+
+
+        @Override
+        public List<WebElement> findElementsBy(final SearchContext context) {
+
+            List<WebElement> matchingElems = null;
+
+            final List<WebElement> tagElements = context.findElements(new ByClassName(this.cssClassName));
+
+            for (final WebElement e : tagElements) {
+
+                if (e.getText().equals(expectedText)){
+
+                    if (matchingElems == null) {
+                        matchingElems = new ArrayList<WebElement>();
+                    }
+                    matchingElems.add(e);
+                }
+            }
+
+            return matchingElems;
+        }
+    }
+
+    static class ByCssContainingText extends BaseBy {
+
+        private final String cssClassName;
+        private final String expectedText;
+
+
+        ByCssContainingText(final String cssClassName, final String expectedText) {
+            this.cssClassName = cssClassName;
+            this.expectedText = expectedText;
+        }
+
+
+        @Override
+        public List<WebElement> findElementsBy(final SearchContext context) {
+
+            List<WebElement> matchingElems = null;
+
+            final List<WebElement> tagElements = context.findElements(new ByClassName(this.cssClassName));
+
+            for (final WebElement e : tagElements) {
+
+                if (e.getText().contains(expectedText)){
+
+                    if (matchingElems == null) {
+                        matchingElems = new ArrayList<WebElement>();
+                    }
+                    matchingElems.add(e);
+                }
+            }
+
+            return matchingElems;
+        }
+    }
+
+    static class ByCssSelectorWithText extends BaseBy {
+
+        private final String cssSelector;
+        private final String expectedText;
+
+
+        ByCssSelectorWithText(final String cssSelector, final String expectedText) {
+            this.cssSelector = cssSelector;
+            this.expectedText = expectedText;
+        }
+
+
+        @Override
+        public List<WebElement> findElementsBy(final SearchContext context) {
+
+            List<WebElement> matchingElems = null;
+
+            final List<WebElement> tagElements = context.findElements(new ByCssSelector(this.cssSelector));
+
+            for (final WebElement e : tagElements) {
+
+                if (e.getText().equals(expectedText)){
+
+                    if (matchingElems == null) {
+                        matchingElems = new ArrayList<WebElement>();
+                    }
+                    matchingElems.add(e);
+                }
+            }
+
+            return matchingElems;
+        }
+    }
+
 }

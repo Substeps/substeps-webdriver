@@ -24,10 +24,8 @@ import java.util.Map;
 import com.technophobia.substeps.model.Scope;
 import com.technophobia.substeps.runner.ExecutionContextSupplier;
 import com.technophobia.substeps.runner.MutableSupplier;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.junit.Assert;
+import org.openqa.selenium.*;
 
 import com.google.common.base.Supplier;
 import com.google.common.collect.MapDifference;
@@ -51,6 +49,41 @@ public abstract class AbstractWebDriverSubStepImplementations implements Provide
 //    public AbstractWebDriverSubStepImplementations(final Supplier<WebDriverContext> webDriverContextSupplier) {
 //        this.webDriverContextSupplier = webDriverContextSupplier;
 //    }
+
+
+    protected WebElement waitFor(By by, String... messages) {
+        this.webDriverContext().setCurrentElement(null);
+
+        WebElement elem = this.webDriverContext().waitForElement(by);
+
+        StringBuilder buf = new StringBuilder();
+
+        for (String s : messages) {
+            buf.append(s).append(" ");
+        }
+
+        Assert.assertNotNull(buf.toString(), elem);
+        this.webDriverContext().setCurrentElement(elem);
+
+        return elem;
+    }
+
+    protected WebElement waitFor(By by, long timeout, String... messages) {
+        this.webDriverContext().setCurrentElement(null);
+
+        WebElement elem = this.webDriverContext().waitForElement(by, timeout);
+
+        StringBuilder buf = new StringBuilder();
+
+        for (String s : messages) {
+            buf.append(s).append(" ");
+        }
+
+        Assert.assertNotNull(buf.toString(), elem);
+        this.webDriverContext().setCurrentElement(elem);
+
+        return elem;
+    }
 
 
     protected boolean elementHasExpectedAttributes(final WebElement e, final Map<String, String> expectedAttributes) {

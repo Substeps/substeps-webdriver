@@ -20,13 +20,17 @@ package com.technophobia.webdriver.substeps.impl;
 
 import static org.hamcrest.CoreMatchers.is;
 
+import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.technophobia.substeps.model.Configuration;
+import com.technophobia.substeps.model.SubSteps;
 import com.technophobia.webdriver.substeps.runner.*;
 
+import com.technophobia.webdriver.util.WebDriverSubstepsBy;
 import org.junit.Assert;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
@@ -86,6 +90,21 @@ public class ActionWebDriverSubStepImplementations extends AbstractWebDriverSubS
     }
 
 
+    @SubSteps.Step("NavigateTo url property \"([^\"]*)\"")
+    public void navigateToProperty(final String baseUrlProperty) {
+
+        final String url = Configuration.INSTANCE.getString(baseUrlProperty);
+
+        logger.debug("About to navigate to base url : " + url);
+
+        if (url.startsWith("file") || url.startsWith("http")) {
+            webDriver().get(url);
+        } else {
+            webDriver().get(normalise(url));
+        }
+    }
+
+
     /**
      * Find an element by id, then click it.
      * 
@@ -116,7 +135,80 @@ public class ActionWebDriverSubStepImplementations extends AbstractWebDriverSubS
         clickElementWhenAvailable(element);
     }
 
-    
+
+    @SubSteps.Step("ClickWhenClickable")
+    public void clickWhenClickable(){
+
+        WebElement currentElement = webDriverContext().getCurrentElement();
+        Assert.assertNotNull("currentElement can't be null", currentElement );
+
+        WebDriverWait wait = new WebDriverWait(webDriver(), 15000);
+        wait.until( ExpectedConditions.elementToBeClickable(currentElement));
+
+        currentElement.click();
+
+    }
+
+
+    @SubSteps.Step("SendKeys pathOf property \"([^\"]*)\" to current element")
+    public void sendKeysToCurrentElement(String filePropertyName) {
+
+        String fileName = Configuration.INSTANCE.getString(filePropertyName);
+
+        logger.debug("csv filename: " + fileName);
+
+        File csvFile = new File(fileName);
+
+        logger.debug("About to send keys " + csvFile.getAbsolutePath() + " to current element");
+
+        WebElement target = this.webDriverContext().getCurrentElement();
+
+
+
+        Assert.assertNotNull("target element is null", target);
+        target.sendKeys(new CharSequence[]{csvFile.getAbsolutePath()});
+
+    }
+
+    @SubSteps.Step("SendKeys pathOf property \"([^\"]*)\" to id \"([^\"]*)\"")
+    public void sendKeysToId(String filePropertyName, String id) {
+
+        String fileName = Configuration.INSTANCE.getString(filePropertyName);
+
+        logger.debug("csv filename: " + fileName);
+
+        File csvFile = new File(fileName);
+
+        logger.debug("About to send keys " + csvFile.getAbsolutePath() + " to id " + id);
+
+        WebElement fileInput = this.webDriver().findElement(By.id(id));
+
+        Assert.assertNotNull("fileInput is null", fileInput);
+        fileInput.sendKeys(new CharSequence[]{csvFile.getAbsolutePath()});
+
+    }
+
+
+    @SubSteps.Step("ClickButton containing \"([^\"]*)\"")
+    public void clickButtonContainingText(String text) {
+
+        final By by = WebDriverSubstepsBy.ByTagContainingText("button", text);
+
+        waitFor(by, "expecting an element with tag", "button", "and text", text);
+
+
+        WebDriverWait wait = new WebDriverWait(this.webDriver(), 5);
+
+        logger.debug("about to wait until element clickable");
+        wait.until(ExpectedConditions.elementToBeClickable(by));
+
+        logger.debug("element should be clickable");
+
+        this.webDriverContext().getCurrentElement().click();
+    }
+
+
+
     private void clickElementWhenAvailable(final WebElement elem) {
 
         final long timeout = System.currentTimeMillis() + (1000 * WebdriverSubstepsPropertiesConfiguration.INSTANCE.defaultTimeout());
@@ -164,22 +256,27 @@ public class ActionWebDriverSubStepImplementations extends AbstractWebDriverSubS
 
 
     /**
-     * Click a button that has the text...
-     * 
-     * @example ClickButton submit
+     * Click a button that has the text, NB surrounding quotes are optional
+     *
+     * @example ClickButton "submit button"
      * @section Clicks
      * @param buttonText
      *            the button text
      */
-    @Step("ClickButton ([^\"]*)")
-    public void clickButton(final String buttonText) {
-        logger.debug("About to click button with text " + buttonText);
-        webDriverContext().setCurrentElement(null);
-        final WebElement elem = this.locator.findElementWithText("button", buttonText.trim());
-        Assert.assertNotNull("expecting to find a button: " + buttonText, elem);
-        webDriverContext().setCurrentElement(elem);
-        elem.click();
+
+    @SubSteps.Step("ClickButton \"?([^\"]*)\"?")
+    public void clickButton(String buttonText) {
+
+        final By by = WebDriverSubstepsBy.ByTagAndWithText("button", buttonText);
+        waitFor(by, "expecting an element with tag", "button", "and text", buttonText);
+        WebDriverWait wait = new WebDriverWait(this.webDriver(), 5);
+        logger.debug("about to wait until element clickable");
+        wait.until(ExpectedConditions.elementToBeClickable(by));
+        logger.debug("element should be clickable");
+        this.webDriverContext().getCurrentElement().click();
     }
+
+
 
 
     @Step("ClickSubmitButton \"([^\"]*)\"")

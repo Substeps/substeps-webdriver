@@ -22,11 +22,15 @@ import static org.hamcrest.CoreMatchers.is;
 
 import java.util.List;
 
+import com.technophobia.webdriver.substeps.runner.WebdriverSubstepsPropertiesConfiguration;
+import com.technophobia.webdriver.util.WebDriverSubstepsBy;
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -134,6 +138,10 @@ public class FormWebDriverSubStepImplementations extends
     public void clearAndSendKeys(final String value) {
         logger.debug("About to clear the current element and send the keys "
                 + value);
+
+        WebDriverWait wait = new WebDriverWait(webDriver(), WebdriverSubstepsPropertiesConfiguration.INSTANCE.defaultTimeout());
+        wait.until(ExpectedConditions.visibilityOfElementLocated(WebDriverSubstepsBy.ByCurrentWebElement(webDriverContext().getCurrentElement())));
+
         webDriverContext().getCurrentElement().clear();
         webDriverContext().getCurrentElement().sendKeys(value);
     }
