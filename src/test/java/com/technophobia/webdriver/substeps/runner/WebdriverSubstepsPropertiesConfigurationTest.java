@@ -51,27 +51,6 @@ public class WebdriverSubstepsPropertiesConfigurationTest {
         }
     }
 
-    @Test
-    public void testGithubAuthOverride(){
-
-        Config cfg = Configuration.INSTANCE.getConfig();
-
-        Assert.assertThat(cfg.hasPath("github.auth"), is(true));
-
-        Assert.assertThat(cfg.getConfig("github.auth").getString("username"), is("iantmoore"));
-
-
-        Assert.assertThat(cfg.getString("github.auth.username"), is("iantmoore"));
-
-//        if (cfg.hasPath("github.token") && cfg.hasPath("github.token.secret")){
-//
-//            System.setProperty("wdm.gitHubTokenName", cfg.getString("github.token"));
-//            System.setProperty("wdm.gitHubTokenSecret", cfg.getString("github.token.secret"));
-//        }
-    }
-
-
-
 
     @Ignore
     @Test
