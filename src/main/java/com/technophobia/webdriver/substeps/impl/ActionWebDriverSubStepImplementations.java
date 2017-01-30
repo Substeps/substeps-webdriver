@@ -141,6 +141,10 @@ public class ActionWebDriverSubStepImplementations extends AbstractWebDriverSubS
     }
 
 
+    /**
+     * used to pass the path of a file for file uploads
+      * @param filePropertyName
+     */
     @SubSteps.Step("SendKeys pathOf property \"([^\"]*)\" to current element")
     public void sendKeysToCurrentElement(String filePropertyName) {
 
