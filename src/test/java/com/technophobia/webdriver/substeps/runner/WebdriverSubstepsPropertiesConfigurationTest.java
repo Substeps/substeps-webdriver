@@ -25,6 +25,8 @@ import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import com.technophobia.substeps.model.Configuration;
+import com.typesafe.config.Config;
 import org.junit.*;
 
 /**
@@ -48,6 +50,7 @@ public class WebdriverSubstepsPropertiesConfigurationTest {
             System.setProperty("environment", presetEnv);
         }
     }
+
 
     @Ignore
     @Test

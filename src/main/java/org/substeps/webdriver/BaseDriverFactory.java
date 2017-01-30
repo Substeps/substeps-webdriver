@@ -16,10 +16,10 @@ public abstract class BaseDriverFactory implements DriverFactory{
     protected final void setupWebdriverManagerGithubAuth(Config cfg){
 
         // see https://github.com/settings/tokens
-        if (cfg.hasPath("github.token") && cfg.hasPath("github.token.secret")){
+        if (cfg.hasPath("github.auth")){
 
-            System.setProperty("wdm.gitHubTokenName", cfg.getString("github.token"));
-            System.setProperty("wdm.gitHubTokenSecret", cfg.getString("github.token.secret"));
+            System.setProperty("wdm.gitHubTokenName", cfg.getString("github.auth.username"));
+            System.setProperty("wdm.gitHubTokenSecret", cfg.getString("github.auth.token"));
         }
         else {
             log.info("webdriver manager may be unable to download drivers");
