@@ -14,6 +14,9 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
+import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.lessThanOrEqualTo;
+
 /**
  * Created by ian on 24/01/17.
  */
@@ -26,6 +29,7 @@ public class CssStepImplementations  extends AbstractWebDriverSubStepImplementat
     /**
      *
      * @example FindByTag "tag" with cssClassRegex ".* marker-\d .*"
+     * @section CSS
      *
      * @param tag the name of the HTML tag
      * @param cssRegex a regex applied to the css class attribute to restrict the selection of the tag
@@ -39,8 +43,14 @@ public class CssStepImplementations  extends AbstractWebDriverSubStepImplementat
     }
 
 
-
-
+    /**
+     * @example
+     * @section CSS
+     *
+     * @param tag
+     * @param cssRegex
+     * @return
+     */
     @SubSteps.Step("FindChildByTag \"([^\"]*)\" with cssClassRegex \"([^\"]*)\"")
     public WebElement findChildByTagAndCssWildcard(String tag, String cssRegex){
 
@@ -60,7 +70,15 @@ public class CssStepImplementations  extends AbstractWebDriverSubStepImplementat
         return elem;
     }
 
-
+    /**
+     * @example
+     * @section CSS
+     *
+     * @param tag
+     * @param cssRegex
+     * @param text
+     * @return
+     */
     @SubSteps.Step("FindByTag \"([^\"]*)\" with cssClassRegex \"([^\"]*)\" and text \"([^\"]*)\"")
     public WebElement findByTagAndCssWildcard(String tag, String cssRegex, String text){
 
@@ -70,12 +88,20 @@ public class CssStepImplementations  extends AbstractWebDriverSubStepImplementat
 
     }
 
-    @SubSteps.Step("ClickByCss \"([^\"]*)\" if present")
+    /**
+     * Click on an element located by css classname if present, NB. this step implementation does not wait for the element to be present
+     *
+     * @example ClickByCssClass "not-present-button" if present
+     * @section CSS
+     *
+     * @param cssClassName the CSS class of the element to click
+     */
+    @SubSteps.Step("ClickByCssClass \"([^\"]*)\" if present")
     public void clickByCssClassNoFail(final String cssClassName) {
 
         By by = new By.ByClassName(cssClassName);
 
-        // NB. no wait here - // TODO with find by there is a wait here, which we don't want
+        // NB. no wait here - // with find by there is a wait here, which we don't want
         List<WebElement> elems = this.webDriver().findElements(by);
 
         if (!elems.isEmpty()) {
@@ -88,8 +114,15 @@ public class CssStepImplementations  extends AbstractWebDriverSubStepImplementat
         }
     }
 
-
-    @SubSteps.Step("FindByCss \"([^\"]*)\"")
+    /**
+     * Find an element that has the specified CSS class (the element can have other classes that apply, but only one can be specified)
+     *
+     * @example FindByCssClass "markerClass-1"
+     * @section CSS
+     *
+     * @param cssClassName the CSS Classname
+     */
+    @SubSteps.Step("FindByCssClass \"([^\"]*)\"")
     public void findWithCssClass(String cssClassName) {
 
         By by = new By.ByClassName(cssClassName);
@@ -97,31 +130,73 @@ public class CssStepImplementations  extends AbstractWebDriverSubStepImplementat
 
     }
 
-
+    /**
+     * Find an element that has the specified CSS class and text(the element can have other classes that apply, but only one can be specified)
+     *
+     * @example FindByCssClass "somethingElse" with text "Another heading"
+     * @section CSS
+     *
+     * @param cssClass the CSS Classname
+     * @param text the expected text
+     */
     @SubSteps.Step("FindByCssClass \"([^\"]*)\" with text \"([^\"]*)\"")
     public void findByCssClassWithText(final String cssClass, final String text) {
         By by = WebDriverSubstepsBy.ByCssWithText(cssClass, text);
         waitFor(by, "expecting an element with css class", cssClass, "and text: " + text);
     }
 
+    /**
+     * @example
+     * @section CSS
+     *
+     * @param cssClass
+     * @param text
+     */
     @SubSteps.Step("FindByCssClass \"([^\"]*)\" containing text \"([^\"]*)\"")
     public void findByCssClassContainingText(final String cssClass, final String text) {
         By by = WebDriverSubstepsBy.ByCssContainingText(cssClass, text);
         waitFor(by, "expecting an element with css class", cssClass, "and text: " + text);
     }
 
+    /**
+     * @example
+     * @section CSS
+     *
+     * @param cssClass
+     * @param timeout
+     * @param text
+     */
     @SubSteps.Step("FindByCssClass \"([^\"]*)\" using timeout \"(\\d+)\" with text \"([^\"]*)\"")
     public void findByCssClassWithTimeoutAndText(final String cssClass, long timeout, final String text) {
         By by = WebDriverSubstepsBy.ByCssWithText(cssClass, text);
         waitFor(by, timeout, "expecting an element with css class", cssClass, "and text: " + text);
     }
 
+
+    /**
+     * @example
+     * @section CSS
+     *
+     * @param cssClass
+     * @param timeout
+     * @param text
+     */
     @SubSteps.Step("FindByCssClass \"([^\"]*)\" using timeout \"(\\d+)\" containing \"([^\"]*)\"")
     public void findByCssClassContainingTimeoutAndText(final String cssClass, long timeout, final String text) {
         By by = WebDriverSubstepsBy.ByCssContainingText(cssClass, text);
         waitFor(by, timeout, "expecting an element with css class", cssClass, "and text: " + text);
     }
 
+    /**
+     * @example
+     * @section CSS
+     *
+     * @param cssClass1
+     * @param tagName
+     * @param tagNumber
+     * @param text
+     * @throws InterruptedException
+     */
     @SubSteps.Step("FindNthByTagAndText with parent css \"([^\"]*)\", tag name \"([^\"]*)\", tag number \"(\\d+)\" containing text \"([^\"]*)\"")
     public void findNthByTagContainingText(String cssClass1, String tagName, int tagNumber, String text) throws InterruptedException {
 
@@ -151,16 +226,29 @@ public class CssStepImplementations  extends AbstractWebDriverSubStepImplementat
     }
 
 
-
+    /**
+     * Ensures that the CSS Selector returns no results.
+     *
+     * @example AssertCssSelector ".not-present-button" is not present
+     * @section CSS
+     *
+     * @param cssSelector the CSS selector
+     */
     @SubSteps.Step("AssertCssSelector \"([^\"]*)\" is not present")
     public void assertCssSelectorIsNotPresent(String cssSelector) {
         if (webDriver().findElements(By.id(cssSelector)).size() > 0) {
             Assert.fail("The element " + cssSelector + " is present when it should not be");
         } else {
-            logger.info("The element " + cssSelector + " is correctly not present");
+            logger.debug("The element " + cssSelector + " is correctly not present");
         }
     }
 
+    /**
+     * @example
+     * @section CSS
+     *
+     * @param cssSelector
+     */
     @SubSteps.Step("AssertCssSelector \"([^\"]*)\" is present")
     public void assertCssSelectorIsPresent(String cssSelector) {
         if (webDriver().findElements(By.cssSelector(cssSelector)).size() != 0) {
@@ -170,41 +258,67 @@ public class CssStepImplementations  extends AbstractWebDriverSubStepImplementat
         }
     }
 
-    @SubSteps.Step("AssertCssSelector \"([^\"]*)\" has text which contains \"([^\"]*)\"")
+    /**
+     * Finds an element by CSS selector with the specified text
+     * @example FindByCssSelector ".present-button" with text "clicked"
+     * @section CSS
+     *
+     * @param cssSelector the CSS Selector
+     * @param expectedText the expected text
+     */
+    @SubSteps.Step("FindByCssSelector \"([^\"]*)\" with text \"([^\"]*)\"")
     public void assertCssSelectorHasCorrectText(String cssSelector, String expectedText) {
         By by = new By.ByCssSelector(cssSelector);
-        waitFor(by, "expecting an element with class ", cssSelector);
-        String actualText = webDriver().findElement(By.cssSelector(cssSelector)).getText();
+        WebElement webElement = waitFor(by, "expecting an element with class ", cssSelector);
+
+        String actualText = webElement.getText();
         Assert.assertEquals("Incorrect error message found", expectedText, actualText);
         logger.debug(cssSelector + " " + actualText);
     }
 
+    /**
+     * Finds an element using a css selector; #id, .class for example, more css selectors <a href="http://www.w3schools.com/cssref/css_selectors.asp">here</a>
+     * @example FindByCssSelector "#parent_div_id"
+     * @section CSS
+     *
+     * @param cssSelector the css selector
+     */
     @SubSteps.Step("FindByCssSelector \"([^\"]*)\"")
     public void findByCssSelector(String cssSelector) {
         By by = new By.ByCssSelector(cssSelector);
         waitFor(by, "expecting an element with class ", cssSelector);
     }
 
-
-    @SubSteps.Step("Assert number of instances of \"([^\"]*)\" is \"([^\"]*)\" or less")
+    /**
+     * Checks that the number of elements located by the CSS Selector is less than the specified size
+     *
+     * @example AssertCssSelector "two-divs" count is "2" or less
+     * @section CSS
+     *
+     * @param cssSelector the CSS Selector
+     * @param expectedSize the expected maximum size
+     */
+    @SubSteps.Step("AssertCssSelector \"([^\"]*)\" count is \"([^\"]*)\" or less")
     public void assertNumberOfElementsIsNotGreaterThanExpectedSize(String cssSelector, int expectedSize) {
         int numberOfElements = webDriver().findElements(By.cssSelector(cssSelector)).size();
-        if (expectedSize >= numberOfElements) {
-            logger.info(numberOfElements + " instances of " + cssSelector + " were found");
-        } else {
-            Assert.fail("The number of instances of " + cssSelector + " found was " + numberOfElements + " but expect " + expectedSize + " or fewer");
-        }
 
+        Assert.assertThat("number of instances of " + cssSelector + " found", numberOfElements, lessThanOrEqualTo(expectedSize));
     }
 
-    @SubSteps.Step("Assert number of instances of \"([^\"]*)\" is greater than \"([^\"]*)\"")
+    /**
+     * Checks that the number of elements located by the CSS Selector is greater than the specified size
+     *
+     * @example AssertCssSelector "two-divs" count is greater than "1"
+     * @section CSS
+     *
+     * @param cssSelector the CSS Selector
+     * @param expectedSize the expected minimum size
+     */
+    @SubSteps.Step("AssertCssSelector \"([^\"]*)\" count is greater than \"([^\"]*)\"")
     public void assertNumberOfElementsIsGreaterThanExpectedSize(String cssSelector, int expectedSize) {
         int numberOfElements = webDriver().findElements(By.cssSelector(cssSelector)).size();
-        if (expectedSize < numberOfElements) {
-            logger.info(numberOfElements + " instances of " + cssSelector + " were found");
-        } else {
-            Assert.fail("The number of instances of " + cssSelector + " found was " + numberOfElements + " but was expected to be greater than " + expectedSize);
-        }
+
+        Assert.assertThat("number of instances of " + cssSelector + " found", numberOfElements, greaterThan(expectedSize));
 
     }
 
@@ -212,6 +326,9 @@ public class CssStepImplementations  extends AbstractWebDriverSubStepImplementat
      * Uses two chained CSS Selector to find an element and set it is as the CurrentElement
      * Example in substeps:
      * Find Chained element by css: first element ".qa-compliance-footer-links", second element ".qa-compliance-legal-age"
+     *
+     * @example
+     * @section CSS
      *
      * @param cssSelector1  The first CSS selector
      * @param cssSelector2  The second CSS selector
@@ -262,6 +379,10 @@ public class CssStepImplementations  extends AbstractWebDriverSubStepImplementat
 
 
     /**
+     *
+     * @example
+     * @section CSS
+     *
      * Searches for the provided CSS Selector to become visible for up to 3 seconds to allow react DOM changes to complete.
      *
      * @param cssSelector   The cssSelector used in the search
@@ -271,6 +392,13 @@ public class CssStepImplementations  extends AbstractWebDriverSubStepImplementat
         waitUntil(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(cssSelector)));
     }
 
+    /**
+     * @example
+     * @section CSS
+     *
+     *
+     * @param cssSelector
+     */
     @SubSteps.Step("WaitFor CSS Selector \"([^\"]*)\" to be invisibile")
     public void waitForCssSelectorToHide(String cssSelector) {
 

@@ -53,12 +53,6 @@ public abstract class AbstractWebDriverSubStepImplementations implements Provide
 //        this.webDriverContextSupplier = webDriverContextSupplier;
 //    }
 
-    protected <T> T waitUntil(ExpectedCondition<T> ec) {
-        WebDriverWait wait = new WebDriverWait(webDriver(), WebdriverSubstepsPropertiesConfiguration.INSTANCE.defaultTimeout());
-        return wait.until(ec);
-    }
-
-
     protected WebElement waitFor(By by, String... messages) {
         this.webDriverContext().setCurrentElement(null);
 
@@ -74,6 +68,12 @@ public abstract class AbstractWebDriverSubStepImplementations implements Provide
         this.webDriverContext().setCurrentElement(elem);
 
         return elem;
+    }
+
+
+    protected <T> T waitUntil(ExpectedCondition<T> ec) {
+        WebDriverWait wait = new WebDriverWait(webDriver(), WebdriverSubstepsPropertiesConfiguration.INSTANCE.defaultTimeout());
+        return wait.until(ec);
     }
 
     protected WebElement waitFor(By by, long timeout, String... messages) {

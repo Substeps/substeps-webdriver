@@ -68,6 +68,10 @@ function performDoubleClick()
     
 }
 
+function doPresentButtonClick(element){
+  element.innerText = "clicked"
+}
+
 function createElement(element, type, id, value)
 {
 	//clickable button - no waiting
@@ -403,6 +407,11 @@ function onClick(timeout)
 
 <h4 class="something markerClass-1 somethingElse">heading</h4>
 <h4 class="something markerClass-2 somethingElse">Another heading</h4>
+
+<button class="present-button" onclick="doPresentButtonClick(this)">a present button</button>
+
+<div class="two-divs">1</div>
+<div class="two-divs">2</div>
 
 
 </body>

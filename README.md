@@ -12,6 +12,11 @@ There is also a [Substeps Google group](http://groups.google.com/group/substeps?
 Substeps.org Release Notes
 ==========================
 
+1.0.5
+-----
+* Tests around some of the step impls added in 1.0.4
+* Added a config flag (log.pagesource.onerror) to disable logging out the page source on failure
+
 1.0.4
 -----
 * More step implementations...
