@@ -72,6 +72,20 @@ function doPresentButtonClick(element){
   element.innerText = "clicked"
 }
 
+function doHideDiv(){
+	var elem = document.getElementById('visible-div');
+
+  setTimeout(function(){elem.style.visibility="hidden";},500);
+	return false;
+}
+
+function doShowHiddenDiv(){
+  var elem = document.getElementById('visible-div');
+  setTimeout(function(){elem.style.visibility="visible";},500);
+  return false;
+
+}
+
 function createElement(element, type, id, value)
 {
 	//clickable button - no waiting
@@ -412,6 +426,24 @@ function onClick(timeout)
 
 <div class="two-divs">1</div>
 <div class="two-divs">2</div>
+
+<div id="visible-div">something visible</div>
+<button onclick="doHideDiv()">hide something visible</button>
+
+<button onclick="doShowHiddenDiv()">make something visible</button>
+
+<div class="parent-div-class">
+	<div class="nested-div-class">expected</div>
+	<div class="nested-div-class-1234">expected2</div>
+	<div class="nested-div-class-xxxx">not-expected</div>
+	<span>one</span>
+	<span>two</span>
+
+</div>
+
+<!-- added to ensure we're finding the right thing -->
+<div class="nested-div-class">fail</div>
+
 
 
 </body>

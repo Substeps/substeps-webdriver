@@ -448,4 +448,17 @@ public class ActionWebDriverSubStepImplementations extends AbstractWebDriverSubS
         // And acknowledge the alert (equivalent to clicking "OK")
         alert.accept();
     }
+
+    /**
+     * Asserts that the current element is visible
+     * @example AssertCurrentElement is visible
+     * @section Assertions
+     */
+    @Step("AssertCurrentElement is visible")
+    public void assertCurrentElementIsVisible(){
+        WebElement currentElement = webDriverContext().getCurrentElement();
+
+        waitUntil( ExpectedConditions.elementToBeClickable(currentElement));
+
+    }
 }
