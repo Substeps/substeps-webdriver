@@ -80,8 +80,6 @@ Define: And the table row <row>, column <col> contains "<txt>"
 	FindById table_id
 	AssertTableValue column <col>, row <row> contains text "<txt>"	
 	
-Define: Given I go to an external page such as Github
-    NavigateTo https://raw.githubusercontent.com/Substeps/substeps-webdriver/master/README.md
 
 Define: And the raw README is loaded
     AssertPageSourceContains "Substeps.org Release Notes"

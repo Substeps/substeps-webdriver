@@ -81,11 +81,18 @@ public class ActionWebDriverSubStepImplementations extends AbstractWebDriverSubS
         }
     }
 
-
+    /**
+     * Navigate to a url specified by a property in the config files
+     *
+     * @example NavigateTo url property "login.url"
+     *
+     * @section Location
+     * @param urlProperty the property to lookup
+     */
     @SubSteps.Step("NavigateTo url property \"([^\"]*)\"")
-    public void navigateToProperty(final String baseUrlProperty) {
+    public void navigateToProperty(final String urlProperty) {
 
-        final String url = Configuration.INSTANCE.getString(baseUrlProperty);
+        final String url = Configuration.INSTANCE.getString(urlProperty);
 
         logger.debug("About to navigate to base url : " + url);
 
@@ -123,16 +130,19 @@ public class ActionWebDriverSubStepImplementations extends AbstractWebDriverSubS
     @Step("Click")
     public void click() {
         logger.debug("About to click on current element");
-        WebElement element = webDriverContext().getCurrentElement();
-        clickElementWhenAvailable(element);
+        clickWhenClickable();
     }
 
-
+    /**
+     * Clicks (the current element) when the element can be clicked (visibility, enabled etc)
+     *
+     * @example ClickWhenClickable
+     * @section Clicks
+     */
     @SubSteps.Step("ClickWhenClickable")
     public void clickWhenClickable(){
 
         WebElement currentElement = webDriverContext().getCurrentElement();
-        Assert.assertNotNull("currentElement can't be null", currentElement );
 
         waitUntil( ExpectedConditions.elementToBeClickable(currentElement));
 
@@ -142,56 +152,19 @@ public class ActionWebDriverSubStepImplementations extends AbstractWebDriverSubS
 
 
     /**
-     * used to pass the path of a file for file uploads
-      * @param filePropertyName
+     * Finds a button that contains the specified text, waits until the element is clickable, then clicks it.
+     *
+     * @example ClickButton containing "button text"
+     *
+     * @section Clicks
+     * @param text the text to partially match against the button text
      */
-    @SubSteps.Step("SendKeys pathOf property \"([^\"]*)\" to current element")
-    public void sendKeysToCurrentElement(String filePropertyName) {
-
-        String fileName = Configuration.INSTANCE.getString(filePropertyName);
-
-        logger.debug("csv filename: " + fileName);
-
-        File csvFile = new File(fileName);
-
-        logger.debug("About to send keys " + csvFile.getAbsolutePath() + " to current element");
-
-        WebElement target = this.webDriverContext().getCurrentElement();
-
-
-
-        Assert.assertNotNull("target element is null", target);
-        target.sendKeys(new CharSequence[]{csvFile.getAbsolutePath()});
-
-    }
-
-    @SubSteps.Step("SendKeys pathOf property \"([^\"]*)\" to id \"([^\"]*)\"")
-    public void sendKeysToId(String filePropertyName, String id) {
-
-        String fileName = Configuration.INSTANCE.getString(filePropertyName);
-
-        logger.debug("csv filename: " + fileName);
-
-        File csvFile = new File(fileName);
-
-        logger.debug("About to send keys " + csvFile.getAbsolutePath() + " to id " + id);
-
-        WebElement fileInput = this.webDriver().findElement(By.id(id));
-
-        Assert.assertNotNull("fileInput is null", fileInput);
-        fileInput.sendKeys(new CharSequence[]{csvFile.getAbsolutePath()});
-
-    }
-
-
     @SubSteps.Step("ClickButton containing \"([^\"]*)\"")
     public void clickButtonContainingText(String text) {
 
         final By by = WebDriverSubstepsBy.ByTagContainingText("button", text);
 
         waitFor(by, "expecting an element with tag", "button", "and text", text);
-
-
 
         logger.debug("about to wait until element clickable");
         waitUntil(ExpectedConditions.elementToBeClickable(by));
@@ -201,34 +174,6 @@ public class ActionWebDriverSubStepImplementations extends AbstractWebDriverSubS
         this.webDriverContext().getCurrentElement().click();
     }
 
-
-
-    private void clickElementWhenAvailable(final WebElement elem) {
-
-        final long timeout = System.currentTimeMillis() + (1000 * WebdriverSubstepsPropertiesConfiguration.INSTANCE.defaultTimeout());
-
-        boolean success = false;
-
-        while (!success && System.currentTimeMillis() < timeout) {
-
-            try {
-                elem.click();
-                success = true;
-            } catch (final WebDriverException e) {
-                if (! (e.getMessage().contains("Element is not clickable") || e.getMessage().contains("Element is not currently visible")) ) {
-                    throw e;
-                }
-                try {
-                    Thread.sleep(500);
-                } catch (final InterruptedException e1) {
-                    // bothered
-                    logger.debug("not clickable this time");
-                }
-            } 
-        }
-        Assert.assertTrue("Failed to click on element within timeout", success);
-
-    }    
 
     /**
      * Click the link "(....)" as it appears on the page
@@ -257,7 +202,6 @@ public class ActionWebDriverSubStepImplementations extends AbstractWebDriverSubS
      * @param buttonText
      *            the button text
      */
-
     @SubSteps.Step("ClickButton \"?([^\"]*)\"?")
     public void clickButton(String buttonText) {
 
@@ -269,9 +213,7 @@ public class ActionWebDriverSubStepImplementations extends AbstractWebDriverSubS
         this.webDriverContext().getCurrentElement().click();
     }
 
-
-
-
+    // TODO - need to test this out a bit more.. doesn't look right!
     @Step("ClickSubmitButton \"([^\"]*)\"")
     public void clickInput(final String buttonText) {
         logger.debug("About to click submit button with text " + buttonText);
@@ -371,25 +313,6 @@ public class ActionWebDriverSubStepImplementations extends AbstractWebDriverSubS
     }
 
 
-    /**
-     * Transfer the focus into the current element (set with a previous Find
-     * method) which should be a frame or iframe
-     * 
-     * @example SwitchFrameToCurrentElement
-     * @section Location
-     * 
-     */
-    @Step("SwitchFrameToCurrentElement")
-    public void switchFrameToCurrentElement() {
-
-        final TargetLocator targetLocator = webDriver().switchTo();
-        final WebDriver refocusedWebDriver = targetLocator.frame(webDriverContext().getCurrentElement());
-
-        // yes I actually want to check these objects are the same!
-        Assert.assertTrue(
-                "Webdriver target locator has returned a different webdriver instance, some webdriver-substeps changes will be required to support this",
-                refocusedWebDriver == webDriver());
-    }
 
 
     /**
@@ -422,11 +345,6 @@ public class ActionWebDriverSubStepImplementations extends AbstractWebDriverSubS
     @Step("PerformContextClick")
     public void performContextClick() {
 
-        //DM: removed - this this isn't true?! - plus even if it is, doesn't the HtmlUnitWebDriver tell you this?
-//        if (webDriverContext().getDriverType() == DriverType.HTMLUNIT) {
-//            throw new WebDriverSubstepsException("PerformContextClick not supported in HTMLUnit");
-//        }
-
         final Actions actions = new Actions(webDriver());
 
         actions.contextClick(webDriverContext().getCurrentElement());
@@ -434,7 +352,13 @@ public class ActionWebDriverSubStepImplementations extends AbstractWebDriverSubS
         actions.perform();
     }
 
-
+    /**
+     * Dismisses an Alert with specific text
+     * @section Clicks
+     * @example DismissAlert with message "Popup"
+     *
+     * @param message the expected alert text
+     */
     @Step("DismissAlert with message \"([^\"]*)\"")
     public void dismissAlertWithMessage(final String message) {
 
@@ -443,6 +367,8 @@ public class ActionWebDriverSubStepImplementations extends AbstractWebDriverSubS
         final Alert alert = webDriverContext().getWebDriver().switchTo().alert();
         // this will throw a org.openqa.selenium.NoAlertPresentException if no
         // alert is present
+
+        logger.debug("alert says: " + alert.getText());
 
         Assert.assertThat(alert.getText(), is(message));
         // And acknowledge the alert (equivalent to clicking "OK")

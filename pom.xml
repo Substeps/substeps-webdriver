@@ -326,6 +326,14 @@
                                 </goals>
                             </execution>
 
+                            <execution>
+                                <id>Build SubSteps Glossary</id>
+                                <phase>process-test-resources</phase>
+                                <goals>
+                                    <goal>generate-docs</goal>
+                                </goals>
+                            </execution>
+
                         </executions>
 
                         <configuration>
@@ -356,11 +364,6 @@
 
                                 </executionConfig>
                             </executionConfigs>
-
-							  <executionReportBuilder implementation="com.technophobia.substeps.report.DefaultExecutionReportBuilder">
-							    <outputDirectory>${project.build.directory}</outputDirectory>
-                                <reportTitle>Webdriver Substeps - ${project.version}</reportTitle>
-							  </executionReportBuilder>
 
                             <executionResultsCollector implementation="org.substeps.report.ExecutionResultsCollector">
                                 <dataDir>${project.build.directory}/substeps_data</dataDir>
@@ -394,65 +397,6 @@
 
             </build>
         </profile>
-
-    <profile>
-        <id>generate-glossary</id>
-        <activation>
-            <activeByDefault>true</activeByDefault>
-        </activation>
-        <build>
-            <plugins>
-
-                <plugin>
-                    <groupId>org.substeps</groupId>
-                    <artifactId>substeps-glossary-builder</artifactId>
-                    <version>${substeps.framework.version}</version>
-
-                    <executions>
-                        <execution>
-                            <id>Build SubSteps Glossary</id>
-                            <phase> process-test-resources</phase>
-                            <goals>
-                                <goal>generate-docs</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-
-                    <configuration>
-                        <stepImplementationClassNames>
-                            <param>com.technophobia.webdriver.substeps.impl.AssertionWebDriverSubStepImplementations</param>
-                            <param>com.technophobia.webdriver.substeps.impl.ActionWebDriverSubStepImplementations</param>
-
-                            <param>com.technophobia.webdriver.substeps.impl.FinderWebDriverSubStepImplementations</param>
-                            <param>com.technophobia.webdriver.substeps.impl.FormWebDriverSubStepImplementations</param>
-                            <param>com.technophobia.webdriver.substeps.impl.StartupWebDriverSubStepImplementations</param>
-                            <param>com.technophobia.webdriver.substeps.impl.TableSubStepImplementations</param>
-                            <param>com.technophobia.webdriver.substeps.impl.CssStepImplementations</param>
-                            <param>com.technophobia.webdriver.substeps.impl.IFrameAndWindowSubstepImplementations</param>
-                            <param>com.technophobia.webdriver.substeps.impl.NewFinderStepImplementations</param>
-
-
-                        </stepImplementationClassNames>
-
-                        <glossaryPublisher implementation="com.technophobia.substeps.glossary.JsonSubstepsPublisher">
-                            <outputFile>${project.build.directory}/stepimplementations.json</outputFile>
-                        </glossaryPublisher>
-
-                    </configuration>
-
-
-                    <dependencies>
-                        <dependency>
-                            <groupId>org.slf4j</groupId>
-                            <artifactId>slf4j-log4j12</artifactId>
-                            <version>${slf4j.version}</version>
-                        </dependency>
-                    </dependencies>
-
-                </plugin>
-            </plugins>
-        </build>
-    </profile>
 
 
         <profile>

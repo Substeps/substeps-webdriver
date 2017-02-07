@@ -43,7 +43,12 @@ public class NewFinderStepImplementations extends AbstractWebDriverSubStepImplem
     // Handy little ! xpath to get to the chevron to do the whatsit
     // $x("//*[@id='sogei_mapping_left_container']//div[contains(text(),'BASKET')]/ancestor::div[contains(@class, 'mapperItem draggable')]//div[contains(@class, 'chevron')]")
 
-
+    /**
+     * Find by Xpath (without quotes)
+     *
+     * @param xpath the xpath expression
+     * @return the web element found
+     */
     @SubSteps.Step("FindByXpath2 (.*)$")
     public WebElement findByXpath2(String xpath) {
 
@@ -132,57 +137,6 @@ public class NewFinderStepImplementations extends AbstractWebDriverSubStepImplem
 
 
 
-    @SubSteps.Step("Select \"([^\"]*)\" option in class \"([^\"]*)\"")
-    public void selectOptionInClass(String optionText, String cssClassName) {
-
-        By by = new By.ByClassName(cssClassName);
-        WebElement selectElement = waitFor(by, "expecting an element with class ", cssClassName);
-
-        final Select select = new Select(selectElement);
-        select.selectByVisibleText(optionText);
-    }
-
-
-    @SubSteps.Step("Select \"([^\"]*)\" option in Id \"([^\"]*)\"")
-    public WebElement selectOptionInId(String optionText, String id) throws InterruptedException {
-
-        String xpathString = String.format("//*[@id='%s']//option[ text() ='%s']/..", id, optionText);
-
-        logger.debug("looking for option with xpath: " + xpathString);
-
-        By by = new By.ByXPath(xpathString);
-
-        WebElement selectElement = waitFor(by, "expecting an element with Id ", id);
-
-        final Select select = new Select(selectElement);
-        select.selectByVisibleText(optionText);
-
-        int attempt = 0;
-
-        // Make sure text is displayed after the item is selected from the dropdown list
-        while (attempt < 3) {
-            try {
-                WebElement option = select.getFirstSelectedOption();
-                String test = option.getText();
-
-                if (test.equals(optionText)) {
-                    break;
-                }
-            }
-            catch (NotFoundException e) {
-                logger.debug("element not found " + e);
-            }
-
-            // Try to select again, sometimes it doesn't do it properly
-            logger.debug("Trying to click again");
-            select.selectByVisibleText(optionText);
-
-            Thread.sleep(500);
-            attempt++;
-        }
-
-        return selectElement;
-    }
 
     @SubSteps.Step("ExecuteJavascript (.*)$")
     public void executeJavaScript(String js){

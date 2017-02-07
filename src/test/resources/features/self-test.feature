@@ -52,10 +52,4 @@ Scenario: a scenario
 	And I can find an h4 tag with a css regex
 	And I can find an h4 tag with a css regex and text
 
-##################################################################	
-	# these tests need to be last as they go off to google
-	Given I go to an external page such as Github
-    And the raw README is loaded
-    
-    # Do not add more steps here
 

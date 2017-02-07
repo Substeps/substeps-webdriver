@@ -3,7 +3,44 @@
 <head >
 	<title>Hello Self Test page</title>
 	
-<script type="text/javascript">
+<script type="text/javascript">function triggerDoubleClick() {
+
+  var elem = document.getElementById("dbl-click-button-div");
+  elem.innerHTML = "doubled clicked"
+}
+
+
+function triggerPageTitleChange(){
+  var t=setTimeout("doPageTitleChange()",1000);
+  return false;
+
+}
+
+function doPageTitleChange() {
+  document.title = "A new page title"
+}
+
+
+function doOtherButtonClick() {
+  var elem = document.getElementById("the-other-button-div");
+  elem.innerHTML = "Other button clicked"
+}
+
+
+function enableTheOtherButton(){
+      var t=setTimeout("showTheOtherButton()",1000);
+      return false;
+	}
+	function showTheOtherButton(){
+      var elem = document.getElementById("the-other-button");
+      elem.style.visibility="visible";
+	}
+
+  function partialTextMatchButtonClickHandler() {
+    var elem = document.getElementById("partial-text-button-div");
+	elem.innerHTML = "Partial text matched Button click successful"
+}
+
 
 function do_btn_click()
 {
@@ -444,7 +481,22 @@ function onClick(timeout)
 <!-- added to ensure we're finding the right thing -->
 <div class="nested-div-class">fail</div>
 
+<button onclick="partialTextMatchButtonClickHandler()">some text to partially match on</button>
 
+<div id="partial-text-button-div"></div>
 
+<button id="other-button-enabler" onclick="enableTheOtherButton()">Enable other button</button>
+
+<button id="the-other-button" style="visibility:hidden" onclick="doOtherButtonClick()">The other button</button>
+
+<div id="the-other-button-div"></div>
+
+<button id="trigger-alert" onclick="window.alert('Popup')">do alert</button>
+
+<button id="trigger-page-title-change" onclick="triggerPageTitleChange()">change page title</button>
+
+<button id="dbl-click-trigger" ondblclick="triggerDoubleClick()">do double click</button>
+
+<div id="dbl-click-button-div"></div>
 </body>
 </html>

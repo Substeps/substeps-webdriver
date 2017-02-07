@@ -5,6 +5,7 @@ import com.technophobia.substeps.model.SubSteps;
 import com.technophobia.substeps.runner.ExecutionContextSupplier;
 import com.technophobia.substeps.runner.MutableSupplier;
 import com.technophobia.webdriver.substeps.runner.DefaultExecutionSetupTearDown;
+import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
@@ -101,6 +102,26 @@ public class IFrameAndWindowSubstepImplementations extends AbstractWebDriverSubS
         WebDriver driver = webdriverInContext.get();
         driver = driver.switchTo().defaultContent();
         webdriverInContext.set(driver);
+    }
+
+    /**
+     * Transfer the focus into the current element (set with a previous Find
+     * method) which should be a frame or iframe
+     *
+     * @example SwitchFrameToCurrentElement
+     * @section Location
+     *
+     */
+    @SubSteps.Step("SwitchFrameToCurrentElement")
+    public void switchFrameToCurrentElement() {
+
+        final WebDriver.TargetLocator targetLocator = webDriver().switchTo();
+        final WebDriver refocusedWebDriver = targetLocator.frame(webDriverContext().getCurrentElement());
+
+        // yes I actually want to check these objects are the same!
+        Assert.assertTrue(
+                "Webdriver target locator has returned a different webdriver instance, some webdriver-substeps changes will be required to support this",
+                refocusedWebDriver == webDriver());
     }
 
 }

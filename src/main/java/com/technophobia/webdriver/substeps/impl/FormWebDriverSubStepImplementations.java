@@ -20,13 +20,17 @@ package com.technophobia.webdriver.substeps.impl;
 
 import static org.hamcrest.CoreMatchers.is;
 
+import java.io.File;
 import java.util.List;
 
+import com.technophobia.substeps.model.Configuration;
+import com.technophobia.substeps.model.SubSteps;
 import com.technophobia.webdriver.substeps.runner.WebdriverSubstepsPropertiesConfiguration;
 import com.technophobia.webdriver.util.WebDriverSubstepsBy;
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.NotFoundException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
@@ -50,7 +54,7 @@ public class FormWebDriverSubStepImplementations extends
             .getLogger(FormWebDriverSubStepImplementations.class);
 
     private final FinderWebDriverSubStepImplementations locator;
-    //
+
     private final ActionWebDriverSubStepImplementations actions;
 
 
@@ -413,4 +417,100 @@ public class FormWebDriverSubStepImplementations extends
     private List<WebElement> getOptions(final WebElement select) {
         return select.findElements(By.tagName("option"));
     }
+
+    @SubSteps.Step("Select \"([^\"]*)\" option in class \"([^\"]*)\"")
+    public void selectOptionInClass(String optionText, String cssClassName) {
+
+        By by = new By.ByClassName(cssClassName);
+        WebElement selectElement = waitFor(by, "expecting an element with class ", cssClassName);
+
+        final Select select = new Select(selectElement);
+        select.selectByVisibleText(optionText);
+    }
+
+
+    @SubSteps.Step("Select \"([^\"]*)\" option in Id \"([^\"]*)\"")
+    public WebElement selectOptionInId(String optionText, String id) throws InterruptedException {
+
+        String xpathString = String.format("//*[@id='%s']//option[ text() ='%s']/..", id, optionText);
+
+        logger.debug("looking for option with xpath: " + xpathString);
+
+        By by = new By.ByXPath(xpathString);
+
+        WebElement selectElement = waitFor(by, "expecting an element with Id ", id);
+
+        final Select select = new Select(selectElement);
+        select.selectByVisibleText(optionText);
+
+        int attempt = 0;
+
+        // Make sure text is displayed after the item is selected from the dropdown list
+        while (attempt < 3) {
+            try {
+                WebElement option = select.getFirstSelectedOption();
+                String test = option.getText();
+
+                if (test.equals(optionText)) {
+                    break;
+                }
+            }
+            catch (NotFoundException e) {
+                logger.debug("element not found " + e);
+            }
+
+            // Try to select again, sometimes it doesn't do it properly
+            logger.debug("Trying to click again");
+            select.selectByVisibleText(optionText);
+
+            Thread.sleep(500);
+            attempt++;
+        }
+
+        return selectElement;
+    }
+
+
+    /**
+     * used to pass the path of a file for file uploads
+     * @param filePropertyName
+     */
+    @SubSteps.Step("SendKeys pathOf property \"([^\"]*)\" to current element")
+    public void sendKeysToCurrentElement(String filePropertyName) {
+
+        String fileName = Configuration.INSTANCE.getString(filePropertyName);
+
+        logger.debug("csv filename: " + fileName);
+
+        File csvFile = new File(fileName);
+
+        logger.debug("About to send keys " + csvFile.getAbsolutePath() + " to current element");
+
+        WebElement target = this.webDriverContext().getCurrentElement();
+
+
+
+        Assert.assertNotNull("target element is null", target);
+        target.sendKeys(new CharSequence[]{csvFile.getAbsolutePath()});
+
+    }
+
+    @SubSteps.Step("SendKeys pathOf property \"([^\"]*)\" to id \"([^\"]*)\"")
+    public void sendKeysToId(String filePropertyName, String id) {
+
+        String fileName = Configuration.INSTANCE.getString(filePropertyName);
+
+        logger.debug("csv filename: " + fileName);
+
+        File csvFile = new File(fileName);
+
+        logger.debug("About to send keys " + csvFile.getAbsolutePath() + " to id " + id);
+
+        WebElement fileInput = this.webDriver().findElement(By.id(id));
+
+        Assert.assertNotNull("fileInput is null", fileInput);
+        fileInput.sendKeys(new CharSequence[]{csvFile.getAbsolutePath()});
+
+    }
+
 }
