@@ -1,6 +1,7 @@
-Tags: @non-visual
 
 Feature: A feature to test Action Step implementations
+
+Tags: @non-visual
 
 Scenario: Test Action step impls
     Given I go to the self test page
@@ -41,8 +42,6 @@ Scenario: Test Action step impls
     FindByCssClass "context-menu-item" containing text "Edit"
     AssertCurrentElement is visible
 
-    TakeScreenshot with prefix "self-test"
-    AssertScreenshotFileExists "self-test" something
 
 ##################################################################
 	# these tests need to be last as they go off to google
@@ -51,8 +50,10 @@ Scenario: Test Action step impls
     And the raw README is loaded
     # Do not add more steps here
 
-# TODO
-# ClickSubmitButton     - form ?
-# ExecuteJavascript (.*)$
-# Execute substituted Javascript ~([^~]*)~ "([^"]*)"
 
+Tags: @visual
+
+Scenario: Test Action step impls
+    Given I go to the self test page
+    TakeScreenshot with prefix "self-test"
+    AssertScreenshotFileExists "self-test" something
