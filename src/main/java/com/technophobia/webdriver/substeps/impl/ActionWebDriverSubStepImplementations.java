@@ -18,6 +18,7 @@
  */
 package com.technophobia.webdriver.substeps.impl;
 
+import com.google.common.io.Files;
 import com.technophobia.substeps.model.Configuration;
 import com.technophobia.substeps.model.SubSteps;
 import com.technophobia.substeps.model.SubSteps.Step;
@@ -35,8 +36,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,6 +50,7 @@ import static org.hamcrest.CoreMatchers.is;
 public class ActionWebDriverSubStepImplementations extends AbstractWebDriverSubStepImplementations {
 
     private static final Logger logger = LoggerFactory.getLogger(ActionWebDriverSubStepImplementations.class);
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyMMddHHmm");
 
     private final FinderWebDriverSubStepImplementations locator;
 
@@ -99,7 +104,7 @@ public class ActionWebDriverSubStepImplementations extends AbstractWebDriverSubS
         if (url.startsWith("file") || url.startsWith("http")) {
             webDriver().get(url);
         } else {
-            webDriver().get(normalise(url));
+            webDriver().get(normaliseURL(url));
         }
     }
 
@@ -213,37 +218,24 @@ public class ActionWebDriverSubStepImplementations extends AbstractWebDriverSubS
         this.webDriverContext().getCurrentElement().click();
     }
 
-    // TODO - need to test this out a bit more.. doesn't look right!
+    /**
+     * Finds an input element with the specified value, then clicks it.
+     *
+     * @section Form
+     * @example ClickSubmitButton "Submit"
+     *
+     * @param buttonText the button text
+     */
     @Step("ClickSubmitButton \"([^\"]*)\"")
     public void clickInput(final String buttonText) {
         logger.debug("About to click submit button with text " + buttonText);
         webDriverContext().setCurrentElement(null);
-        final List<WebElement> elems = webDriver().findElements(By.tagName("input"));
 
-        List<WebElement> matchingElems = null;
-        for (final WebElement e : elems) {
-            // does this WebElement have the attributes that we need!
+        By by = WebDriverSubstepsBy.ByTagAndAttributes("input", "value=\"" + buttonText + "\"");
 
-            if (e != null && buttonText.equals(e.getAttribute("value"))) {
-                if (matchingElems == null) {
-                    matchingElems = new ArrayList<WebElement>();
-                }
-                matchingElems.add(e);
-            }
+        WebElement webElement = waitFor(by, "expecting an input element with value=" + buttonText);
 
-        }
-
-        if (matchingElems != null && matchingElems.size() > 1) {
-            // ambiguous
-            Assert.fail("Found too many elements that meet this criteria");
-            // TODO - need some more debug here
-        }
-
-        else if (matchingElems != null) {
-            webDriverContext().setCurrentElement(matchingElems.get(0));
-        }
-
-        webDriverContext().getCurrentElement().click();
+        webElement.click();
     }
 
 
@@ -376,7 +368,7 @@ public class ActionWebDriverSubStepImplementations extends AbstractWebDriverSubS
     }
 
     /**
-     * Asserts that the current element is visible
+     * Asserts that the current element is visible, it will wait until this is true
      * @example AssertCurrentElement is visible
      * @section Assertions
      */
@@ -384,7 +376,70 @@ public class ActionWebDriverSubStepImplementations extends AbstractWebDriverSubS
     public void assertCurrentElementIsVisible(){
         WebElement currentElement = webDriverContext().getCurrentElement();
 
-        waitUntil( ExpectedConditions.elementToBeClickable(currentElement));
+        waitUntil( ExpectedConditions.visibilityOf(currentElement));
+    }
+
+    /**
+     * Waits until the current element is invisible, either visibility: hidden or display:none
+     *
+     * @example AssertCurrentElement is invisible
+     * @section Assertions
+     *
+     */
+    @Step("AssertCurrentElement is invisible")
+    public void assertCurrentElementIsInVisible(){
+        WebElement currentElement = webDriverContext().getCurrentElement();
+
+        List<WebElement> elems = new ArrayList<>();
+        elems.add(currentElement);
+        waitUntil( ExpectedConditions.invisibilityOfAllElements(elems));
+
+
 
     }
+
+
+    /**
+     * Invoke the webdriver Javascript executor to run a line of javascript
+     *
+     * @section Actions
+     * @example ExecuteJavascript document.getElementById("id-for-js-manipulation").innerHTML = "js fiddled"
+     *
+     * @param js the javascript expression
+     */
+    @SubSteps.Step("ExecuteJavascript (.*)$")
+    public void executeJavaScript(String js){
+        ((JavascriptExecutor) webDriver()).executeScript(js);
+
+    }
+
+
+    /**
+     * Takes a screenshot and writes to a file with the specified prefix, appending a timestamp of the format (yyMMddHHmm)
+     *
+     * @example TakeScreenshot with prefix "self-test"
+     * @section Actions
+     *
+     * @param filePrefix the filename prefix
+     */
+    @SubSteps.Step("TakeScreenshot with prefix \"([^\"]*)\"")
+    public void takeScreenshot(String filePrefix){
+
+        logger.debug("taking screenshot..");
+
+        LocalDateTime timePoint = LocalDateTime.now();
+
+        timePoint.getMinute();
+
+        String formattedDate = timePoint.format(formatter);
+
+        File out = new File(filePrefix + "_" + formattedDate + ".png");
+
+        try {
+            Files.write(getScreenshotBytes(), out);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

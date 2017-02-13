@@ -36,6 +36,7 @@ Scenario: a scenario
 	# table
 	And the table row 1, column 2 contains "Mrs Evil Headtecher"   	
 	And find by child works
+
 	
 	And I can find the disabled text field
 
@@ -52,4 +53,12 @@ Scenario: a scenario
 	And I can find an h4 tag with a css regex
 	And I can find an h4 tag with a css regex and text
 
+    FindById table_id
+    FindTableBodyRow row 2
+    AssertColumn 2 text = "Mr A. Person"
 
+
+    FindById table_id
+    FindTableBodyRow row 3
+    FindElementInRow ByTagAndAttributes tag="span" attributes=[data-reactid="123456"]
+    AssertCurrentElement text="Mr Z. Person"

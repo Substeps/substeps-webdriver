@@ -82,12 +82,11 @@ public class FormWebDriverSubStepImplementations extends
     }
 
 
-    // TODO quote this, or just send the remainder of the line
     /**
      * Enters text to the current element, without clearing any current content
      * first
      * 
-     * @example SendKeys hello
+     * @example SendKeys "hello"
      * @section Forms
      * @param value
      *            the value
@@ -218,7 +217,14 @@ public class FormWebDriverSubStepImplementations extends
         }
     }
 
-
+    /**
+     * Asserts that the select with the specified id has the specified option text selected
+     *
+     * @example AssertSelect id="select_id" text="number two option" is currently selected
+     * @section Form
+     * @param id the id of the select
+     * @param value the text value of the option
+     */
     @Step("AssertSelect id=\"([^\"]*)\" text=\"([^\"]*)\" is currently selected")
     public void assertOptionIsSelected(final String id, final String value) {
         logger.debug("Asserting select box with id " + id + " has option "
@@ -236,7 +242,14 @@ public class FormWebDriverSubStepImplementations extends
         }
     }
 
-
+    /**
+     * Asserts that the select with the specified id does not have the specified option text selected
+     *
+     * @example AssertSelect id="select_id" text="number one option" is not currently selected
+     * @section Form
+     * @param id the id of the select
+     * @param value the text value of the option that shouldn't be selected
+     */
     @Step("AssertSelect id=\"([^\"]*)\" text=\"([^\"]*)\" is not currently selected")
     public void assertOptionIsNotSelected(final String id, final String value) {
         logger.debug("Asserting select box with id " + id + " has option "
@@ -254,31 +267,6 @@ public class FormWebDriverSubStepImplementations extends
     }
 
 
-    /**
-     * Use: FindRadioButton inside tag=&quot;label&quot; with label=&quot;&lt;radio_button_text&gt;"
-     * + SetRadioButton checked=&lt;true&gt; in preference as this will locate the
-     * radio button by visible text rather than the underlying value.
-     * 
-     * Locates a radio button with a specific value and checks the radio button.
-     * 
-     * @example SetRadioButton name=opt_in, value=OFF, checked=true
-     * @section Forms
-     * @param name
-     *            the name
-     * @param value
-     *            the value
-     * @param checked
-     *            the checked
-     * @deprecated use "SetRadioButton checked=.." instead
-     */
-    @Deprecated
-    @Step("SetRadioButton name =([^\"]*), value =([^\"]*), checked =([^\"]*)")
-    public void setRadioButtonValue(final String name, final String value,
-            final String checked) {
-
-        throw new IllegalStateException(
-                "change code to use SetRadioButton checked= true/false instead");
-    }
 
 
     /**
@@ -327,70 +315,8 @@ public class FormWebDriverSubStepImplementations extends
     }
 
 
-    /**
-     * Sets the value of a radio button
-     * 
-     * @example SetRadioButton name="opt_in", text="radio button text"
-     * @section Forms
-     * @param name
-     *            the name
-     * @param text
-     *            text value
-     * @deprecated use SetRadioButton checked=true / false instead with an
-     *             apporpriate finder method
-     */
-    @Deprecated
-    @Step("SetRadioButton name=\"([^\"]*)\", text=\"([^\"]*)\"")
-    public void setRadioButton(final String name, final String text) {
-
-        throw new IllegalStateException(
-                "change code to use SetRadioButton checked=true / false instead");
-    }
 
 
-    /**
-     * Asserts a value of a radio button
-     * 
-     * @example AssertRadioButton name="radio_btn_name", text="text",
-     *          checked="true"
-     * @section Forms
-     * @param name
-     *            the name
-     * @param text
-     *            text value
-     * @param checked
-     *            true or false to indicate wether the checkbox is checked or
-     *            not
-     * @deprecated use AssertRadioButton checked=true
-     */
-    @Deprecated
-    @Step("AssertRadioButton name=\"([^\"]*)\", text=\"([^\"]*)\", checked=\"([^\"]*)\"")
-    public void assertRadioButton(
-            final String name,
-            final String text,
-            @StepParameter(converter = BooleanConverter.class) final Boolean checked) {
-
-        throw new IllegalStateException(
-                "change code to use AssertRadioButton checked= true/false instead");
-    }
-
-    /**
-     * Sets a check box value; deprecated use
-     * 
-     * @example SetCheckBox name="accept", checked=true
-     * @section Forms
-     * @param name
-     *            the name
-     * @param checked
-     *            the checked
-     * @deprecated use SetCheckedBox checked= true/false instead
-     */
-    @Deprecated
-    @Step("SetCheckBox name=\"([^\"]*)\", checked=([^\"]*)")
-    public void setSetCheckBox(final String name, final String checked) {
-        throw new IllegalStateException(
-                "change code to use SetCheckedBox checked= true/false instead");
-        }
 
 
     /**
@@ -418,6 +344,14 @@ public class FormWebDriverSubStepImplementations extends
         return select.findElements(By.tagName("option"));
     }
 
+    /**
+     * Choose an option with the specified text in the select with the specified css class
+     *
+     * @example Select "number two option" option in class "select-marker-class"
+     * @section Form
+     * @param optionText the option text
+     * @param cssClassName the css class of the select
+     */
     @SubSteps.Step("Select \"([^\"]*)\" option in class \"([^\"]*)\"")
     public void selectOptionInClass(String optionText, String cssClassName) {
 
@@ -428,7 +362,17 @@ public class FormWebDriverSubStepImplementations extends
         select.selectByVisibleText(optionText);
     }
 
-
+    /**
+     * Choose an option with the specified text in the select with the given id
+     *
+     * @example Select "number one option" option in Id "select_id"
+     * @section Form
+     *
+     * @param optionText the option text
+     * @param id the id of the select
+     * @return
+     * @throws InterruptedException
+     */
     @SubSteps.Step("Select \"([^\"]*)\" option in Id \"([^\"]*)\"")
     public WebElement selectOptionInId(String optionText, String id) throws InterruptedException {
 
@@ -472,35 +416,45 @@ public class FormWebDriverSubStepImplementations extends
 
 
     /**
+     * Uses a value of a property in the config file, constructs a File and passes the absolute path of that file to the current element.  Useful for file upload scenarios.
+     *
+     * @example SendKeys pathOf property "test.filename" to current element
+     * @section Form
+     *
      * used to pass the path of a file for file uploads
-     * @param filePropertyName
+     * @param filePropertyName the config property name
      */
     @SubSteps.Step("SendKeys pathOf property \"([^\"]*)\" to current element")
     public void sendKeysToCurrentElement(String filePropertyName) {
 
         String fileName = Configuration.INSTANCE.getString(filePropertyName);
 
-        logger.debug("csv filename: " + fileName);
+        logger.debug("filename: " + fileName);
 
         File csvFile = new File(fileName);
 
         logger.debug("About to send keys " + csvFile.getAbsolutePath() + " to current element");
 
         WebElement target = this.webDriverContext().getCurrentElement();
-
-
-
         Assert.assertNotNull("target element is null", target);
         target.sendKeys(new CharSequence[]{csvFile.getAbsolutePath()});
-
     }
 
+
+    /**
+     * Uses a value of a property in the config file, constructs a File and passes the absolute path of that file to the element with the specified id.  Useful for file upload scenarios.
+     *
+     * @example SendKeys pathOf property "test.filename2" to id "text-id"
+     * @section Form
+     * @param filePropertyName the config property name
+     * @param id the id of the element to send the absolute filename to
+     */
     @SubSteps.Step("SendKeys pathOf property \"([^\"]*)\" to id \"([^\"]*)\"")
     public void sendKeysToId(String filePropertyName, String id) {
 
         String fileName = Configuration.INSTANCE.getString(filePropertyName);
 
-        logger.debug("csv filename: " + fileName);
+        logger.debug("filename: " + fileName);
 
         File csvFile = new File(fileName);
 

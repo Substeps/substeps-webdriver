@@ -355,6 +355,7 @@
 
                                     <stepImplementationClassNames>
                                         <param>com.technophobia.webdriver.substeps.impl.BaseWebdriverSubStepImplementations</param>
+                                        <param>org.substeps.webdriver.TestWebdriverStepImplementations</param>
                                     </stepImplementationClassNames>
 
 								    	<executionListeners>

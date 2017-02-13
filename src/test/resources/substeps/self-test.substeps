@@ -108,8 +108,8 @@ Define: And I click the context menu
 Define: Then I see "context has been clicked"
          FindById context-clicked-div
          AssertCurrentElement has attributes=[class="context-clicked"]
-        AssertEventuallyContains context-clicked-div "context has been clicked"
-        
+         FindById context-clicked-div containing text="context has been clicked"
+
         
 Define: Given that I've not double clicked the link
          FindById dbl-clicked-div and text = "Not doubled clicked yet"
@@ -177,5 +177,5 @@ Define: And I can find an h4 tag with a css regex
 	    FindByTag "h4" with cssClassRegex ".* markerClass-\d .*"
 
 Define: And I can find an h4 tag with a css regex and text
-	    FindByTag "h4" with cssClassRegex ".* markerClass-\d .*" and text "Another heading"
+	    FindByTag "h4" with cssClassRegex ".* markerClass-\d .*" and containing text "Another heading"
 

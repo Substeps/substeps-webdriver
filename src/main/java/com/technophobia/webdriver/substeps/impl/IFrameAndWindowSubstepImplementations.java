@@ -9,6 +9,7 @@ import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,14 +20,12 @@ import org.slf4j.LoggerFactory;
 @SubSteps.StepImplementations(requiredInitialisationClasses = DefaultExecutionSetupTearDown.class)
 public class IFrameAndWindowSubstepImplementations extends AbstractWebDriverSubStepImplementations {
 
-    private static final Logger logger = LoggerFactory.getLogger(IFrameAndWindowSubstepImplementations.class);
-
-
-    private static final MutableSupplier<WebDriver> webdriverInContext = new ExecutionContextSupplier<>(Scope.SCENARIO, "webdriver-in-context");
     private static final MutableSupplier<String> webdriverPageInContext = new ExecutionContextSupplier<>(Scope.SCENARIO, "1");
 
     /**
      * Switches to the new window which has been opened
+     * @example Switch to new window
+     * @section windows
      */
     @SubSteps.Step("Switch to new window")
     public void switchToNewWindow() {
@@ -41,6 +40,8 @@ public class IFrameAndWindowSubstepImplementations extends AbstractWebDriverSubS
 
     /**
      * Close the new window which was been opened and return the focus to the original window
+     * @example Close new window
+     * @section windows
      */
     @SubSteps.Step("Close new window")
     public void closeWebDriver() {
@@ -55,53 +56,45 @@ public class IFrameAndWindowSubstepImplementations extends AbstractWebDriverSubS
 
     /**
      * Switches to the new iFrame present on current page and store the webdriver element for the iFrame
+     *
+     * @example Switch to new frame by CSS selector ".iframe-class"
+     * @section windows
+     *
+     * @param iFrameCssSelector the CSS Selector to identify the iframe to switch to
      */
-    @SubSteps.Step("Switch to new frame \"([^\"]*)\"")
-    public void switchToNewFrame(String frameCss) throws InterruptedException {
+    @SubSteps.Step("Switch to new frame by CSS selector \"([^\"]*)\"")
+    public void switchToNewFrame(String iFrameCssSelector) throws InterruptedException {
 
-        int timeout = 0;
-        while (timeout < 10) {
-            try {
-                webdriverInContext.set(webDriver().switchTo().frame(webDriver().findElement(By.cssSelector(frameCss))));
-                break;
-            }
-            catch (NoSuchElementException e) {
-                logger.info("The element " + frameCss + " has not yet been found");
-                Thread.sleep(1000);
-                timeout++;
-            }
-        }
+        WebElement elem = waitFor(By.cssSelector(iFrameCssSelector), "Expecting an iframe with selector: " + iFrameCssSelector);
+        webDriver().switchTo().frame(elem);
     }
 
     /**
      * Switches to the specified iFrame present on current page and store the webdriver element for the iFrame
+     *
+     * @example Switch to new frame by name "iframe-name"
+     * @section windows
+     *
+     * @param frameName the name attribute of the iframe to switch to
+     *
      */
     @SubSteps.Step("Switch to new frame by name \"([^\"]*)\"")
     public void switchToNewFrameByName(String frameName) throws InterruptedException {
 
-        int timeout = 0;
-        while (timeout < 10) {
-            try {
-                webdriverInContext.set(webDriver().switchTo().frame(webDriver().findElement(By.name(frameName))));
-                break;
-            }
-            catch (NoSuchElementException e) {
-                logger.info("The element " + frameName + " has not yet been found");
-                Thread.sleep(1000);
-                timeout++;
-            }
-        }
+        WebElement elem = waitFor(By.name(frameName), "Expecting an iframe with name: " + frameName);
+        webDriver().switchTo().frame(elem);
     }
 
     /**
      * Switches back to the default content
+     *
+     * @example Switch to default content
+     * @section Windows
      */
     @SubSteps.Step("Switch to default content")
     public void switchToDefaultContent() {
 
-        WebDriver driver = webdriverInContext.get();
-        driver = driver.switchTo().defaultContent();
-        webdriverInContext.set(driver);
+        webDriver().switchTo().defaultContent();
     }
 
     /**
@@ -109,7 +102,7 @@ public class IFrameAndWindowSubstepImplementations extends AbstractWebDriverSubS
      * method) which should be a frame or iframe
      *
      * @example SwitchFrameToCurrentElement
-     * @section Location
+     * @section Windows
      *
      */
     @SubSteps.Step("SwitchFrameToCurrentElement")

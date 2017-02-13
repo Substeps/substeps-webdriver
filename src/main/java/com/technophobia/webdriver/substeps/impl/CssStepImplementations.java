@@ -26,6 +26,7 @@ public class CssStepImplementations  extends AbstractWebDriverSubStepImplementat
 
 
     /**
+     * Finds an element of the specified type and with css classes that match the specified expression
      *
      * @example FindByTag "tag" with cssClassRegex ".* marker-\d .*"
      * @section CSS
@@ -71,15 +72,16 @@ public class CssStepImplementations  extends AbstractWebDriverSubStepImplementat
     }
 
     /**
-     * @example
+     * Finds an element of the specified type and with css classes that match the specified expression and containing the specified text
+     * @example FindByTag "h4" with cssClassRegex ".* markerClass-\d .*" and containing text "Another heading"
      * @section CSS
      *
-     * @param tag
-     * @param cssRegex
-     * @param text
-     * @return
+     * @param tag the tag name
+     * @param cssRegex a regex to test against the class attribute
+     * @param text the text to match partially against the text of the element
+     * @return the found element
      */
-    @SubSteps.Step("FindByTag \"([^\"]*)\" with cssClassRegex \"([^\"]*)\" and text \"([^\"]*)\"")
+    @SubSteps.Step("FindByTag \"([^\"]*)\" with cssClassRegex \"([^\"]*)\" and containing text \"([^\"]*)\"")
     public WebElement findByTagAndCssWildcard(String tag, String cssRegex, String text){
 
         By by = WebDriverSubstepsBy.ByTagWithCssClassWildcardContainingText(tag, cssRegex, text);
@@ -146,11 +148,13 @@ public class CssStepImplementations  extends AbstractWebDriverSubStepImplementat
     }
 
     /**
-     * @example
+     * Find an element that has the specified CSS class and contains the text (the element can have other classes that apply, but only one can be specified)
+     *
+     * @example FindByCssClass "markerClass-2" containing text "Another"
      * @section CSS
      *
-     * @param cssClass
-     * @param text
+     * @param cssClass the CSS Class
+     * @param text the text to partially match against
      */
     @SubSteps.Step("FindByCssClass \"([^\"]*)\" containing text \"([^\"]*)\"")
     public void findByCssClassContainingText(final String cssClass, final String text) {

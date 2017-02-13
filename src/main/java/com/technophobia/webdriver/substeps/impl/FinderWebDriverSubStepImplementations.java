@@ -99,22 +99,34 @@ public class FinderWebDriverSubStepImplementations extends AbstractWebDriverSubS
     }
 
 
+
+    // xpath query //*[contains(@id, 'f41_txt')]
+    // $x("//*[@id='sogei_mapping_left_container']")
+
+    // $x("//*[@id='sogei_mapping_left_container']//div[contains(text(),'BANDY')]")  selects the item
+
+    // Handy little ! xpath to get to the chevron to do the whatsit
+    // $x("//*[@id='sogei_mapping_left_container']//div[contains(text(),'BASKET')]/ancestor::div[contains(@class, 'mapperItem draggable')]//div[contains(@class, 'chevron')]")
+
     /**
-     * Find an id by xpath
-     * 
-     * @example FindByXpath
-     * @section Location
-     * 
-     * @param xpath
-     *            the xpath
+     * Finds an element using an xpath expression, the expression may contain quotes, unlike an earlier implementation.
+     * Xpath expressions should search rather than full paths to elements
+     *
+     *  @example FindByXpath //li[a/i[contains(@class, "NOT_RUN")]]
+     *  @section Finders
+     *
+     * @param xpath the xpath expression
+     * @return the web element found
      */
-    @Step("FindByXpath ([^\"]*)")
-    public void findByXpath(final String xpath) {
+
+    @Step("FindByXpath (.*)$")
+    public WebElement findByXpath(final String xpath) {
         logger.debug("Looking for item with xpath " + xpath);
         webDriverContext().setCurrentElement(null);
         final WebElement elem = webDriverContext().waitForElement(By.xpath(xpath));
         Assert.assertNotNull("expecting an element with xpath " + xpath, elem);
         webDriverContext().setCurrentElement(elem);
+        return elem;
     }
 
 
@@ -167,39 +179,39 @@ public class FinderWebDriverSubStepImplementations extends AbstractWebDriverSubS
     }
 
 
-    /**
-     * Finds an element on the page with the specified tag and text
-     * 
-     * @example FindTagElementContainingText tag="ul" text="list item itext"
-     * @section Location
-     * @param tag
-     *            the tag
-     * @param text
-     *            the text
-     */
-    @Step("FindTagElementWithExactText tag=\"([^\"]*)\" text=\"([^\"]*)\"")
-    public void findTagElementWithExactText(final String tag, final String text) {
-        logger.debug("Finding tag element " + tag + "and asserting has exact text " + text);
-
-        webDriverContext().setCurrentElement(null);
-        final List<WebElement> elementsWithTagName = webDriver().findElements(By.tagName(tag));
-
-        WebElement matchingElement = null;
-        for (final WebElement element : elementsWithTagName) {
-
-            if (element.getText().equals(text)) {
-
-                if (matchingElement == null) {
-                    matchingElement = element;
-                } else {
-                    Assert.fail("expected one element with tag " + tag + " and text " + text + " but found multiple");
-                }
-            }
-        }
-
-        Assert.assertNotNull("expecting element with tag " + tag + " and text " + text, matchingElement);
-        webDriverContext().setCurrentElement(matchingElement);
-    }
+//    /**
+//     * Finds an element on the page with the specified tag and text
+//     *
+//     * @example FindTagElementContainingText tag="ul" text="list item itext"
+//     * @section Location
+//     * @param tag
+//     *            the tag
+//     * @param text
+//     *            the text
+//     */
+//    @Step("FindTagElementWithExactText tag=\"([^\"]*)\" text=\"([^\"]*)\"")
+//    public void findTagElementWithExactText(final String tag, final String text) {
+//        logger.debug("Finding tag element " + tag + "and asserting has exact text " + text);
+//
+//        webDriverContext().setCurrentElement(null);
+//        final List<WebElement> elementsWithTagName = webDriver().findElements(By.tagName(tag));
+//
+//        WebElement matchingElement = null;
+//        for (final WebElement element : elementsWithTagName) {
+//
+//            if (element.getText().equals(text)) {
+//
+//                if (matchingElement == null) {
+//                    matchingElement = element;
+//                } else {
+//                    Assert.fail("expected one element with tag " + tag + " and text " + text + " but found multiple");
+//                }
+//            }
+//        }
+//
+//        Assert.assertNotNull("expecting element with tag " + tag + " and text " + text, matchingElement);
+//        webDriverContext().setCurrentElement(matchingElement);
+//    }
     
     
     /**
@@ -249,8 +261,6 @@ public class FinderWebDriverSubStepImplementations extends AbstractWebDriverSubS
 
     private WebElement findChildByTagAndAttributes(final String tag, final String attributeString,
             final MatchingElementResultHandler resultHandler) {
-
-        Assert.assertNotNull("expecting a current element", webDriverContext().getCurrentElement());
 
         final WebElement currentElement = webDriverContext().getCurrentElement();
 
@@ -784,7 +794,7 @@ public class FinderWebDriverSubStepImplementations extends AbstractWebDriverSubS
      *          "Log Out"
      * @section Location
      * @param xpath
-     *            the xpath
+     *            the xpath expression, NB this is quoted and can't contain double quotes
      * @param text
      *            the text
      */
@@ -833,17 +843,15 @@ public class FinderWebDriverSubStepImplementations extends AbstractWebDriverSubS
     }
     
     /**
-     * Find an element by tag name and a set of attributes and corresponding
-     * values
+     * Find an element by tag name and a set of attributes and expected text
      * 
      * @param tag
      *            the tag
      * @param attributeString
      *            the attribute string
-     *            @param text the expected text
+     * @param text the expected text
      * @return the web element
-     * @example FindByTagAndAttributesWithText tag="input"
-     *          attributes=[type="submit",value="Search"]
+     * @example FindByTagAndAttributesWithText tag="input" attributes=[type="submit",value="Search"] with text="abc"
      * @section Location
      */
     @Step("FindByTagAndAttributesWithText tag=\"?([^\"]*)\"? attributes=\\[(.*)\\] with text=\"([^\"]*)\"")
@@ -869,5 +877,23 @@ public class FinderWebDriverSubStepImplementations extends AbstractWebDriverSubS
         webDriverContext().setCurrentElement(rtn);
 
         return rtn;
-    }    
+    }
+
+
+    /**
+     * Finds and waits for if necessary, an element by Id containing the specified text
+     *
+     * @example FindById id containing text="abc"
+     * @section Finders
+     * @param elementId
+     *            HTML ID of element
+     * @param text
+     *            the expected text
+     */
+    @Step("FindById ([^\"]*) containing text=\"([^\"]*)\"")
+    public void assertEventuallyContains(final String elementId, final String text) {
+
+        waitFor(WebDriverSubstepsBy.ByIdContainingText(elementId, text), String.format("Expected to find a element with 'id=%s' containing text '%s' but didn't.", elementId, text));
+    }
+
 }

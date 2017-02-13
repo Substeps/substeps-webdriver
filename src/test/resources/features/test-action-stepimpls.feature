@@ -25,12 +25,24 @@ Scenario: Test Action step impls
     PerformDoubleClick
     FindById dbl-click-button-div and text = "doubled clicked"
 
+    FindById id-for-js-manipulation and text = "initial"
+    ExecuteJavascript document.getElementById("id-for-js-manipulation").innerHTML = "js fiddled"
+    FindById id-for-js-manipulation and text = "js fiddled"
+
+
+
+    #######################################################
+    # External site
+
     NavigateTo https://swisnl.github.io/jQuery-contextMenu/demo.html
     FindByCssClass "context-menu-one" with text "right click me"
     PerformContextClick
 
     FindByCssClass "context-menu-item" containing text "Edit"
     AssertCurrentElement is visible
+
+    TakeScreenshot with prefix "self-test"
+    AssertScreenshotFileExists "self-test" something
 
 ##################################################################
 	# these tests need to be last as they go off to google
@@ -40,4 +52,7 @@ Scenario: Test Action step impls
     # Do not add more steps here
 
 # TODO
-# ClickSubmitButton
+# ClickSubmitButton     - form ?
+# ExecuteJavascript (.*)$
+# Execute substituted Javascript ~([^~]*)~ "([^"]*)"
+

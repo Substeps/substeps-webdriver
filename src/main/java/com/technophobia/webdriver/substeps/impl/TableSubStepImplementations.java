@@ -90,8 +90,9 @@ public class TableSubStepImplementations extends AbstractWebDriverSubStepImpleme
         final WebElement rowElement = getTableRow(tbody, row);
 
         Assert.assertNotNull("expecting a table row element", rowElement);
-         webDriverContext().setCurrentElement(rowElement);
+        webDriverContext().setCurrentElement(rowElement);
 
+        webDriverContext().stashElement(TABLE_ROW_KEY, rowElement);
         return rowElement;
     }
 
@@ -164,6 +165,33 @@ public class TableSubStepImplementations extends AbstractWebDriverSubStepImpleme
 
     }
 
+    /**
+     * Step implementation to be used after a table and specific row, assert that the given column has the specified  text
+     * @example AssertColumn 2 text = "Mr A. Person"
+     * @section Table
+     * @param column the column number (1 based)
+     * @param text the expected text
+     */
+    @Step("AssertColumn (\\d+) text = \"([^\"]*)\"")
+    public void assertColumnText(@StepParameter(converter = IntegerConverter.class) final Integer column, final String text){
+
+        // assumes current element is already set
+        final WebElement rowElem =  webDriverContext().getCurrentElement();
+
+        AssertionWebDriverSubStepImplementations.assertElementIs(rowElem, "tr");
+
+        WebElement cell = getCell(rowElem, column);
+
+        webDriverContext().setCurrentElement(cell);
+
+        String cellText = cell.getText();
+
+        Assert.assertNotNull("expecting some cell text", cellText);
+
+        Assert.assertThat("expecting cell text to = " + text , cellText, is(text));
+
+
+    }
 
     private WebElement getResultsTableBodyElement(final WebElement tableElement) {
 
@@ -197,6 +225,20 @@ public class TableSubStepImplementations extends AbstractWebDriverSubStepImpleme
 
         final WebElement rowElement = getTableRow(tbody, row);
 
+//        final List<WebElement> columnElements = rowElement.findElements(By.tagName("td"));
+//        Assert.assertNotNull("expecting columnElements", columnElements);
+//
+//        Assert.assertTrue("expecting more than " + col + " columns in the table, got: " + columnElements.size(),
+//                columnElements.size() >= col);
+
+        final WebElement tdElem = getCell(rowElement, col);
+
+        Assert.assertNotNull("expecting a td at column: " + col, tdElem);
+
+        return tdElem.getText();
+    }
+
+    private WebElement getCell(WebElement rowElement, final int col){
         final List<WebElement> columnElements = rowElement.findElements(By.tagName("td"));
         Assert.assertNotNull("expecting columnElements", columnElements);
 
@@ -205,8 +247,7 @@ public class TableSubStepImplementations extends AbstractWebDriverSubStepImpleme
         final WebElement tdElem = columnElements.get(col - 1);
 
         Assert.assertNotNull("expecting a td at column: " + col, tdElem);
-
-        return tdElem.getText();
+        return tdElem;
     }
 
 
