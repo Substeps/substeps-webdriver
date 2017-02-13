@@ -3,7 +3,52 @@
 <head >
 	<title>Hello Self Test page</title>
 	
-<script type="text/javascript">
+<script type="text/javascript">function do_submit() {
+
+  console.log("do submit handler")
+  var elem = document.getElementById("submitted-div-id");
+  elem.innerHTML = "submitted"
+  return false;
+
+}
+function triggerDoubleClick() {
+
+  var elem = document.getElementById("dbl-click-button-div");
+  elem.innerHTML = "doubled clicked"
+}
+
+
+function triggerPageTitleChange(){
+  var t=setTimeout("doPageTitleChange()",1000);
+  return false;
+
+}
+
+function doPageTitleChange() {
+  document.title = "A new page title"
+}
+
+
+function doOtherButtonClick() {
+  var elem = document.getElementById("the-other-button-div");
+  elem.innerHTML = "Other button clicked"
+}
+
+
+function enableTheOtherButton(){
+      var t=setTimeout("showTheOtherButton()",1000);
+      return false;
+	}
+	function showTheOtherButton(){
+      var elem = document.getElementById("the-other-button");
+      elem.style.visibility="visible";
+	}
+
+  function partialTextMatchButtonClickHandler() {
+    var elem = document.getElementById("partial-text-button-div");
+	elem.innerHTML = "Partial text matched Button click successful"
+}
+
 
 function do_btn_click()
 {
@@ -66,6 +111,24 @@ function performDoubleClick()
     return false;
 
     
+}
+
+function doPresentButtonClick(element){
+  element.innerText = "clicked"
+}
+
+function doHideDiv(){
+	var elem = document.getElementById('visible-div');
+
+  setTimeout(function(){elem.style.visibility="hidden";},500);
+	return false;
+}
+
+function doShowHiddenDiv(){
+  var elem = document.getElementById('visible-div');
+  setTimeout(function(){elem.style.visibility="visible";},500);
+  return false;
+
 }
 
 function createElement(element, type, id, value)
@@ -150,7 +213,7 @@ function onClick(timeout)
 
 
 
-<select id="select_id">
+<select id="select_id" class="select-marker-class">
     <option value="1">number one option</option>
     <option value="2" selected="selected">number two option</option>
     <option value="3">number three option</option>
@@ -216,7 +279,7 @@ function onClick(timeout)
           <span class="help-block">- option 2</span>
      </label>
      <label class="radio">
-          <input type="radio" name="optionsRadios" id="optionsRadios2" value="option3"/>
+          <input type="radio" name="optionsRadios" id="optionsRadios3" value="option3"/>
                radio
           <span class="help-block">- option 3</span>
      </label>
@@ -262,7 +325,7 @@ function onClick(timeout)
 				</tr>
 				<tr>
 					<td>Acme corporation</td>
-					<td>Mr A. Person</td>
+					<td><span data-reactid="123456">Mr Z. Person</span></td>
 					<td>X00000000026</td>
 					<td>21/01/11</td>
 					<td>3</td>
@@ -404,7 +467,100 @@ function onClick(timeout)
 <h4 class="something markerClass-1 somethingElse">heading</h4>
 <h4 class="something markerClass-2 somethingElse">Another heading</h4>
 
+<button class="present-button" onclick="doPresentButtonClick(this)">a present button</button>
 
+<div class="two-divs">1</div>
+<div class="two-divs">2</div>
 
+<div id="visible-div">something visible</div>
+
+<div id="not-visible-div" style="visibility: hidden">not visible div</div>
+<div id="not-visible-hidden-div" style="display: none">hidden div</div>
+
+<button onclick="doHideDiv()">hide something visible</button>
+
+<button onclick="doShowHiddenDiv()">make something visible</button>
+
+<div class="parent-div-class">
+	<div class="nested-div-class">expected</div>
+	<div class="nested-div-class-1234">expected2</div>
+	<div class="nested-div-class-xxxx">not-expected</div>
+	<span>one</span>
+	<span>two</span>
+
+</div>
+
+<!-- added to ensure we're finding the right thing -->
+<div class="nested-div-class">fail</div>
+
+<button onclick="partialTextMatchButtonClickHandler()">some text to partially match on</button>
+
+<div id="partial-text-button-div"></div>
+
+<button id="other-button-enabler" onclick="enableTheOtherButton()">Enable other button</button>
+
+<button id="the-other-button" style="visibility:hidden" onclick="doOtherButtonClick()">The other button</button>
+
+<div id="the-other-button-div"></div>
+
+<button id="trigger-alert" onclick="window.alert('Popup')">do alert</button>
+
+<button id="trigger-page-title-change" onclick="triggerPageTitleChange()">change page title</button>
+
+<button id="dbl-click-trigger" ondblclick="triggerDoubleClick()">do double click</button>
+
+<div id="dbl-click-button-div"></div>
+
+<div data-reactid="12345">div0 with tag and attributes</div>
+<div data-reactid="12345">div1 with tag and attributes</div>
+<div data-reactid="12345" aria-label="a-label">div2 with tag and attributes</div>
+
+<div id="find-child-by-name-parent">
+	<button name="child1">child 1</button>
+	<button name="child2">child 2</button>
+	<div data-reactid="12345">child div0 with tag and attributes</div>
+	<div data-reactid="12345">child div1 with tag and attributes</div>
+
+	<div data-reactid="6789">first child</div>
+	<div data-reactid="6789">second child</div>
+
+	<div>beginning with first</div>
+	<div>beginning with second</div>
+
+</div>
+
+<div data-reactid="54321">first</div>
+<div data-reactid="54321">second</div>
+
+<ul id="ul-parent-id">
+<li><a><i class="something NOT_RUN something-else"></i>target</a></li>
+	<li><a><i class="something RUN something-else"></i>decoy</a></li>
+	<li><a><i class="something FAILED something-else"></i>target2</a></li>
+</ul>
+
+<span>some text</span>
+<div>some text</div>
+
+<span id="span-id-with-regex">blah xyzabc found</span>
+
+<input id="input-value-assertion-id" type="text" value="123456">
+
+<div data-reactid="abcdefg-123456">tag and attribute assertion</div>
+
+<div id="remember-div">to be remembered</div>
+<div id="to-compare-to-matching-div">to be remembered</div>
+<div id="to-compare-to-not-matching-div">not matching</div>
+
+<form onsubmit="return do_submit()">
+
+	<input id="input-value-to-submit-id" type="text" value="123456">
+	<input type="submit" name="submit">
+</form>
+
+<div id="submitted-div-id"></div>
+
+<div id="id-for-partial-text-match">I love cheese, especially airedale queso. Cheese and biscuits halloumi cauliflower cheese cottage cheese swiss boursin fondue caerphilly. Cow port-salut camembert de normandie macaroni cheese feta who moved my cheese babybel boursin. Red leicester roquefort boursin squirty cheese jarlsberg blue castello caerphilly chalk and cheese. Lancashire.</div>
+
+<div id="id-for-js-manipulation">initial</div>
 </body>
 </html>
