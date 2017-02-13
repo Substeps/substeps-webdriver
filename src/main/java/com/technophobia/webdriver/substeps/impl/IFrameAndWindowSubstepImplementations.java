@@ -63,7 +63,7 @@ public class IFrameAndWindowSubstepImplementations extends AbstractWebDriverSubS
      * @param iFrameCssSelector the CSS Selector to identify the iframe to switch to
      */
     @SubSteps.Step("Switch to new frame by CSS selector \"([^\"]*)\"")
-    public void switchToNewFrame(String iFrameCssSelector) throws InterruptedException {
+    public void switchToNewFrame(String iFrameCssSelector) {
 
         WebElement elem = waitFor(By.cssSelector(iFrameCssSelector), "Expecting an iframe with selector: " + iFrameCssSelector);
         webDriver().switchTo().frame(elem);
@@ -79,7 +79,7 @@ public class IFrameAndWindowSubstepImplementations extends AbstractWebDriverSubS
      *
      */
     @SubSteps.Step("Switch to new frame by name \"([^\"]*)\"")
-    public void switchToNewFrameByName(String frameName) throws InterruptedException {
+    public void switchToNewFrameByName(String frameName) {
 
         WebElement elem = waitFor(By.name(frameName), "Expecting an iframe with name: " + frameName);
         webDriver().switchTo().frame(elem);

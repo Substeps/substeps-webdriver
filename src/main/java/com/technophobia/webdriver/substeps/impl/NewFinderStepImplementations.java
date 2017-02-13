@@ -63,7 +63,7 @@ public class NewFinderStepImplementations extends AbstractWebDriverSubStepImplem
      * @example FindBy xpath with token replacement $x("//li[a/i[contains(@class, '%s')]]") "FAILED"
      * @section Finders
      *
-     * @param xpath an expression surrounded by $x(" <xpath > ")
+     * @param xpath an expression surrounded by $x(" &lt; xpath &gt; ")
      * @param tokens the tokens if any to be substituted into the xpath string using String format specifiers.  NB. If calling this directly in code, the tokens need to be quoted
      * @return the web element
      */

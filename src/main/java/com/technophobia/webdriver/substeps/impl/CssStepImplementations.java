@@ -33,6 +33,7 @@ public class CssStepImplementations  extends AbstractWebDriverSubStepImplementat
      *
      * @param tag the name of the HTML tag
      * @param cssRegex a regex applied to the css class attribute to restrict the selection of the tag
+     * @return the located WebElement
      */
     @SubSteps.Step("FindByTag \"([^\"]*)\" with cssClassRegex \"([^\"]*)\"")
     public WebElement findByTagAndCssWildcard(String tag, String cssRegex){
@@ -243,7 +244,7 @@ public class CssStepImplementations  extends AbstractWebDriverSubStepImplementat
      * @example AssertCssSelector ".two-divs" is present
      * @section CSS
      *
-     * @param cssSelector
+     * @param cssSelector the CSS Selector
      */
     @SubSteps.Step("AssertCssSelector \"([^\"]*)\" is present")
     public void assertCssSelectorIsPresent(String cssSelector) {
@@ -275,6 +276,7 @@ public class CssStepImplementations  extends AbstractWebDriverSubStepImplementat
      * @section CSS
      *
      * @param cssSelector the css selector
+     * @return the located WebElement
      */
     @SubSteps.Step("FindByCssSelector \"([^\"]*)\"")
     public WebElement findByCssSelector(String cssSelector) {

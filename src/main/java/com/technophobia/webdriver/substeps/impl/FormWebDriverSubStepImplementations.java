@@ -370,8 +370,8 @@ public class FormWebDriverSubStepImplementations extends
      *
      * @param optionText the option text
      * @param id the id of the select
-     * @return
-     * @throws InterruptedException
+     * @return the located WebElement
+     * @throws InterruptedException if the wait is interupted
      */
     @SubSteps.Step("Select \"([^\"]*)\" option in Id \"([^\"]*)\"")
     public WebElement selectOptionInId(String optionText, String id) throws InterruptedException {
