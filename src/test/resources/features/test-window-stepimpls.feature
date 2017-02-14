@@ -1,7 +1,8 @@
-Tags: @non-visual
 
 Feature: A feature to test iframe and window related step impls
-    
+
+Tags: @non-visual
+
 Scenario: Test iframe and window step implementations
     NavigateTo url property "iframe.test.page"
 
@@ -22,6 +23,8 @@ Scenario: Test iframe and window step implementations
     FindById iframed-div-id and text = "iframed div"
 
 
+Tags: @visual
+Scenario: A feature to test window related step impls
     Switch to default content
     ClickById open-new-window-button
 
