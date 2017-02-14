@@ -35,7 +35,6 @@ import com.technophobia.webdriver.substeps.runner.DefaultExecutionSetupTearDown;
         AssertionWebDriverSubStepImplementations.class,
         FinderWebDriverSubStepImplementations.class,
         FormWebDriverSubStepImplementations.class,
-        StartupWebDriverSubStepImplementations.class,
         TableSubStepImplementations.class,
         CssStepImplementations.class,
         IFrameAndWindowSubstepImplementations.class,

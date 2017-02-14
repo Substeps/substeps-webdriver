@@ -19,6 +19,7 @@
 package com.technophobia.webdriver.util;
 
 import com.google.common.base.Function;
+import com.technophobia.substeps.model.Configuration;
 import com.technophobia.webdriver.substeps.runner.Condition;
 import com.technophobia.webdriver.substeps.runner.WebdriverSubstepsPropertiesConfiguration;
 import org.openqa.selenium.By;
@@ -71,7 +72,12 @@ public class ElementLocators {
         try {
             elem = wait.until(condition);
         } catch (final TimeoutException e) {
-            LOG.debug("timed out page src:\n" + webDriver.getPageSource());
+
+            if (Configuration.INSTANCE.getConfig().getBoolean("log.pagesource.onerror")){
+                LOG.debug("timed out page src:\n" + webDriver.getPageSource());
+            }
+
+
         }
         return elem;
     }

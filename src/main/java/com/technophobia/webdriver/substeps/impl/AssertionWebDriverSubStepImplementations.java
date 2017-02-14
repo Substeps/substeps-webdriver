@@ -86,7 +86,22 @@ public class AssertionWebDriverSubStepImplementations extends AbstractWebDriverS
         Assert.assertThat( webDriverContext().getCurrentElement()
                 .getAttribute("value"), is(expected));
     }
-    
+
+    /**
+     * Check that the current input field contains the expected text value
+     *
+     * @example AssertCurrentInput value contains "Hello"
+     * @section Assertions
+     * @param expected
+     *            part of the expected value
+     */
+    @Step("AssertCurrentInput value contains \"([^\"]*)\"")
+    public void assertCurrentInputContainsText(final String expected) {
+        logger.debug("Asserting the current input contains the value" + expected);
+        Assert.assertThat( webDriverContext().getCurrentElement()
+                .getAttribute("value"), containsString(expected));
+    }
+
     
     /**
      * Check that the current element contains the specified text
@@ -124,40 +139,6 @@ public class AssertionWebDriverSubStepImplementations extends AbstractWebDriverS
     }
 
 
-    /**
-     * Check that any of the html tags have the specified attribute name and
-     * value
-     * 
-     * @example AssertTagElementContainsText tag="ul" attributeName="class"
-     *          attributeValue="a_list"
-     * @section Assertions
-     * @param tag
-     *            the tag
-     * @param attributeName
-     *            the attribute name
-     * @param attributeValue
-     *            the attribute value
-     */
-    @Step("AssertTagElementContainsAttribute tag=\"([^\"]*)\" attributeName=\"([^\"]*)\" attributeValue=\"([^\"]*)\"")
-    public void assertTagElementContainsAttribute(final String tag, final String attributeName,
-            final String attributeValue) {
-        logger.debug("Asserting tag element " + tag + " has attribute " + attributeName + " with value "
-                + attributeValue);
-        final List<WebElement> itemList = webDriver().findElements(By.tagName(tag));
-        boolean found = false;
-
-        for (final WebElement item : itemList) {
-            final String itemAttributeValue = item.getAttribute(attributeName);
-
-            if (StringUtils.isNotBlank(itemAttributeValue) && itemAttributeValue.contains(attributeValue)) {
-                found = true;
-                break;
-            }
-        }
-
-        Assert.assertTrue("expecting child element to contain attribute: " + attributeName + " with value "
-                + attributeValue, found);
-    }
 
 
     /**
@@ -179,7 +160,7 @@ public class AssertionWebDriverSubStepImplementations extends AbstractWebDriverS
      * Simple text search on page source
      * 
      * @example AssertPageSourceContains "foobar"
-     * 
+     * @section Assertions
      * @param expected
      *            the text you expect to find in the page source - this can
      *            include quotes.
@@ -304,7 +285,8 @@ public class AssertionWebDriverSubStepImplementations extends AbstractWebDriverS
     /**
      * Grab the text of an element (identified by id) and save it for the
      * duration of this scenario
-     * 
+     *
+     * @section Assertions
      * @example RememberForScenario textFrom "projectName" as "savedProjectName"
      * 
      * @param elementId
@@ -327,7 +309,7 @@ public class AssertionWebDriverSubStepImplementations extends AbstractWebDriverS
      * 
      * @example AssertDifferent rememberedValue "savedProjectName"
      *          compareToElement "projectName"
-     * 
+     * @section Assertions
      * @param elementId
      *            The ID of the HTML element
      * @param rememberedValueName
@@ -358,7 +340,7 @@ public class AssertionWebDriverSubStepImplementations extends AbstractWebDriverS
      * 
      * @example AssertSame rememberedValue "savedProjectName" compareToElement
      *          "projectName"
-     * 
+     * @section Assertions
      * @param elementId
      *            The ID of the HTML element
      * @param rememberedValueName
@@ -383,41 +365,13 @@ public class AssertionWebDriverSubStepImplementations extends AbstractWebDriverS
     }
 
 
-    /**
-     * Asserts that an element (identified by ID) eventually gets some text
-     * inserted into it (by JavaScript, probably)
-     * 
-     * @example AssertEventuallyNotEmpty mySpan
-     * @param elementId
-     *            HTML ID of element
-     */
-    @Step("AssertEventuallyNotEmpty id=\"([^\"]*)\"")
-    public void assertEventuallyNotEmpty(final String elementId) {
-        WebElement webElement = waitForElementToContainSomeText(By.id(elementId));
-        Assert.assertNotNull(String.format("Expected to find a non-empty element with 'id=%s' but didn't.", elementId), webElement);
-    }
+
+
+
 
 
     /**
-     * Asserts that an element (identified by ID) eventually gets some specific
-     * text inserted into it (by JavaScript, probably)
-     * 
-     * @example AssertEventuallyContains mySpanId "text I eventually expect"
-     * @section Assertions
-     * @param elementId
-     *            HTML ID of element
-     * @param text
-     *            the expected text
-     */
-    @Step("AssertEventuallyContains ([^\"]*) \"([^\"]*)\"")
-    public void assertEventuallyContains(final String elementId, final String text) {
-        WebElement webElement = webDriverContext().waitForElement(WebDriverSubstepsBy.ByIdContainingText(elementId, text));
-        Assert.assertNotNull(String.format("Expected to find a element with 'id=%s' containing text '%s' but didn't.", elementId, text), webElement);
-    }
-
-
-    /**
-     * Assert that the specified text is not found within the page
+     * Assert that the specified text is not found within the page source
      * 
      * @example AssertNotPresent text="undesirable text"
      * @section Assertions

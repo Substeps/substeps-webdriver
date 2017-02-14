@@ -2,6 +2,7 @@ package org.substeps.webdriver;
 
 import com.technophobia.webdriver.util.WebDriverContext;
 import com.typesafe.config.Config;
+import io.github.bonigarcia.wdm.WdmConfig;
 import org.openqa.selenium.WebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,15 +16,10 @@ public abstract class BaseDriverFactory implements DriverFactory{
 
     protected final void setupWebdriverManagerGithubAuth(Config cfg){
 
+        // this is to allow the injection of github username and access token
         // see https://github.com/settings/tokens
-        if (cfg.hasPath("github.auth")){
 
-            System.setProperty("wdm.gitHubTokenName", cfg.getString("github.auth.username"));
-            System.setProperty("wdm.gitHubTokenSecret", cfg.getString("github.auth.token"));
-        }
-        else {
-            log.info("webdriver manager may be unable to download drivers");
-        }
+        System.setProperty("wdm.properties", "substeps-webdrivermanager.properties");
     }
 
     @Override

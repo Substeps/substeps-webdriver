@@ -32,31 +32,17 @@ public class NewFinderStepImplementations extends AbstractWebDriverSubStepImplem
 
     private static final Logger logger = LoggerFactory.getLogger(NewFinderStepImplementations.class);
 
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyMMddHHmm");
 
 
-    // xpath query //*[contains(@id, 'f41_txt')]
-    // $x("//*[@id='sogei_mapping_left_container']")
-
-    // $x("//*[@id='sogei_mapping_left_container']//div[contains(text(),'BANDY')]")  selects the item
-
-    // Handy little ! xpath to get to the chevron to do the whatsit
-    // $x("//*[@id='sogei_mapping_left_container']//div[contains(text(),'BASKET')]/ancestor::div[contains(@class, 'mapperItem draggable')]//div[contains(@class, 'chevron')]")
-
-
-    @SubSteps.Step("FindByXpath2 (.*)$")
-    public WebElement findByXpath2(String xpath) {
-
-        logger.debug("Looking for item with xpath " + xpath);
-        this.webDriverContext().setCurrentElement(null);
-        WebElement elem = this.webDriverContext().waitForElement(By.xpath(xpath));
-        Assert.assertNotNull("expecting an element with xpath " + xpath, elem);
-        this.webDriverContext().setCurrentElement(elem);
-
-        return elem;
-
-    }
-
+    /**
+     * Attempts to find an element with a specific id and matching the text against a regex
+     * @example FindById "span-id-with-regex" with text matching regex \w* xyzabc.*
+     * @section Finders
+     *
+     * @param id the id to locate
+     * @param regex the regex to test the element's text
+     * @return the found web element
+     */
     @SubSteps.Step("FindById \"([^\"]*)\" with text matching regex (.*)$")
     public WebElement findByIdWithRegex(String id, String regex) {
 
@@ -71,15 +57,20 @@ public class NewFinderStepImplementations extends AbstractWebDriverSubStepImplem
     }
 
     /**
+     * Finds an element using an xpath expression which is merged using placeholders and additional token parameters. NB. the xpath expression is surrounded by $x(".... "),
+     * (the same format that can be used directly in Chrome Dev tools) and therefore can't contain double quotes.
      *
-     * @example FindByXpath with token replacement $x("//*[@id='sogei_mapping_left_container']//div[contains(@class, 'label drilldown') and text() ='%1']") "CALCIO" "fred"
+     * @example FindBy xpath with token replacement $x("//li[a/i[contains(@class, '%s')]]") "FAILED"
+     * @section Finders
      *
-     * @param xpath
-     * @param tokens the tokens if any to be substitued into the xpath string using String format specifiers.  NB. If calling this directly in code, the tokens need to be quoted
+     * @param xpath an expression surrounded by $x(" &lt; xpath &gt; ")
+     * @param tokens the tokens if any to be substituted into the xpath string using String format specifiers.  NB. If calling this directly in code, the tokens need to be quoted
      * @return the web element
      */
-    @SubSteps.Step("FindByXpath with token replacement \\$x\\(\"([^\"]*)\"\\)(.*)$")
+    @SubSteps.Step("FindBy xpath with token replacement \\$x\\(\"([^\"]*)\"\\)(.*)$")
     public WebElement findByXpathWithTokenReplacement(String xpath, String tokens) {
+
+        logger.debug("findByXpathWithTokenReplacement format String: " + xpath + "   tokens: " + tokens);
 
         String finalXpath = null;
         if (!tokens.isEmpty()){
@@ -110,103 +101,15 @@ public class NewFinderStepImplementations extends AbstractWebDriverSubStepImplem
 
     }
 
-    @SubSteps.Step("TakeScreenshot with prefix \"([^\"]*)\"")
-    public void takeScreenshot(String filePrefix){
-
-        logger.debug("taking screenshot..");
-
-        LocalDateTime timePoint = LocalDateTime.now();
-
-        timePoint.getMinute();
-
-        String formattedDate = timePoint.format(formatter);
-
-        File out = new File(filePrefix + "_" + formattedDate + ".png");
-
-        try {
-            Files.write(getScreenshotBytes(), out);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
 
-
-    @SubSteps.Step("Select \"([^\"]*)\" option in class \"([^\"]*)\"")
-    public void selectOptionInClass(String optionText, String cssClassName) {
-
-        By by = new By.ByClassName(cssClassName);
-        WebElement selectElement = waitFor(by, "expecting an element with class ", cssClassName);
-
-        final Select select = new Select(selectElement);
-        select.selectByVisibleText(optionText);
-    }
-
-
-    @SubSteps.Step("Select \"([^\"]*)\" option in Id \"([^\"]*)\"")
-    public WebElement selectOptionInId(String optionText, String id) throws InterruptedException {
-
-        String xpathString = String.format("//*[@id='%s']//option[ text() ='%s']/..", id, optionText);
-
-        logger.debug("looking for option with xpath: " + xpathString);
-
-        By by = new By.ByXPath(xpathString);
-
-        WebElement selectElement = waitFor(by, "expecting an element with Id ", id);
-
-        final Select select = new Select(selectElement);
-        select.selectByVisibleText(optionText);
-
-        int attempt = 0;
-
-        // Make sure text is displayed after the item is selected from the dropdown list
-        while (attempt < 3) {
-            try {
-                WebElement option = select.getFirstSelectedOption();
-                String test = option.getText();
-
-                if (test.equals(optionText)) {
-                    break;
-                }
-            }
-            catch (NotFoundException e) {
-                logger.debug("element not found " + e);
-            }
-
-            // Try to select again, sometimes it doesn't do it properly
-            logger.debug("Trying to click again");
-            select.selectByVisibleText(optionText);
-
-            Thread.sleep(500);
-            attempt++;
-        }
-
-        return selectElement;
-    }
-
-    @SubSteps.Step("ExecuteJavascript (.*)$")
-    public void executeJavaScript(String js){
-        ((JavascriptExecutor) webDriver()).executeScript(js);
-
-    }
-
-    // TODO - need an example of this
-    @SubSteps.Step("Execute substituted Javascript ~([^~]*)~ \"([^\"]*)\"")
-    public void executeJavaScript(String js, String filePropertyName){
-
-        String fileName = Configuration.INSTANCE.getString(filePropertyName);
-
-        logger.debug("csv filename: " + fileName);
-
-        File csvFile = new File(fileName);
-
-        String finalJs = String.format(js, csvFile.getAbsolutePath());
-
-        logger.debug("formatted js expression: " + finalJs);
-
-        ((JavascriptExecutor) webDriver()).executeScript(finalJs);
-    }
-
+    /**
+     * Waits for the element with the specified id to become invisible (either visibility or display CSS attributes)
+     * @example WaitFor id "invisible-div" to be invisible
+     * @section Finders
+     *
+     * @param id the id of the element
+     */
     @SubSteps.Step("WaitFor id \"([^\"]*)\" to hide")
     public void waitForElementToHide(String id) {
 
@@ -216,7 +119,13 @@ public class NewFinderStepImplementations extends AbstractWebDriverSubStepImplem
     }
 
 
-
+    /**
+     * Waits for the element with the specified id to become visible (either visibility or display CSS attributes)
+     * @example WaitFor id "visible-div" to be visible
+     * @section Finders
+     *
+     * @param id the id of the element
+     */
     @SubSteps.Step("WaitFor id \"([^\"]*)\" to be visible")
     public void waitForElementToBeVisible(String id) {
 
@@ -224,15 +133,25 @@ public class NewFinderStepImplementations extends AbstractWebDriverSubStepImplem
     }
 
 
-
-
-
-
+    /**
+     * A step implementation to use when sketching out features and substep defs
+     * @example NotImplemented
+     * @section Miscellaneous
+     */
     @SubSteps.Step("NotImplemented")
     public void notImplementedNotFailing() {
         logger.warn("silent test success...");
     }
 
+
+    /**
+     * Finds an element with the specified tag, with the specified text
+     *
+     * @example FindByTag "div" with text "some text"
+     * @section Finders
+     * @param tag the tag to find
+     * @param text the text to match on
+     */
 
     @SubSteps.Step("FindByTag \"([^\"]*)\" with text \"([^\"]*)\"")
     public void findByTagAndText(final String tag, String text) {
@@ -242,6 +161,15 @@ public class NewFinderStepImplementations extends AbstractWebDriverSubStepImplem
         waitFor(by, "expecting an element with tag", tag, "and text", text);
     }
 
+
+    /**
+     * Finds an element with the specified tag, containing the specified text
+     *
+     * @example FindByTag "span" containing text "xyzabc"
+     * @section Finders
+     * @param tag the tag to find
+     * @param text the text to partially match on
+     */
     @SubSteps.Step("FindByTag \"([^\"]*)\" containing text \"([^\"]*)\"")
     public void findByTagContainingText(final String tag, String text) {
 

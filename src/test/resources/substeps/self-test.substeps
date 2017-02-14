@@ -80,8 +80,6 @@ Define: And the table row <row>, column <col> contains "<txt>"
 	FindById table_id
 	AssertTableValue column <col>, row <row> contains text "<txt>"	
 	
-Define: Given I go to an external page such as Github
-    NavigateTo https://raw.githubusercontent.com/Substeps/substeps-webdriver/master/README.md
 
 Define: And the raw README is loaded
     AssertPageSourceContains "Substeps.org Release Notes"
@@ -110,8 +108,8 @@ Define: And I click the context menu
 Define: Then I see "context has been clicked"
          FindById context-clicked-div
          AssertCurrentElement has attributes=[class="context-clicked"]
-        AssertEventuallyContains context-clicked-div "context has been clicked"
-        
+         FindById context-clicked-div containing text="context has been clicked"
+
         
 Define: Given that I've not double clicked the link
          FindById dbl-clicked-div and text = "Not doubled clicked yet"
@@ -174,14 +172,10 @@ Define: Check to see if I wait until the div I've just made visbile in 2 secs is
 	FindById failsOPasses
 	Click
 
-Define: blah <css_selector>
-	    FindByCss "#whatevs .doodah"
 
 Define: And I can find an h4 tag with a css regex
 	    FindByTag "h4" with cssClassRegex ".* markerClass-\d .*"
 
 Define: And I can find an h4 tag with a css regex and text
-	    FindByTag "h4" with cssClassRegex ".* markerClass-\d .*" and text "Another heading"
+	    FindByTag "h4" with cssClassRegex ".* markerClass-\d .*" and containing text "Another heading"
 
-Define: Not exist
-        Does not exist

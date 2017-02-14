@@ -12,6 +12,21 @@ There is also a [Substeps Google group](http://groups.google.com/group/substeps?
 Substeps.org Release Notes
 ==========================
 
+1.0.5
+-----
+* Tests around some of the step impls added in 1.0.4
+* Added a config flag (log.pagesource.onerror) to disable logging out the page source on failure - useful for js heavy sites
+* Some step impl refactoring, 
+  AssertTagElementContainsAttribute tag="<tag>" attributeName="<name>" attributeValue="<value>" has been replaced by
+  FindByTagAndAttributes tag="<tag>" attributes=\[<name>="<value>"\]
+* AssertEventuallyContains <id> "text" replaced by  FindById id containing text="abc"
+* AssertEventuallyNotEmpty id="<id>"  replaced by FindById "<id>" with text matching regex .+
+* AssertRadioButton name="radio_btn_name", text="text", checked="true" replaced by AssertRadioButton checked=true/false
+* SetCheckBox name="accept", checked=true replaced by SetCheckedBox checked=true/false
+* SetRadioButton name=opt_in, value=OFF, checked=true replaced by other finders + SetRadioButton checked=true/false
+* SetRadioButton name="opt_in", text="radio button text" replaced by other finders + SetRadioButton checked=true/false
+* Startup / Shutdown removed as no longer relevant / necessary
+
 1.0.4
 -----
 * More step implementations...

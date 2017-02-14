@@ -33,17 +33,17 @@
     <!--<level value="DEBUG"/>-->
     <!--<appender-ref ref="console" />-->
   <!--</logger>-->
+  <logger name="org.substeps" additivity="false">
+    <level value="DEBUG"/>
+    <appender-ref ref="console" />
+  </logger>
 
 
-<logger name="com.technophobia.webdriver" additivity="false">
-  <level value="INFO"/>
+<logger name="com.technophobia" additivity="false">
+  <level value="DEBUG"/>
   <appender-ref ref="console" />
 </logger>
 
-<logger name="com.technophobia.substeps" additivity="false">
-  <level value="INFO"/>
-  <appender-ref ref="console" />
-</logger>
 
   <root>
     <priority value ="INFO" />
