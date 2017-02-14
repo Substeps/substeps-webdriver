@@ -8,7 +8,7 @@
 	<packaging>jar</packaging>
 	<name>Webdriver Substeps</name>
 	<description>Webdriver specific implementations of Substeps</description>
-    <url>https://github.com/Substeps/substeps-webdriver</url>
+    	<url>https://github.com/Substeps/substeps-webdriver</url>
 
     <scm>
         <connection>scm:git:https://github.com:Substeps/substeps-webdriver.git</connection>
@@ -111,19 +111,19 @@
     </developers>
 
 	<properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <java.version>1.8</java.version>
+        	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        	<java.version>1.8</java.version>
 
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        	<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
 		<selenium.version>3.0.1</selenium.version>
 
 		<hamcrest.version>1.3</hamcrest.version>
 		<junit.version>4.12</junit.version>
 
-        <substeps.framework.version>1.0.5-SNAPSHOT</substeps.framework.version>
+        	<substeps.framework.version>1.0.5</substeps.framework.version>
 
-        <slf4j.version>1.7.13</slf4j.version>
+        	<slf4j.version>1.7.13</slf4j.version>
 
 		<guava.version>18.0</guava.version>
 		<mockito.version>1.9.0-rc1</mockito.version>
