@@ -16,7 +16,8 @@ release:
         git checkout __rultor
         mvn versions:set "-DnewVersion=${tag}"
         git commit -am "${tag}"
-        mvn clean deploy -Prelease -PSubsteps.org --settings /home/r/settings.xml
+        mvn clean process-test-resources -Pself-test
+        mvn deploy -Prelease -PSubsteps.org --settings /home/r/settings.xml
 
   commanders:
     - iantmoore
