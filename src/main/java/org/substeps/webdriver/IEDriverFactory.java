@@ -30,7 +30,7 @@ public class IEDriverFactory extends BaseDriverFactory implements DriverFactory{
     }
 
     @Override
-    public WebDriver create(Config cfg) {
+    protected WebDriver createInternal(Config cfg) {
 
         log.debug("creating IE driver");
 
