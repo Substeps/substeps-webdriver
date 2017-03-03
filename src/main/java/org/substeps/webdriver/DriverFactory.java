@@ -18,4 +18,5 @@ public interface DriverFactory {
     void shutdownWebDriver(WebDriverContext webDriverContext);
 
     boolean resetWebDriver(WebDriverContext webDriverContext);
+
 }

@@ -31,7 +31,7 @@ public class HTMLUnitDriverFactory extends BaseDriverFactory implements DriverFa
     }
 
     @Override
-    public WebDriver create(Config cfg) {
+    protected WebDriver createInternal(Config cfg) {
 
         log.debug("creating htmlunit driver");
 

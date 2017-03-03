@@ -27,7 +27,7 @@ public class RemoteDriverFactory extends BaseDriverFactory implements DriverFact
     }
 
     @Override
-    public WebDriver create(Config cfg) {
+    protected WebDriver createInternal(Config cfg) {
 
         log.debug("creating remote saucelabs driver");
 

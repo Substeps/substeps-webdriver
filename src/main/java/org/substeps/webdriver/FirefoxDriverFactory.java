@@ -30,11 +30,9 @@ public class FirefoxDriverFactory extends BaseDriverFactory implements DriverFac
     }
 
     @Override
-    public WebDriver create(Config cfg) {
+    protected WebDriver createInternal(Config cfg) {
 
         log.debug("creating firefox driver");
-
-        setupWebdriverManagerGithubAuth(cfg);
 
         if (cfg.hasPath(FIREFOXDRIVER_VERSION_KEY)) {
             FirefoxDriverManager.getInstance().setup(cfg.getString(FIREFOXDRIVER_VERSION_KEY));

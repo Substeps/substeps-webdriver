@@ -21,7 +21,7 @@ public class ChromeDriverFactory extends BaseDriverFactory implements DriverFact
     private static final String CHROMEDRIVER_VERSION_KEY = "chromedriver.version";
 
     @Override
-    public WebDriver create(Config cfg) {
+    protected WebDriver createInternal(Config cfg) {
 
         log.debug("creating chrome driver");
 
