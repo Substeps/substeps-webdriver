@@ -111,21 +111,21 @@
     </developers>
 
 	<properties>
-        	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        	<java.version>1.8</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <java.version>1.8</java.version>
 
-        	<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-		<selenium.version>3.0.1</selenium.version>
+		<selenium.version>3.3.1</selenium.version>
 
 		<hamcrest.version>1.3</hamcrest.version>
 		<junit.version>4.12</junit.version>
 
-        	<substeps.framework.version>1.0.5</substeps.framework.version>
+        <substeps.framework.version>1.0.5</substeps.framework.version>
 
-        	<slf4j.version>1.7.13</slf4j.version>
+        <slf4j.version>1.7.13</slf4j.version>
 
-		<guava.version>18.0</guava.version>
+		<guava.version>21.0</guava.version>
 		<mockito.version>1.9.0-rc1</mockito.version>
 
  		<sonar.jacoco.reportPath>${basedir}/jacoco.exec</sonar.jacoco.reportPath>
@@ -170,6 +170,13 @@
 	</pluginRepositories>
 
 	<dependencies>
+
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava.version}</version>
+        </dependency>
+
 		<dependency>
 			<groupId>org.substeps</groupId>
 			<artifactId>substeps-core-api</artifactId>
@@ -352,7 +359,7 @@
                                     <fastFailParseErrors>false</fastFailParseErrors>
                                     <featureFile>${basedir}/target/test-classes/features</featureFile>
                                     <subStepsFileName>${basedir}/target/test-classes/substeps</subStepsFileName>
-
+                                    <nonFatalTags>@non-visual</nonFatalTags>
                                     <stepImplementationClassNames>
                                         <param>com.technophobia.webdriver.substeps.impl.BaseWebdriverSubStepImplementations</param>
                                         <param>org.substeps.webdriver.TestWebdriverStepImplementations</param>

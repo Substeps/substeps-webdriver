@@ -142,8 +142,7 @@ public class FormWebDriverSubStepImplementations extends
         logger.debug("About to clear the current element and send the keys "
                 + value);
 
-        WebDriverWait wait = new WebDriverWait(webDriver(), WebdriverSubstepsPropertiesConfiguration.INSTANCE.defaultTimeout());
-        wait.until(ExpectedConditions.visibilityOfElementLocated(WebDriverSubstepsBy.ByCurrentWebElement(webDriverContext().getCurrentElement())));
+        waitUntil(ExpectedConditions.visibilityOfElementLocated(WebDriverSubstepsBy.ByCurrentWebElement(webDriverContext().getCurrentElement())));
 
         webDriverContext().getCurrentElement().clear();
         webDriverContext().getCurrentElement().sendKeys(value);

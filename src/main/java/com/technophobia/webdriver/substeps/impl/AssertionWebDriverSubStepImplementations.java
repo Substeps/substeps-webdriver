@@ -19,14 +19,12 @@
 package com.technophobia.webdriver.substeps.impl;
 
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.not;
-
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.lang3.StringUtils;
+import com.technophobia.substeps.model.Scope;
+import com.technophobia.substeps.model.SubSteps.Step;
+import com.technophobia.substeps.model.SubSteps.StepImplementations;
+import com.technophobia.substeps.runner.ExecutionContext;
+import com.technophobia.substeps.step.StepImplementationUtils;
+import com.technophobia.webdriver.substeps.runner.DefaultExecutionSetupTearDown;
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -35,16 +33,12 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.base.Function;
-import com.google.common.base.Supplier;
-import com.technophobia.substeps.model.Scope;
-import com.technophobia.substeps.model.SubSteps.Step;
-import com.technophobia.substeps.model.SubSteps.StepImplementations;
-import com.technophobia.substeps.runner.ExecutionContext;
-import com.technophobia.substeps.step.StepImplementationUtils;
-import com.technophobia.webdriver.substeps.runner.DefaultExecutionSetupTearDown;
-import com.technophobia.webdriver.util.WebDriverContext;
-import com.technophobia.webdriver.util.WebDriverSubstepsBy;
+import java.util.Map;
+import java.util.function.Function;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.not;
 
 @StepImplementations(requiredInitialisationClasses = DefaultExecutionSetupTearDown.class)
 public class AssertionWebDriverSubStepImplementations extends AbstractWebDriverSubStepImplementations {

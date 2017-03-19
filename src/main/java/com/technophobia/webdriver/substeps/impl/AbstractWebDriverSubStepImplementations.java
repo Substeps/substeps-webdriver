@@ -35,7 +35,11 @@ import com.technophobia.substeps.runner.ProvidesScreenshot;
 import com.technophobia.webdriver.substeps.runner.DefaultExecutionSetupTearDown;
 import com.technophobia.webdriver.util.WebDriverContext;
 import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.FluentWait;
+import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
+import static java.util.concurrent.TimeUnit.SECONDS;
 
 public abstract class AbstractWebDriverSubStepImplementations implements ProvidesScreenshot {
 
@@ -72,8 +76,16 @@ public abstract class AbstractWebDriverSubStepImplementations implements Provide
 
 
     protected <T> T waitUntil(ExpectedCondition<T> ec) {
+
         WebDriverWait wait = new WebDriverWait(webDriver(), WebdriverSubstepsPropertiesConfiguration.INSTANCE.defaultTimeout());
-        return wait.until(ec);
+
+        return wait.until(new java.util.function.Function<WebDriver, T>(){
+
+            @Override
+            public T apply(WebDriver webDriver) {
+                return ec.apply(webDriver);
+            }
+        });
     }
 
     protected WebElement waitFor(By by, long timeout, String... messages) {

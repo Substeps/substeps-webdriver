@@ -2,6 +2,8 @@ package org.substeps.webdriver;
 
 import com.typesafe.config.Config;
 import org.apache.commons.lang3.StringUtils;
+import org.openqa.selenium.Dimension;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.logging.LogType;
 import org.openqa.selenium.logging.LoggingPreferences;
 import org.openqa.selenium.remote.CapabilityType;
@@ -16,7 +18,7 @@ import java.util.logging.Level;
  */
 public class WebDriverFactoryUtils {
 
-    private static final Logger LOG = LoggerFactory.getLogger(WebDriverFactoryUtils.class);
+    private static final Logger logger = LoggerFactory.getLogger(WebDriverFactoryUtils.class);
 
     public static void setLoggingPreferences(final DesiredCapabilities chromeCapabilities, Config cfg) {
         // TODO switch on based on properties
@@ -34,8 +36,24 @@ public class WebDriverFactoryUtils {
             final org.openqa.selenium.Proxy proxy = new org.openqa.selenium.Proxy();
             proxy.setHttpProxy(proxyHostAndPort).setFtpProxy(proxyHostAndPort).setSslProxy(proxyHostAndPort);
             capabilities.setCapability(CapabilityType.PROXY, proxy);
-            LOG.info("Proxy set to {}", proxyHostAndPort);
+            logger.info("Proxy set to {}", proxyHostAndPort);
         }
     }
 
+    public static void setScreensize(WebDriver webdriver, Config cfg) {
+
+        Config windowConfig = cfg.getConfig("org.substeps.webdriver.window");
+
+        if (windowConfig.getBoolean("maximise")){
+            webdriver.manage().window().maximize();
+        }
+        else {
+            if (windowConfig.hasPath("height") && windowConfig.hasPath("width")){
+                int h = windowConfig.getInt("height");
+                int w = windowConfig.getInt("width");
+                logger.debug("setting screen size to: w;h " + w + ":" + h);
+                webdriver.manage().window().setSize(new Dimension(w,h));
+            }
+        }
+    }
 }
