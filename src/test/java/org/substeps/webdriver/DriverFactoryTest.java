@@ -46,6 +46,8 @@ public class DriverFactoryTest {
 
         Config cfg = Configuration.INSTANCE.getConfig();
 
+        System.out.println("cfg: " + cfg.root().render());
+
         WebDriver htmlUnit = DriverFactoryRegistry.INSTANCE.create("HTMLUNIT", cfg);
 
         Assert.assertNotNull(htmlUnit);
