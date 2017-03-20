@@ -18,7 +18,6 @@
  */
 package com.technophobia.webdriver.util;
 
-import com.google.common.base.Function;
 import com.technophobia.substeps.model.Configuration;
 import com.technophobia.webdriver.substeps.runner.Condition;
 import com.technophobia.webdriver.substeps.runner.WebdriverSubstepsPropertiesConfiguration;
@@ -29,6 +28,8 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.function.Function;
 
 public class ElementLocators {
 

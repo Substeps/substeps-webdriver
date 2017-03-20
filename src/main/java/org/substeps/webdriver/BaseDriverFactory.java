@@ -27,7 +27,12 @@ public abstract class BaseDriverFactory implements DriverFactory{
 
             System.setProperty("wdm.properties", cfg.getString(WEBDRIVER_MANAGER_PROPS_KEY));
         }
-        return createInternal(cfg);
+
+        WebDriver webdriver = createInternal(cfg);
+
+        WebDriverFactoryUtils.setScreensize(webdriver, cfg);
+
+        return webdriver;
     }
 
     @Override

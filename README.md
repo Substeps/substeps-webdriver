@@ -12,6 +12,11 @@ There is also a [Substeps Google group](http://groups.google.com/group/substeps?
 Substeps.org Release Notes
 ==========================
 
+1.0.7
+-----
+* Upgraded to Selenium 3.3.1 and Guava 21, requires some changes to webdriver wait methods to use java.util.function.Functions rather than the guava equivalents
+* added options to maximise webdriver windows on startup (issue #25)
+
 1.0.5
 -----
 * Tests around some of the step impls added in 1.0.4
