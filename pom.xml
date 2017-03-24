@@ -297,7 +297,6 @@
 
     <profiles>
 
-
         <profile>
             <id>self-test</id>
             <!--<activation>-->
@@ -359,7 +358,7 @@
                                     <fastFailParseErrors>false</fastFailParseErrors>
                                     <featureFile>${basedir}/target/test-classes/features</featureFile>
                                     <subStepsFileName>${basedir}/target/test-classes/substeps</subStepsFileName>
-                                    <nonFatalTags>@non-visual</nonFatalTags>
+                                    <!--<nonFatalTags>@non-visual</nonFatalTags>-->
                                     <stepImplementationClassNames>
                                         <param>com.technophobia.webdriver.substeps.impl.BaseWebdriverSubStepImplementations</param>
                                         <param>org.substeps.webdriver.TestWebdriverStepImplementations</param>
