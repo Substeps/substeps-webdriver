@@ -1,5 +1,7 @@
 package com.technophobia.webdriver.substeps.runner;
 
+import org.substeps.webdriver.runner.WebdriverReuseStategy;
+
 /**
  * User: dmoss
  * Date: 20/05/13
@@ -10,13 +12,8 @@ public interface WebdriverSubstepsConfiguration {
 
     String driverLocale();
 
-    boolean shutDownWebdriver();
 
     boolean isJavascriptDisabledWithHTMLUnit();
-
-    boolean closeVisualWebDriveronFail();
-
-    boolean reuseWebDriver();
 
     long defaultTimeout();
 
@@ -37,4 +34,6 @@ public interface WebdriverSubstepsConfiguration {
     
     int getNetworkProxyPort();
 
+
+    WebdriverReuseStategy getReuseStrategy();
 }

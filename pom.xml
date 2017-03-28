@@ -138,6 +138,8 @@
 
 		<jacoco.maven.plugin.version>0.5.3.201107060350</jacoco.maven.plugin.version>
 
+        <htmlunit.driver.version>2.23.1</htmlunit.driver.version> <!-- latest is 2.25 -->
+
 		<!-- THESE PROPERTIES NEED TO BE DEFINED IN AN ACTIVE PROFILE IN SETTINGS.XML
 		EG.
         <nexus.snapshot.artifacts>snapshots</nexus.snapshot.artifacts>
@@ -207,7 +209,7 @@
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>htmlunit-driver</artifactId>
-            <version>2.23.1</version>
+            <version>${htmlunit.driver.version}</version>
             <!--<exclusions>-->
                 <!--<exclusion>-->
                     <!--<groupId>net.sourceforge.htmlunit</groupId>-->
@@ -285,6 +287,14 @@
             <groupId>org.eclipse.jetty.websocket</groupId>
             <artifactId>websocket-client</artifactId>
             <version>9.4.0.v20161208</version>
+        </dependency>
+
+        <!-- required for HTML Unit to open SSL Connections -->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.2</version>
+            <scope>test</scope>
         </dependency>
 
         <dependency>

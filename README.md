@@ -16,6 +16,14 @@ Substeps.org Release Notes
 -----
 * Upgraded to Selenium 3.3.1 and Guava 21, requires some changes to webdriver wait methods to use java.util.function.Functions rather than the guava equivalents
 * added options to maximise webdriver windows on startup (issue #25)
+* simplified the shutdown / re-use flags, replacing the existing three confusing flags with a singular strategy value:
+    `
+    org.substeps.webdriver {
+        reuse-strategy = "shutdown_and_create_new" 
+    }
+    `
+    possible values include shutdown_and_create_new, reuse_unless_error_keep_visuals_in_error, reuse_unless_error, leave_and_create_new
+
 
 1.0.5
 -----

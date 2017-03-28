@@ -19,13 +19,12 @@
 package com.technophobia.webdriver.substeps.runner;
 
 import java.io.File;
-import java.net.URL;
 
-import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.technophobia.substeps.model.Configuration;
+import org.substeps.webdriver.runner.WebdriverReuseStategy;
 
 public enum WebdriverSubstepsPropertiesConfiguration implements WebdriverSubstepsConfiguration {
 
@@ -35,31 +34,22 @@ public enum WebdriverSubstepsPropertiesConfiguration implements WebdriverSubstep
 
     private final String baseUrl;
     private final String driverLocale;
-    private final boolean reuseWebdriver;
     private final String htmlUnitProxyHost;
-    private final boolean shutdownWebdriver;
     private final boolean htmlunitDisableJs;
     private final Integer htmlUnitProxyPort;
-    private final boolean visualWebdriverCloseOnFail;
     private final String networkProxyHost;
     private final int networkProxyPort;
 
 
     private long defaultWebDriverTimeoutSecs;
 
+    private WebdriverReuseStategy reuseStrategy;
 
     private WebdriverSubstepsPropertiesConfiguration() {
 
-
         baseUrl = determineBaseURL(Configuration.INSTANCE.getString("base.url"));
 
-
         driverLocale = Configuration.INSTANCE.getString("webdriver.locale");
-
-        shutdownWebdriver = Configuration.INSTANCE.getBoolean("webdriver.shutdown");
-        visualWebdriverCloseOnFail = Configuration.INSTANCE.getBoolean("visual.webdriver.close.on.fail");
-
-        reuseWebdriver = Configuration.INSTANCE.getBoolean("webdriver.reuse");
 
         defaultWebDriverTimeoutSecs = Configuration.INSTANCE.getInt("default.webdriver.timeout.secs");
 
@@ -71,7 +61,17 @@ public enum WebdriverSubstepsPropertiesConfiguration implements WebdriverSubstep
         networkProxyPort = Configuration.INSTANCE.getInt("network.proxy.port");
 
 
+        reuseStrategy = WebdriverReuseStategy.fromConfig(Configuration.INSTANCE.getConfig());
 
+        if (Configuration.INSTANCE.getConfig().hasPath("webdriver.shutdown") ||
+                Configuration.INSTANCE.getConfig().hasPath("visual.webdriver.close.on.fail") ||
+                Configuration.INSTANCE.getConfig().hasPath("webdriver.reuse") ){
+
+            LOG.warn("** Webdriver shutdown properties have changed!\nwebdriver.shutdown, visual.webdriver.close.on.fail and webdriver.reuse have all been replaced by:\n" +
+                    "org.substeps.webdriver {\n\treuse-strategy = \"shutdown_and_create_new\"\n}\nOther values are resuse_unless_error_keep_visuals_in_error, " +
+                    " resuse_unless_error, leave_and_create_new.\nSee org.substeps.webdriver.runner.WebdriverReuseStategy for further details");
+
+        }
 
         LOG.info("Using properties:\n" + Configuration.INSTANCE.getConfigurationInfo());
     }
@@ -86,26 +86,9 @@ public enum WebdriverSubstepsPropertiesConfiguration implements WebdriverSubstep
         return driverLocale;
     }
 
-
-    public boolean shutDownWebdriver() {
-        return shutdownWebdriver;
-    }
-
-
     public boolean isJavascriptDisabledWithHTMLUnit() {
         return htmlunitDisableJs;
     }
-
-
-    public boolean closeVisualWebDriveronFail() {
-        return visualWebdriverCloseOnFail;
-    }
-
-
-    public boolean reuseWebDriver() {
-        return reuseWebdriver;
-    }
-
 
     public long defaultTimeout() {
         return defaultWebDriverTimeoutSecs;
@@ -152,6 +135,12 @@ public enum WebdriverSubstepsPropertiesConfiguration implements WebdriverSubstep
         }
         return string;
     }
+
+
+    public WebdriverReuseStategy getReuseStrategy() {
+        return reuseStrategy;
+    }
+
 
 
 }
