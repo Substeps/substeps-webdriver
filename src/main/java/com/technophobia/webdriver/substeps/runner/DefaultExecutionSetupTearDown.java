@@ -19,12 +19,11 @@
 package com.technophobia.webdriver.substeps.runner;
 
 import com.technophobia.substeps.model.Configuration;
+import com.technophobia.substeps.runner.setupteardown.Annotations;
 import com.typesafe.config.Config;
-import org.openqa.selenium.WebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.base.Supplier;
 import com.technophobia.substeps.model.Scope;
 import com.technophobia.substeps.runner.ExecutionContext;
 import com.technophobia.substeps.runner.ExecutionContextSupplier;
@@ -37,6 +36,7 @@ import com.technophobia.webdriver.util.WebDriverContext;
 import org.substeps.webdriver.DriverFactory;
 import org.substeps.webdriver.DriverFactoryRegistry;
 import org.substeps.webdriver.FactoryInitialiser;
+import org.substeps.webdriver.runner.WebdriverReuseStategy;
 
 public class DefaultExecutionSetupTearDown {
 
@@ -46,9 +46,6 @@ public class DefaultExecutionSetupTearDown {
     private final MutableSupplier<WebDriverContext> webDriverContextSupplier = new ExecutionContextSupplier<WebDriverContext>(
             Scope.SUITE, WebDriverContext.EXECUTION_CONTEXT_KEY);
 
-//    public static Supplier<WebDriverContext> currentWebDriverContext() {
-//        return webDriverContextSupplier;
-//    }
 
 
     private final MutableSupplier<DriverFactory> webDriverFactorySupplier  = new ExecutionContextSupplier(Scope.SUITE, DriverFactory.DRIVER_FACTORY_KEY);
@@ -97,6 +94,18 @@ public class DefaultExecutionSetupTearDown {
 
     }
 
+    @Annotations.AfterAllFeatures
+    public final void afterAllFeatures(){
+        // a final tear down if we're reusing webdrivers - otherwise will be left hanging around if re-use
+
+        final WebDriverContext webDriverContext = webDriverContextSupplier.get();
+        if (webDriverContext != null){
+            DriverFactory driverFactory = this.webDriverFactorySupplier.get();
+            driverFactory.shutdownWebDriver(webDriverContext);
+            webDriverContextSupplier.set(null);
+        }
+    }
+
 
     @BeforeEveryScenario
     public final void basePreScenarioSetup() {
@@ -104,15 +113,18 @@ public class DefaultExecutionSetupTearDown {
 
         final WebDriverContext webDriverContext = webDriverContextSupplier.get();
 
-        boolean createNewWebDriver = shouldStartup(webDriverContext);
+//        boolean createNewWebDriver = shouldStartup(webDriverContext);
 
-        if (createNewWebDriver) {
-
+        if (webDriverContext == null) {
+            logger.debug("no webdriver in context, creating..");
             DriverFactory driverFactory = this.webDriverFactorySupplier.get();
 
             Config cfg = Configuration.INSTANCE.getConfig();
 
             webDriverContextSupplier.set(new WebDriverContext(driverFactory.getKey(), driverFactory.create(cfg)));
+        }
+        else {
+            logger.debug("re-using webdriver from previous scenario");
         }
     }
 
@@ -124,23 +136,20 @@ public class DefaultExecutionSetupTearDown {
         final WebDriverContext webDriverContext = webDriverContextSupplier.get();
 
         if (webDriverContext != null) {
+            WebdriverReuseStategy reuseStrategy = this.configuration.getReuseStrategy();
 
-            boolean doShutdown = this.shouldShutdown(webDriverContext);
             DriverFactory factory = this.webDriverFactorySupplier.get();
 
-            if(doShutdown) {
-                factory.shutdownWebDriver(webDriverContext);
-                webDriverContextSupplier.set(null);
-            }
-            else if(!factory.resetWebDriver(webDriverContext)) {
+            reuseStrategy.afterScenario(factory, webDriverContextSupplier);
 
-                factory.shutdownWebDriver(webDriverContext);
-                webDriverContextSupplier.set(null);
-            }
         }
+        logScenarioDuration();
 
+    }
+
+    private void logScenarioDuration() {
         // TODO put long test threshold in config
-
+        // TODO should use a thread local for the timings too
         final long ticks = (System.currentTimeMillis() - this.startTimeMillis) / 1000;
 
         if (ticks > 30) {
@@ -149,74 +158,5 @@ public class DefaultExecutionSetupTearDown {
             logger.info(String.format("Test scenario took %s seconds", ticks));
         }
     }
-
-    private boolean shouldShutdown(final WebDriverContext webDriverContext) {
-
-        if (webDriverContext != null) {
-            logger.debug("webDriverContextSupplier.get().hasFailed(): {}", webDriverContext.hasFailed());
-            logger.debug("driverType().isVisual(): {}", webDriverContext.getDriverType().isVisual());
-        }
-
-        logger.debug("WebdriverSubstepsPropertiesConfiguration.closeVisualWebDriveronFail(): {}", configuration.closeVisualWebDriveronFail());
-        logger.debug("WebdriverSubstepsPropertiesConfiguration.reuseWebDriver(): {}", configuration.reuseWebDriver());
-
-        boolean doShutDown = true;
-
-        // reasons *NOT* to shutdown
-        if (!configuration.shutDownWebdriver()) {
-
-            //don't shutdown if:
-            // - global config says we don't have to
-            // - and config says we don't close visual webdrivers on failure
-            // - and we're going to reuse the webdriver
-
-            if (failedIsVisualButShouldNotClose(webDriverContext) || configuration.reuseWebDriver()) {
-                doShutDown = false;
-            }
-        }
-
-        return doShutDown;
-    }
-
-    private boolean shouldStartup(final WebDriverContext webDriverContext) {
-
-        if (webDriverContext != null) {
-            logger.debug("webDriverContextSupplier.get().hasFailed(): {}", webDriverContext.hasFailed());
-            logger.debug("driverType().isVisual(): {}", webDriverContext.getDriverType().isVisual());
-        }
-
-        logger.debug("WebdriverSubstepsPropertiesConfiguration.closeVisualWebDriveronFail(): {}", configuration.closeVisualWebDriveronFail());
-        logger.debug("WebdriverSubstepsPropertiesConfiguration.reuseWebDriver(): {}", configuration.reuseWebDriver());
-
-        boolean doStartup = true;
-
-        // reasons *NOT* to start up
-        if (webDriverContext != null && !configuration.shutDownWebdriver()) {
-
-            //don't start up if:
-            // - we want to reuse the webdriver instance, unless the previous test failed and we don't want to close, in which case we need a new instance
-
-            if (!failedIsVisualButShouldNotClose(webDriverContext) && configuration.reuseWebDriver()) {
-                doStartup = false;
-            }
-        }
-
-        return doStartup;
-    }
-
-    private boolean failedIsVisualButShouldNotClose(final WebDriverContext webDriverContext) {
-
-        //we default to always closing
-        boolean shouldNotClose = false;
-
-        if(!configuration.closeVisualWebDriveronFail() && webDriverContext != null && webDriverContext.getDriverType().isVisual()) {
-            shouldNotClose = webDriverContext.hasFailed();
-        }
-
-        return shouldNotClose;
-
-    }
-
-///
 
 }

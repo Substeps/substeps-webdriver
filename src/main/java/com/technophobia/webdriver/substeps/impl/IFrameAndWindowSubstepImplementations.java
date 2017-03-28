@@ -20,6 +20,8 @@ import org.slf4j.LoggerFactory;
 @SubSteps.StepImplementations(requiredInitialisationClasses = DefaultExecutionSetupTearDown.class)
 public class IFrameAndWindowSubstepImplementations extends AbstractWebDriverSubStepImplementations {
 
+    private static final Logger logger = LoggerFactory.getLogger(IFrameAndWindowSubstepImplementations.class);
+
     private static final MutableSupplier<String> webdriverPageInContext = new ExecutionContextSupplier<>(Scope.SCENARIO, "1");
 
     /**
@@ -61,12 +63,14 @@ public class IFrameAndWindowSubstepImplementations extends AbstractWebDriverSubS
      * @section windows
      *
      * @param iFrameCssSelector the CSS Selector to identify the iframe to switch to
+     * NB the found iframe cannot be returned - once it has been switched to it will be stale and can't be referenced
      */
     @SubSteps.Step("Switch to new frame by CSS selector \"([^\"]*)\"")
     public void switchToNewFrame(String iFrameCssSelector) {
 
         WebElement elem = waitFor(By.cssSelector(iFrameCssSelector), "Expecting an iframe with selector: " + iFrameCssSelector);
         webDriver().switchTo().frame(elem);
+
     }
 
     /**
@@ -76,13 +80,18 @@ public class IFrameAndWindowSubstepImplementations extends AbstractWebDriverSubS
      * @section windows
      *
      * @param frameName the name attribute of the iframe to switch to
+     * NB the found iframe cannot be returned - once it has been switched to it will be stale and can't be referenced
      *
      */
     @SubSteps.Step("Switch to new frame by name \"([^\"]*)\"")
     public void switchToNewFrameByName(String frameName) {
 
-        WebElement elem = waitFor(By.name(frameName), "Expecting an iframe with name: " + frameName);
-        webDriver().switchTo().frame(elem);
+        WebElement iframe = waitFor(By.name(frameName), "Expecting an iframe with name: " + frameName);
+
+        logger.debug(" ** game name iframe @ x: " + iframe.getLocation().getX() + " y: " + iframe.getLocation().getY() + " h: " +
+                iframe.getSize().getHeight() + " w: " + iframe.getSize().getWidth() );
+
+        webDriver().switchTo().frame(iframe);
     }
 
     /**

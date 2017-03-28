@@ -4,6 +4,7 @@ import com.google.common.base.Strings;
 import com.technophobia.webdriver.util.WebDriverContext;
 import com.typesafe.config.Config;
 import io.github.bonigarcia.wdm.WdmConfig;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,6 +42,18 @@ public abstract class BaseDriverFactory implements DriverFactory{
         WebDriver webDriver = webDriverContext.getWebDriver();
         if(webDriver != null) {
             webDriver.manage().deleteAllCookies();
+
+            try {
+                ((JavascriptExecutor) webDriver).executeScript("window.localStorage.clear();");
+                ((JavascriptExecutor) webDriver).executeScript("window.sessionStorage.clear();");
+
+            }
+            catch (Exception e){
+                // best efforts
+                log.error("Exception thrown executing js, closing webdriver down", e);
+            }
+
+
             webDriver.quit();
         }
 

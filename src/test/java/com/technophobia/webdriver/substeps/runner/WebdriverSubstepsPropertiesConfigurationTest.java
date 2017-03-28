@@ -52,14 +52,6 @@ public class WebdriverSubstepsPropertiesConfigurationTest {
     }
 
 
-    @Ignore
-    @Test
-    public void checkOverrides() {
-        // can't run this on jenkins as that sets environment to jenkins - can't
-        // re-init the config..
-        System.setProperty("environment", "localhost");
-        Assert.assertFalse(WebdriverSubstepsPropertiesConfiguration.INSTANCE.closeVisualWebDriveronFail());
-    }
 
     @Test
     public void testRelativeURLResolvesToFileProtocol() throws SecurityException, NoSuchMethodException,
