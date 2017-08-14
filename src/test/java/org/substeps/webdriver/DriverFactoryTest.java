@@ -14,6 +14,8 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.substeps.config.SubstepsConfigLoader;
+import org.substeps.runner.NewSubstepsExecutionConfig;
 
 import static org.hamcrest.CoreMatchers.*;
 
@@ -41,17 +43,37 @@ public class DriverFactoryTest {
 
     @Test
     public void testWebDriverFactoryCreate() {
+        System.out.println("testWebDriverFactoryCreate");
 
         FactoryInitialiser.INSTANCE.toString();
 
-        Config cfg = Configuration.INSTANCE.getConfig();
+//        Config cfg = Configuration.INSTANCE.getConfig();
+//
+//        System.out.println("cfg: " + cfg.root().render());
 
-        System.out.println("cfg: " + cfg.root().render());
+        Config c = SubstepsConfigLoader.loadResolvedConfig();
+
+        System.out.println("resolved config: " + NewSubstepsExecutionConfig.render(c));
+
+        Config cfg = SubstepsConfigLoader.splitMasterConfig(c).get(0);
+
+        System.out.println("split config: " + NewSubstepsExecutionConfig.render(cfg));
+
+        NewSubstepsExecutionConfig.setThreadLocalConfig(cfg);
+
+        System.out.println("config loaded");
+
 
         WebDriver htmlUnit = DriverFactoryRegistry.INSTANCE.create("HTMLUNIT", cfg);
 
-        Assert.assertNotNull(htmlUnit);
+        System.out.println("driver loaded ?");
+
+
+        Assert.assertNotNull("html unit should not be null", htmlUnit);
         htmlUnit.quit();
+
+        System.out.println("html unit quit");
+
     }
 
         @Test

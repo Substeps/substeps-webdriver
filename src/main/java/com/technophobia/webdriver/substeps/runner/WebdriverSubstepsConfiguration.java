@@ -10,30 +10,28 @@ import org.substeps.webdriver.runner.WebdriverReuseStategy;
 public interface WebdriverSubstepsConfiguration {
     String baseURL();
 
-    String driverLocale();
-
-
-    boolean isJavascriptDisabledWithHTMLUnit();
+//    String driverLocale();
+//    boolean isJavascriptDisabledWithHTMLUnit();
 
     long defaultTimeout();
 
-    /**
-     * @return the html unit proxy
-     * @deprecated use getNetworkProxyHost instead */
-    @Deprecated
-    String getHtmlUnitProxyHost();
+//    /**
+//     * @return the html unit proxy
+//     * @deprecated use getNetworkProxyHost instead */
+//    @Deprecated
+//    String getHtmlUnitProxyHost();
+//
+//    /**
+//     * @return the html unit proxy port
+//
+//     * @deprecated use getNetworkProxyPort instead */
+//    @Deprecated
+//    Integer getHtmlUnitProxyPort();
+//
+//    String getNetworkProxyHost();
+//
+//    int getNetworkProxyPort();
 
-    /**
-     * @return the html unit proxy port
 
-     * @deprecated use getNetworkProxyPort instead */
-    @Deprecated
-    Integer getHtmlUnitProxyPort();
-
-    String getNetworkProxyHost();
-    
-    int getNetworkProxyPort();
-
-
-    WebdriverReuseStategy getReuseStrategy();
+//    WebdriverReuseStategy getReuseStrategy();
 }

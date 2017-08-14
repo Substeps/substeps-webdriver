@@ -19,11 +19,13 @@ import java.lang.reflect.Field;
 /**
  * Created by ian on 12/12/16.
  */
-public class HTMLUnitDriverFactory extends BaseDriverFactory implements DriverFactory{
+public class HTMLUnitDriverFactory extends BaseDriverFactory implements DriverFactory, WebdriverSubstepsConfigurationKeys{
 
     private static final Logger log = LoggerFactory.getLogger(HTMLUnitDriverFactory.class);
 
     public static DriverFactoryKey KEY = new DriverFactoryKey("HTMLUNIT", false, HTMLUnitDriverFactory.class);
+
+    private static final String DISABLE_JS_KEY = ROOT_WEBDRIVER_KEY + ".htmlunit.disable.javascript";
 
     @Override
     public DriverFactoryKey getKey() {
@@ -35,16 +37,17 @@ public class HTMLUnitDriverFactory extends BaseDriverFactory implements DriverFa
 
         log.debug("creating htmlunit driver");
 
-        boolean jsDisabled = cfg.getBoolean("htmlunit.disable.javascript");
+        boolean jsDisabled = cfg.getBoolean(DISABLE_JS_KEY);
 
 
         final DesiredCapabilities htmlUnitCapabilities;
 
         if (jsDisabled){
             htmlUnitCapabilities = DesiredCapabilities.htmlUnit();
+            htmlUnitCapabilities.setCapability("SUPPORTS_JAVASCRIPT", false);
         }
         else {
-            htmlUnitCapabilities = DesiredCapabilities.htmlUnitWithJs();
+            htmlUnitCapabilities = DesiredCapabilities.htmlUnit();
         }
 
         // need to use a different ctor if specifying a browsser version to mimic...BrowserVersion.FIREFOX_45

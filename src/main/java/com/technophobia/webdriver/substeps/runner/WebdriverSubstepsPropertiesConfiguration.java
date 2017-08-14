@@ -24,44 +24,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.technophobia.substeps.model.Configuration;
+import org.substeps.webdriver.WebdriverSubstepsConfigurationKeys;
 import org.substeps.webdriver.runner.WebdriverReuseStategy;
 
-public enum WebdriverSubstepsPropertiesConfiguration implements WebdriverSubstepsConfiguration {
+public enum WebdriverSubstepsPropertiesConfiguration implements WebdriverSubstepsConfiguration, WebdriverSubstepsConfigurationKeys {
 
     INSTANCE ; // uninstantiable
 
     private final Logger LOG = LoggerFactory.getLogger(WebdriverSubstepsPropertiesConfiguration.class);
 
-    private final String baseUrl;
-    private final String driverLocale;
-    private final String htmlUnitProxyHost;
-    private final boolean htmlunitDisableJs;
-    private final Integer htmlUnitProxyPort;
-    private final String networkProxyHost;
-    private final int networkProxyPort;
-
-
-    private long defaultWebDriverTimeoutSecs;
-
-    private WebdriverReuseStategy reuseStrategy;
-
-    private WebdriverSubstepsPropertiesConfiguration() {
-
-        baseUrl = determineBaseURL(Configuration.INSTANCE.getString("base.url"));
-
-        driverLocale = Configuration.INSTANCE.getString("webdriver.locale");
-
-        defaultWebDriverTimeoutSecs = Configuration.INSTANCE.getInt("default.webdriver.timeout.secs");
-
-        htmlunitDisableJs = Configuration.INSTANCE.getBoolean("htmlunit.disable.javascript");
-
-        htmlUnitProxyHost = Configuration.INSTANCE.getString("htmlunit.proxy.host");
-        htmlUnitProxyPort = Configuration.INSTANCE.getInt("htmlunit.proxy.port");
-        networkProxyHost = Configuration.INSTANCE.getString("network.proxy.host");
-        networkProxyPort = Configuration.INSTANCE.getInt("network.proxy.port");
-
-
-        reuseStrategy = WebdriverReuseStategy.fromConfig(Configuration.INSTANCE.getConfig());
+    WebdriverSubstepsPropertiesConfiguration() {
 
         if (Configuration.INSTANCE.getConfig().hasPath("webdriver.shutdown") ||
                 Configuration.INSTANCE.getConfig().hasPath("visual.webdriver.close.on.fail") ||
@@ -73,44 +45,19 @@ public enum WebdriverSubstepsPropertiesConfiguration implements WebdriverSubstep
 
         }
 
-        LOG.info("Using properties:\n" + Configuration.INSTANCE.getConfigurationInfo());
+        // TODO - replace LOG.info("Using properties:\n" + Configuration.INSTANCE.getConfigurationInfo());
     }
 
 
     public String baseURL() {
-        return baseUrl;
-    }
 
-
-    public String driverLocale() {
-        return driverLocale;
-    }
-
-    public boolean isJavascriptDisabledWithHTMLUnit() {
-        return htmlunitDisableJs;
+        return determineBaseURL(Configuration.INSTANCE.getString(BASE_URL_KEY));
     }
 
     public long defaultTimeout() {
-        return defaultWebDriverTimeoutSecs;
+        return Configuration.INSTANCE.getInt(DEFAULT_WEBDRIVER_TIMEOUT_KEY);
     }
 
-
-    public String getHtmlUnitProxyHost() {
-        return htmlUnitProxyHost;
-    }
-
-
-    public Integer getHtmlUnitProxyPort() {
-        return htmlUnitProxyPort;
-    }
-
-    public String getNetworkProxyHost() {
-        return networkProxyHost;
-    }
-
-    public int getNetworkProxyPort() {
-        return networkProxyPort;
-    }
 
     private String determineBaseURL(final String baseUrlProperty) {
 
@@ -135,12 +82,4 @@ public enum WebdriverSubstepsPropertiesConfiguration implements WebdriverSubstep
         }
         return string;
     }
-
-
-    public WebdriverReuseStategy getReuseStrategy() {
-        return reuseStrategy;
-    }
-
-
-
 }

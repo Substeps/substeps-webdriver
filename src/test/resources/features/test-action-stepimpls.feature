@@ -21,17 +21,21 @@ Scenario: Test Action step impls
     ClickById trigger-page-title-change
     WaitForPageTitle "A new page title"
 
-    # as of 7.02.2017 Double click doesn't work in Firefox
-    FindById dbl-click-trigger
-    PerformDoubleClick
-    FindById dbl-click-button-div and text = "doubled clicked"
 
     FindById id-for-js-manipulation and text = "initial"
     ExecuteJavascript document.getElementById("id-for-js-manipulation").innerHTML = "js fiddled"
     FindById id-for-js-manipulation and text = "js fiddled"
 
+##################################################################
+	# these tests need to be last as they go off to google
+    NavigateTo url property "external.content"
+    And the raw README is loaded
+    # Do not add more steps here
 
 
+Tags: no-longer-working-at-presnt
+# @non-visual fails-in-firefox
+Scenario: Context click test
     #######################################################
     # External site
 
@@ -43,12 +47,14 @@ Scenario: Test Action step impls
     AssertCurrentElement is visible
 
 
-##################################################################
-	# these tests need to be last as they go off to google
 
-    NavigateTo url property "external.content"
-    And the raw README is loaded
-    # Do not add more steps here
+Tags: @non-visual fails-in-firefox
+Scenario: Double click step impls
+    Given I go to the self test page
+    # as of 7.02.2017 Double click doesn't work in Firefox
+    FindById dbl-click-trigger
+    PerformDoubleClick
+    FindById dbl-click-button-div and text = "doubled clicked"
 
 
 Tags: @visual
