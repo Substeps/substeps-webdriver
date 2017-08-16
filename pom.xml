@@ -129,7 +129,7 @@
 		<mockito.version>1.9.0-rc1</mockito.version>
 
  		<sonar.jacoco.reportPath>${basedir}/jacoco.exec</sonar.jacoco.reportPath>
-		<sonar.jacoco.itReportPath>${basedir}/target/jacocoIt.exec</sonar.jacoco.itReportPath>
+		<sonar.jacoco.itReportPath>${basedir}/target/jacoco-it.exec</sonar.jacoco.itReportPath>
 		<sonar.jacoco.jar>${basedir}/jacoco/jacocoagent.jar</sonar.jacoco.jar>
 
  		<!--<sonar.phase>post-integration-test</sonar.phase>-->
@@ -424,20 +424,21 @@
                     </plugin>
 
 
-                    <plugin>
+<!--                    <plugin>
                         <groupId>org.jacoco</groupId>
                         <artifactId>jacoco-maven-plugin</artifactId>
                         <version>${jacoco.maven.plugin.version}</version>
                         <executions>
                             <execution>
                                 <id>default-prepare-agent</id>
+                                <phase>pre-integration-test</phase>
                                 <goals>
                                     <goal>prepare-agent-integration</goal>
                                 </goals>
                             </execution>
                             <execution>
                                 <id>default-report</id>
-                                <phase>prepare-package</phase>
+                                <phase>post-integration-test</phase>
                                 <goals>
                                     <goal>report-integration</goal>
                                 </goals>
@@ -447,28 +448,25 @@
                                 <goals>
                                     <goal>check</goal>
                                 </goals>
-<!--
                                 <configuration>
                                     <rules>
 
                                         <rule>
                                             <element>BUNDLE</element>
                                             <limits>
-
                                                 <limit>
-                                                    <counter>COMPLEXITY</counter>
+                                                    <counter>CLASS</counter>
                                                     <value>COVEREDRATIO</value>
-                                                    <minimum>0.00</minimum>
+                                                    <minimum>0.20</minimum>
                                                 </limit>
                                             </limits>
                                         </rule>
                                     </rules>
                                 </configuration>
--->
                             </execution>
                         </executions>
                     </plugin>
-
+-->
 
 
                 </plugins>
