@@ -99,12 +99,18 @@ public class ActionWebDriverSubStepImplementations extends AbstractWebDriverSubS
 
         final String url = Configuration.INSTANCE.getString(urlProperty);
 
-        logger.debug("About to navigate to base url : " + url);
 
         if (url.startsWith("file") || url.startsWith("http")) {
+
+            logger.debug("About to navigate to base url : " + url);
+
             webDriver().get(url);
         } else {
-            webDriver().get(normaliseURL(url));
+
+            String normalised = normaliseURL(url);
+            logger.debug("About to navigate to url : " + normalised);
+
+            webDriver().get(normalised);
         }
     }
 

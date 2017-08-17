@@ -74,7 +74,7 @@ public class ElementLocators {
             elem = wait.until(condition);
         } catch (final TimeoutException e) {
 
-            if (Configuration.INSTANCE.getConfig().getBoolean("log.pagesource.onerror")){
+            if (Configuration.INSTANCE.getConfig().getBoolean("org.substeps.webdriver.log.pagesource.onerror")){
                 LOG.debug("timed out page src:\n" + webDriver.getPageSource());
             }
 

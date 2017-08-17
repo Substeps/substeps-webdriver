@@ -12,6 +12,13 @@ There is also a [Substeps Google group](http://groups.google.com/group/substeps?
 Substeps.org Release Notes
 ==========================
 
+1.1.0
+-----
+*** BREAKING CHANGE ***
+* Configuration mechanism has been significantly changed and is not backwardly compatible.  Check console output for instructions on how to upgrade the config.
+  
+
+
 1.0.7
 -----
 * Upgraded to Selenium 3.3.1 and Guava 21, requires some changes to webdriver wait methods to use java.util.function.Functions rather than the guava equivalents

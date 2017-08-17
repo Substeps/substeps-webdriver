@@ -136,7 +136,7 @@ public class DefaultExecutionSetupTearDown {
         final WebDriverContext webDriverContext = webDriverContextSupplier.get();
 
         if (webDriverContext != null) {
-            WebdriverReuseStategy reuseStrategy = this.configuration.getReuseStrategy();
+            WebdriverReuseStategy reuseStrategy = WebdriverReuseStategy.fromConfig(Configuration.INSTANCE.getConfig());//this.configuration.getReuseStrategy();
 
             DriverFactory factory = this.webDriverFactorySupplier.get();
 

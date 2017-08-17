@@ -15,7 +15,7 @@ import java.net.URL;
 /**
  * Created by ian on 12/12/16.
  */
-public class RemoteDriverFactory extends BaseDriverFactory implements DriverFactory{
+public class RemoteDriverFactory extends BaseDriverFactory implements DriverFactory, WebdriverSubstepsConfigurationKeys{
 
     private static final Logger log = LoggerFactory.getLogger(RemoteDriverFactory.class);
 
@@ -31,16 +31,16 @@ public class RemoteDriverFactory extends BaseDriverFactory implements DriverFact
 
         log.debug("creating remote saucelabs driver");
 
-        DesiredCapabilities caps = new DesiredCapabilities(cfg.getString("remote.driver.base.capability"), "", Platform.ANY);
+        DesiredCapabilities caps = new DesiredCapabilities(cfg.getString(REMOTE_WEBDRIVER_BASE_CAPABILITY_KEY), "", Platform.ANY);
 
-        caps.setCapability("platform", cfg.getString("remote.driver.platform")); // "Linux"
-        caps.setCapability("version", cfg.getString("remote.driver.version")); // "48.0"
+        caps.setCapability("platform", cfg.getString(REMOTE_WEBDRIVER_PLATFORM_KEY)); // "Linux"
+        caps.setCapability("version", cfg.getString(REMOTE_WEBDRIVER_BROWSER_VERSION_KEY)); // "48.0"
 
         URL url;
 
         try {
 
-            url = new URL(cfg.getString("remote.driver.url"));
+            url = new URL(cfg.getString(REMOTE_WEBDRIVER_URL));
         } catch (MalformedURLException e) {
             throw new SubstepsConfigurationException(e);
         }

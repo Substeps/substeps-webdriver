@@ -12,7 +12,7 @@ import java.util.Map;
 /**
  * Created by ian on 12/12/16.
  */
-public enum DriverFactoryRegistry {
+public enum DriverFactoryRegistry implements WebdriverSubstepsConfigurationKeys{
 
     INSTANCE;
 
@@ -22,7 +22,7 @@ public enum DriverFactoryRegistry {
 
     public void register(DriverFactoryKey key) {
 
-        log.debug("registering " + key.getFactory() + " to key: "  + key );
+        log.debug("registering " + key.getFactory() + " to key: "  + key.getKey() );
 
         if (registry.containsKey(key.getKey())){
             log.info("replacing default driver factory implementation: " + key.getFactory()  + " key: " + key);
@@ -39,7 +39,7 @@ public enum DriverFactoryRegistry {
 
     public DriverFactory getDriverFactory(Config cfg){
 
-        String key = cfg.getString("driver.type").toUpperCase();
+        String key = cfg.getString(DRIVER_TYPE_KEY).toUpperCase();
 
         DriverFactory factory = registry.get(key);
         if (factory == null){

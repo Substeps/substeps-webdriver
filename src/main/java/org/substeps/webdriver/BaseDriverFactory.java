@@ -6,33 +6,36 @@ import com.typesafe.config.Config;
 import io.github.bonigarcia.wdm.WdmConfig;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriverException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * Created by ian on 19/12/16.
  */
-public abstract class BaseDriverFactory implements DriverFactory{
+public abstract class BaseDriverFactory implements DriverFactory, WebdriverSubstepsConfigurationKeys{
 
     private static final Logger log = LoggerFactory.getLogger(BaseDriverFactory.class);
-
-    private static final String WEBDRIVER_MANAGER_PROPS_KEY = "webdriver.manager.properties";
 
     protected abstract WebDriver createInternal(Config cfg);
 
     @Override
     public WebDriver create(Config cfg){
-        if (cfg.hasPath(WEBDRIVER_MANAGER_PROPS_KEY) && !Strings.isNullOrEmpty(cfg.getString(WEBDRIVER_MANAGER_PROPS_KEY))) {
+        if (cfg.hasPath(WEBDRIVER_MANAGER_PROPERTIES_KEY) && !Strings.isNullOrEmpty(cfg.getString(WEBDRIVER_MANAGER_PROPERTIES_KEY))) {
 
             // see https://github.com/bonigarcia/webdrivermanager/blob/master/src/main/resources/webdrivermanager.properties
 
-            System.setProperty("wdm.properties", cfg.getString(WEBDRIVER_MANAGER_PROPS_KEY));
+            System.setProperty("wdm.properties", cfg.getString(WEBDRIVER_MANAGER_PROPERTIES_KEY));
         }
 
         WebDriver webdriver = createInternal(cfg);
 
-        WebDriverFactoryUtils.setScreensize(webdriver, cfg);
+        try {
+            WebDriverFactoryUtils.setScreensize(webdriver, cfg);
+        }
+        catch (WebDriverException e) {
 
+        }
         return webdriver;
     }
 

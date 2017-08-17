@@ -83,15 +83,15 @@ public class WebdriverSubstepsPropertiesConfigurationTest {
     }
 
 
-    @Test
-    public void testConstructor_DefaultProxySettings() throws NoSuchFieldException,
-            SecurityException, IllegalArgumentException, IllegalAccessException {
-        final WebdriverSubstepsPropertiesConfiguration config = WebdriverSubstepsPropertiesConfiguration.INSTANCE;
-
-        Assert.assertThat(config.getHtmlUnitProxyHost(), is(""));
-        Assert.assertThat(config.getHtmlUnitProxyPort(), is(8080));
-        Assert.assertThat(config.getNetworkProxyHost(), is(""));
-        Assert.assertThat(config.getNetworkProxyPort(), is(8080));
-    }
+//    @Test
+//    public void testConstructor_DefaultProxySettings() throws NoSuchFieldException,
+//            SecurityException, IllegalArgumentException, IllegalAccessException {
+//        final WebdriverSubstepsPropertiesConfiguration config = WebdriverSubstepsPropertiesConfiguration.INSTANCE;
+//
+//        Assert.assertThat(config.getHtmlUnitProxyHost(), is(""));
+//        Assert.assertThat(config.getHtmlUnitProxyPort(), is(8080));
+//        Assert.assertThat(config.getNetworkProxyHost(), is(""));
+//        Assert.assertThat(config.getNetworkProxyPort(), is(8080));
+//    }
 
 }
