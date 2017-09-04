@@ -42,27 +42,31 @@ public class DriverFactoryTest {
     }
 
     @Test
+    public void testWebdriverManagerOverride(){
+        Config cfg = SubstepsConfigLoader.loadResolvedConfig();
+
+        HTMLUnitDriverFactory factory = new HTMLUnitDriverFactory();
+
+        factory.create(cfg);
+
+        String wdmProps = System.getProperty("wdm.properties");
+
+        Assert.assertThat(wdmProps, is("substeps-webdrivermanager.properties"));
+    }
+
+    @Test
     public void testWebDriverFactoryCreate() {
         System.out.println("testWebDriverFactoryCreate");
 
         FactoryInitialiser.INSTANCE.toString();
 
-//        Config cfg = Configuration.INSTANCE.getConfig();
-//
-//        System.out.println("cfg: " + cfg.root().render());
-
         Config c = SubstepsConfigLoader.loadResolvedConfig();
 
-        System.out.println("resolved config: " + NewSubstepsExecutionConfig.render(c));
-
         Config cfg = SubstepsConfigLoader.splitMasterConfig(c).get(0);
-
-        System.out.println("split config: " + NewSubstepsExecutionConfig.render(cfg));
 
         NewSubstepsExecutionConfig.setThreadLocalConfig(cfg);
 
         System.out.println("config loaded");
-
 
         WebDriver htmlUnit = DriverFactoryRegistry.INSTANCE.create("HTMLUNIT", cfg);
 
