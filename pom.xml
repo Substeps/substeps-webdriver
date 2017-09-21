@@ -166,6 +166,12 @@
             <id>ossrh</id>
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </snapshotRepository>
+
+        <repository>
+            <id>oss</id>
+            <url>https://oss.sonatype.org/content/repositories/releases/</url>
+        </repository>
+
     </distributionManagement>
 
 
@@ -178,7 +184,15 @@
 				<updatePolicy>always</updatePolicy>
 			</snapshots>
 		</pluginRepository>
-	</pluginRepositories>
+
+        <pluginRepository>
+            <id>sonatype-nexus-releass</id>
+            <name>Sonatype Nexus Releases</name>
+            <url>https://oss.sonatype.org/content/repositories/releases/</url>
+        </pluginRepository>
+
+
+    </pluginRepositories>
 
 	<dependencies>
 
