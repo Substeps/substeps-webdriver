@@ -12,6 +12,10 @@ There is also a [Substeps Google group](http://groups.google.com/group/substeps?
 Substeps.org Release Notes
 ==========================
 
+1.1.1
+-----
+* v1.1.1 Substeps core, de-dupe stepimplementation entries in the glossary json file as a result
+
 1.1.0
 -----
 *** BREAKING CHANGE ***
