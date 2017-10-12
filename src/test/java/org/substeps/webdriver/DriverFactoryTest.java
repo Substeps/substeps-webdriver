@@ -11,11 +11,14 @@ import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.substeps.config.SubstepsConfigLoader;
 import org.substeps.runner.NewSubstepsExecutionConfig;
+
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.*;
 
@@ -54,53 +57,8 @@ public class DriverFactoryTest {
         Assert.assertThat(wdmProps, is("substeps-webdrivermanager.properties"));
     }
 
-    @Test
-    public void testWebDriverFactoryCreate() {
-        System.out.println("testWebDriverFactoryCreate");
-
-        FactoryInitialiser.INSTANCE.toString();
-
-        Config c = SubstepsConfigLoader.loadResolvedConfig();
-
-        Config cfg = SubstepsConfigLoader.splitMasterConfig(c).get(0);
-
-        NewSubstepsExecutionConfig.setThreadLocalConfig(cfg);
-
-        System.out.println("config loaded");
-
-        WebDriver htmlUnit = DriverFactoryRegistry.INSTANCE.create("HTMLUNIT", cfg);
-
-        System.out.println("driver loaded ?");
 
 
-        Assert.assertNotNull("html unit should not be null", htmlUnit);
-        htmlUnit.quit();
-
-        System.out.println("html unit quit");
-
-    }
-
-        @Test
-    @Ignore("this can only run where chrome and firefox installed, dev only")
-    public void testConstructors(){
-
-        FactoryInitialiser.INSTANCE.toString();
-
-        Config cfg = Configuration.INSTANCE.getConfig();
-
-        WebDriver chrome = DriverFactoryRegistry.INSTANCE.create("CHROME", cfg);
-
-        Assert.assertNotNull(chrome);
-        chrome.close();
-
-        WebDriver firefox = DriverFactoryRegistry.INSTANCE.create("FIREFOX", cfg);
-
-        Assert.assertNotNull(firefox);
-        firefox.close();
-
-        firefox.quit();
-
-    }
 
     @Ignore("this is a local dev test only")
     @Test
@@ -113,12 +71,12 @@ public class DriverFactoryTest {
             final DesiredCapabilities firefoxCapabilities = DesiredCapabilities.firefox();
             FirefoxProfile fp = new FirefoxProfile();
 
+            FirefoxOptions options = new FirefoxOptions();
 
             firefoxCapabilities.setCapability(FirefoxDriver.PROFILE, fp);
 
 
-            cd = new FirefoxDriver(fp);
-            //cd = new ChromeDriver();
+            cd = new FirefoxDriver(options);
 
             String cfgString = "org.substeps.webdriver{ window{ maximise=false, height=500, width=750 } }";
 

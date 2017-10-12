@@ -19,23 +19,21 @@
 package com.technophobia.webdriver.substeps.runner;
 
 import com.technophobia.substeps.model.Configuration;
-import com.technophobia.substeps.runner.setupteardown.Annotations;
-import com.typesafe.config.Config;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.technophobia.substeps.model.Scope;
 import com.technophobia.substeps.runner.ExecutionContext;
 import com.technophobia.substeps.runner.ExecutionContextSupplier;
 import com.technophobia.substeps.runner.INotificationDistributor;
 import com.technophobia.substeps.runner.MutableSupplier;
+import com.technophobia.substeps.runner.setupteardown.Annotations;
 import com.technophobia.substeps.runner.setupteardown.Annotations.AfterEveryScenario;
 import com.technophobia.substeps.runner.setupteardown.Annotations.BeforeAllFeatures;
 import com.technophobia.substeps.runner.setupteardown.Annotations.BeforeEveryScenario;
 import com.technophobia.webdriver.util.WebDriverContext;
+import com.typesafe.config.Config;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.substeps.webdriver.DriverFactory;
-import org.substeps.webdriver.DriverFactoryRegistry;
-import org.substeps.webdriver.FactoryInitialiser;
+import org.substeps.webdriver.config.WebdriverSubstepsConfig;
 import org.substeps.webdriver.runner.WebdriverReuseStategy;
 
 public class DefaultExecutionSetupTearDown {
@@ -68,7 +66,7 @@ public class DefaultExecutionSetupTearDown {
     public final void beforeAllFeaturesSetup() {
 
         // Initialise the webdriver factories
-        FactoryInitialiser.INSTANCE.toString();
+//        FactoryInitialiser.INSTANCE.toString();
 
         final INotificationDistributor notifier = (INotificationDistributor) ExecutionContext.get(Scope.SUITE,
                 INotificationDistributor.NOTIFIER_DISTRIBUTOR_KEY);
@@ -88,7 +86,7 @@ public class DefaultExecutionSetupTearDown {
         logger.info("env prop: " + env);
 
         Config cfg = Configuration.INSTANCE.getConfig();
-        DriverFactory driverFactory = DriverFactoryRegistry.INSTANCE.getDriverFactory(cfg);
+        DriverFactory driverFactory = WebdriverSubstepsConfig.getDriverFactory(cfg);
 
         this.webDriverFactorySupplier.set(driverFactory);
 
