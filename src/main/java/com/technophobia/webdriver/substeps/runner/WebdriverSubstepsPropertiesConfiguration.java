@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 
 import com.technophobia.substeps.model.Configuration;
 import org.substeps.webdriver.WebdriverSubstepsConfigurationKeys;
+import org.substeps.webdriver.config.WebdriverSubstepsConfig;
 import org.substeps.webdriver.runner.WebdriverReuseStategy;
 
 public enum WebdriverSubstepsPropertiesConfiguration implements WebdriverSubstepsConfiguration, WebdriverSubstepsConfigurationKeys {
@@ -51,35 +52,11 @@ public enum WebdriverSubstepsPropertiesConfiguration implements WebdriverSubstep
 
     public String baseURL() {
 
-        return determineBaseURL(Configuration.INSTANCE.getString(BASE_URL_KEY));
+        return WebdriverSubstepsConfig.determineBaseURL(Configuration.INSTANCE.getString(BASE_URL_KEY));
     }
 
     public long defaultTimeout() {
         return Configuration.INSTANCE.getInt(DEFAULT_WEBDRIVER_TIMEOUT_KEY);
     }
 
-
-    private String determineBaseURL(final String baseUrlProperty) {
-
-        final String resolvedBaseUrl;
-        final String property = removeTrailingSlash(baseUrlProperty);
-
-        if (!property.startsWith("http") && !property.startsWith("file://")) {
-
-            resolvedBaseUrl = removeTrailingSlash(new File(property).toURI()
-                    .toString());
-        } else {
-            resolvedBaseUrl = property;
-        }
-
-        return resolvedBaseUrl;
-    }
-
-
-    private String removeTrailingSlash(final String string) {
-        if (string.endsWith("/")) {
-            return string.substring(0, string.length() - 1);
-        }
-        return string;
-    }
 }
