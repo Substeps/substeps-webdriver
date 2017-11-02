@@ -1,5 +1,5 @@
 /*
- *	Copyright Technophobia Ltd 2012
+ *  Copyright Technophobia Ltd 2012
  *
  *   This file is part of Substeps.
  *
@@ -31,14 +31,28 @@ import org.slf4j.LoggerFactory;
 
 import java.util.function.Function;
 
+/**
+ * Collection of static utility methods to locate elements
+ */
 public class ElementLocators {
 
     private static final Logger LOG = LoggerFactory.getLogger(ElementLocators.class);
 
-    private final static int timeout = 10;
-    final static long polltime = 1000;
+    private static final int attempts = 10;
+    private static final long polltime = 1000;
+
+    /**
+     * private to avoid construction, use static methods
+     */
+    private ElementLocators(){}
 
 
+    /**
+     * Wait for an element to be located using the specified By, with the default timeout specified from config
+     * @param by the By to use to locate the element
+     * @param webDriver the webdriver used to locate the element
+     * @return the WebElement or null.  NB this method won't assert on results
+     */
     public static WebElement waitForElement(final By by, WebDriver webDriver) {
         return waitForElement(by, WebdriverSubstepsPropertiesConfiguration.INSTANCE.defaultTimeout(), webDriver);
     }
@@ -66,27 +80,27 @@ public class ElementLocators {
     }
 
 
-
     private static WebElement waitUntil(final WebDriverWait wait, final Function<WebDriver, WebElement> condition,
-                                       WebDriver webDriver) {
+                                        WebDriver webDriver) {
         WebElement elem = null;
         try {
             elem = wait.until(condition);
         } catch (final TimeoutException e) {
 
-            if (Configuration.INSTANCE.getConfig().getBoolean("org.substeps.webdriver.log.pagesource.onerror")){
+            if (Configuration.INSTANCE.getConfig().getBoolean("org.substeps.webdriver.log.pagesource.onerror")) {
                 LOG.debug("timed out page src:\n" + webDriver.getPageSource());
             }
-
-
         }
         return elem;
     }
 
+    /**
+     * Convenience method to wait for the given condition.  Will iterate a number of times, test the condition, if false, sleep for 1 sec, repeat.  Currently not configurable, but perhaps not widely used.
+     * @param condition the condition to test
+     * @return true if the condition was satisfied
+     */
 
-
-
-    public static boolean waitForCondition(final Condition condition, WebDriver webDriver) {
+    public static boolean waitForCondition(final Condition condition) {
 
         int count = 0;
 
@@ -100,7 +114,7 @@ public class ElementLocators {
                 // Do Nothing
             }
 
-            if (count == timeout) {
+            if (count == attempts) {
                 return false;
             }
         }

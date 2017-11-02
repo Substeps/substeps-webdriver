@@ -1,5 +1,5 @@
 /*
- *	Copyright Technophobia Ltd 2012
+ *  Copyright Technophobia Ltd 2012
  *
  *   This file is part of Substeps.
  *
@@ -19,12 +19,13 @@
 package com.technophobia.webdriver.substeps.runner;
 
 /**
- * TODO
- * 
- * @author imoore
- * 
+ * Just a basic condition, used in waitfor
  */
-public interface Condition
-{
-	boolean conditionMet();
+public interface Condition {
+
+    /**
+     * has the condition been satisfied
+     * @return true if it has
+     */
+    boolean conditionMet();
 }

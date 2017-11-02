@@ -1,5 +1,5 @@
 /*
- *	Copyright Technophobia Ltd 2012
+ *  Copyright Technophobia Ltd 2012
  *
  *   This file is part of Substeps.
  *
@@ -26,12 +26,11 @@ import com.technophobia.webdriver.substeps.runner.DefaultExecutionSetupTearDown;
  * Class containing the base set of substep impls. This class will be generic
  * across projects, project specific functionality should live in a separate
  * StepImplementations class
- * 
+ *
  * @author imoore
- * 
  */
 @StepImplementations(requiredInitialisationClasses = DefaultExecutionSetupTearDown.class)
-@AdditionalStepImplementations({ ActionWebDriverSubStepImplementations.class,
+@AdditionalStepImplementations({ActionWebDriverSubStepImplementations.class,
         AssertionWebDriverSubStepImplementations.class,
         FinderWebDriverSubStepImplementations.class,
         FormWebDriverSubStepImplementations.class,

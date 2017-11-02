@@ -7,14 +7,13 @@ import com.technophobia.substeps.runner.MutableSupplier;
 import com.technophobia.webdriver.substeps.runner.DefaultExecutionSetupTearDown;
 import org.junit.Assert;
 import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Created by ian on 21/01/17.
+ * Step implementations concerned with iframes and new windows, switching in and out from them.
  */
 
 @SubSteps.StepImplementations(requiredInitialisationClasses = DefaultExecutionSetupTearDown.class)
@@ -26,6 +25,7 @@ public class IFrameAndWindowSubstepImplementations extends AbstractWebDriverSubS
 
     /**
      * Switches to the new window which has been opened
+     *
      * @example Switch to new window
      * @section windows
      */
@@ -42,6 +42,7 @@ public class IFrameAndWindowSubstepImplementations extends AbstractWebDriverSubS
 
     /**
      * Close the new window which was been opened and return the focus to the original window
+     *
      * @example Close new window
      * @section windows
      */
@@ -59,11 +60,10 @@ public class IFrameAndWindowSubstepImplementations extends AbstractWebDriverSubS
     /**
      * Switches to the new iFrame present on current page and store the webdriver element for the iFrame
      *
+     * @param iFrameCssSelector the CSS Selector to identify the iframe to switch to
+     *                          NB the found iframe cannot be returned - once it has been switched to it will be stale and can't be referenced
      * @example Switch to new frame by CSS selector ".iframe-class"
      * @section windows
-     *
-     * @param iFrameCssSelector the CSS Selector to identify the iframe to switch to
-     * NB the found iframe cannot be returned - once it has been switched to it will be stale and can't be referenced
      */
     @SubSteps.Step("Switch to new frame by CSS selector \"([^\"]*)\"")
     public void switchToNewFrame(String iFrameCssSelector) {
@@ -76,12 +76,10 @@ public class IFrameAndWindowSubstepImplementations extends AbstractWebDriverSubS
     /**
      * Switches to the specified iFrame present on current page and store the webdriver element for the iFrame
      *
+     * @param frameName the name attribute of the iframe to switch to
+     *                  NB the found iframe cannot be returned - once it has been switched to it will be stale and can't be referenced
      * @example Switch to new frame by name "iframe-name"
      * @section windows
-     *
-     * @param frameName the name attribute of the iframe to switch to
-     * NB the found iframe cannot be returned - once it has been switched to it will be stale and can't be referenced
-     *
      */
     @SubSteps.Step("Switch to new frame by name \"([^\"]*)\"")
     public void switchToNewFrameByName(String frameName) {
@@ -89,7 +87,7 @@ public class IFrameAndWindowSubstepImplementations extends AbstractWebDriverSubS
         WebElement iframe = waitFor(By.name(frameName), "Expecting an iframe with name: " + frameName);
 
         logger.debug(" ** game name iframe @ x: " + iframe.getLocation().getX() + " y: " + iframe.getLocation().getY() + " h: " +
-                iframe.getSize().getHeight() + " w: " + iframe.getSize().getWidth() );
+                iframe.getSize().getHeight() + " w: " + iframe.getSize().getWidth());
 
         webDriver().switchTo().frame(iframe);
     }
@@ -112,7 +110,6 @@ public class IFrameAndWindowSubstepImplementations extends AbstractWebDriverSubS
      *
      * @example SwitchFrameToCurrentElement
      * @section Windows
-     *
      */
     @SubSteps.Step("SwitchFrameToCurrentElement")
     public void switchFrameToCurrentElement() {

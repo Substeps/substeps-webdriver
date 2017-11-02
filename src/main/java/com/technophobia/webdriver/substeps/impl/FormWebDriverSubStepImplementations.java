@@ -1,5 +1,5 @@
 /*
- *	Copyright Technophobia Ltd 2012
+ *  Copyright Technophobia Ltd 2012
  *
  *   This file is part of Substeps.
  *
@@ -18,14 +18,11 @@
  */
 package com.technophobia.webdriver.substeps.impl;
 
-import static org.hamcrest.CoreMatchers.is;
-
-import java.io.File;
-import java.util.List;
-
 import com.technophobia.substeps.model.Configuration;
 import com.technophobia.substeps.model.SubSteps;
-import com.technophobia.webdriver.substeps.runner.WebdriverSubstepsPropertiesConfiguration;
+import com.technophobia.substeps.model.SubSteps.Step;
+import com.technophobia.substeps.model.SubSteps.StepImplementations;
+import com.technophobia.webdriver.substeps.runner.DefaultExecutionSetupTearDown;
 import com.technophobia.webdriver.util.WebDriverSubstepsBy;
 import org.junit.Assert;
 import org.openqa.selenium.By;
@@ -34,18 +31,17 @@ import org.openqa.selenium.NotFoundException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.base.Supplier;
-import com.technophobia.substeps.model.SubSteps.Step;
-import com.technophobia.substeps.model.SubSteps.StepImplementations;
-import com.technophobia.substeps.model.SubSteps.StepParameter;
-import com.technophobia.substeps.model.parameter.BooleanConverter;
-import com.technophobia.webdriver.substeps.runner.DefaultExecutionSetupTearDown;
-import com.technophobia.webdriver.util.WebDriverContext;
+import java.io.File;
+import java.util.List;
 
+import static org.hamcrest.CoreMatchers.is;
+
+/**
+ * Form related step implementations, sending keys, submitting, checking checkboxes, choosing options
+ */
 @StepImplementations(requiredInitialisationClasses = DefaultExecutionSetupTearDown.class)
 public class FormWebDriverSubStepImplementations extends
         AbstractWebDriverSubStepImplementations {
@@ -53,25 +49,16 @@ public class FormWebDriverSubStepImplementations extends
     private static final Logger logger = LoggerFactory
             .getLogger(FormWebDriverSubStepImplementations.class);
 
-    private final FinderWebDriverSubStepImplementations locator;
+    private final FinderWebDriverSubStepImplementations locator = new FinderWebDriverSubStepImplementations();
 
-    private final ActionWebDriverSubStepImplementations actions;
-
-
-    public FormWebDriverSubStepImplementations() {
-        super();
-        this.locator = new FinderWebDriverSubStepImplementations();
-        this.actions = new ActionWebDriverSubStepImplementations();
-    }
-
-
+    private final ActionWebDriverSubStepImplementations actions = new ActionWebDriverSubStepImplementations();
 
 
 
     /**
      * Submit the form of the current element. NB using click is preferable as
      * javascript may be executed on click, which this method would bypass
-     * 
+     *
      * @example Submit
      * @section Clicks
      */
@@ -85,11 +72,10 @@ public class FormWebDriverSubStepImplementations extends
     /**
      * Enters text to the current element, without clearing any current content
      * first
-     * 
+     *
+     * @param value the value
      * @example SendKeys "hello"
      * @section Forms
-     * @param value
-     *            the value
      */
     @Step("SendKeys \"([^\"]*)\"")
     public void sendKeys(final String value) {
@@ -99,28 +85,26 @@ public class FormWebDriverSubStepImplementations extends
 
     /**
      * Enters the given key into the current element, without clearing any current content
-     * 
+     * <p>
      * Note this is to be used for 'special' keys defined by org.openqa.selenium.Keys
-     * 
+     *
+     * @param key a value from {@link Keys}
      * @example SendKey Key.RETURN
      * @section Forms
-     * @param key a value from {@link Keys}
      */
     @Step("SendKey Key\\.(.+)")
     public void sendKey(final String key) {
         logger.debug("About to send key " + key + " to the current element");
-    	webDriverContext().getCurrentElement().sendKeys(Keys.valueOf(key));
+        webDriverContext().getCurrentElement().sendKeys(Keys.valueOf(key));
     }
 
     /**
      * Find an element by id, clear any text from the element, and enter text
-     * 
+     *
+     * @param id    the id
+     * @param value the value
      * @example ClearAndSendKeys "fred" to id username
      * @section Forms
-     * @param id
-     *            the id
-     * @param value
-     *            the value
      */
     @Step("ClearAndSendKeys \"([^\"]*)\" to id ([^\"]*)")
     public void sendKeysById(final String value, final String id) {
@@ -131,11 +115,10 @@ public class FormWebDriverSubStepImplementations extends
 
     /**
      * Clear any text from the element, and enter text (to the current element)
-     * 
+     *
+     * @param value the value
      * @example ClearAndSendKeys "hello"
      * @section Forms
-     * @param value
-     *            the value
      */
     @Step("ClearAndSendKeys \"([^\"]*)\"")
     public void clearAndSendKeys(final String value) {
@@ -150,13 +133,11 @@ public class FormWebDriverSubStepImplementations extends
 
     /**
      * Select a value in the option list that has the id
-     * 
+     *
+     * @param value the value
+     * @param id    the id
      * @example ChooseOption "fred" in id usersList
      * @section Forms
-     * @param value
-     *            the value
-     * @param id
-     *            the id
      */
     @Step("ChooseOption \"([^\"]*)\" in id ([^\"]*)")
     public void selectValueInId(final String value, final String id) {
@@ -172,11 +153,12 @@ public class FormWebDriverSubStepImplementations extends
 
     /**
      * choose an option by visible text within a select
-     * @param value the value to be chosen
+     *
+     * @param value         the value to be chosen
      * @param selectElement the select element
      */
     public void chooseOptionByTextInSelect(final String value,
-            final WebElement selectElement) {
+                                           final WebElement selectElement) {
         final Select select = new Select(selectElement);
         select.selectByVisibleText(value);
         Assert.assertTrue("expected value is not selected", select
@@ -189,11 +171,10 @@ public class FormWebDriverSubStepImplementations extends
     /**
      * Select a value in the option list in the current element, a Find
      * operation is required immediatebly before
-     * 
+     *
+     * @param value the value
      * @example ChooseOption "fred" in current element
      * @section Forms
-     * @param value
-     *            the value
      */
     @Step("ChooseOption \"([^\"]*)\" in current element")
     public void selectValueInCurrentElement(final String value) {
@@ -219,10 +200,10 @@ public class FormWebDriverSubStepImplementations extends
     /**
      * Asserts that the select with the specified id has the specified option text selected
      *
+     * @param id    the id of the select
+     * @param value the text value of the option
      * @example AssertSelect id="select_id" text="number two option" is currently selected
      * @section Form
-     * @param id the id of the select
-     * @param value the text value of the option
      */
     @Step("AssertSelect id=\"([^\"]*)\" text=\"([^\"]*)\" is currently selected")
     public void assertOptionIsSelected(final String id, final String value) {
@@ -244,10 +225,10 @@ public class FormWebDriverSubStepImplementations extends
     /**
      * Asserts that the select with the specified id does not have the specified option text selected
      *
+     * @param id    the id of the select
+     * @param value the text value of the option that shouldn't be selected
      * @example AssertSelect id="select_id" text="number one option" is not currently selected
      * @section Form
-     * @param id the id of the select
-     * @param value the text value of the option that shouldn't be selected
      */
     @Step("AssertSelect id=\"([^\"]*)\" text=\"([^\"]*)\" is not currently selected")
     public void assertOptionIsNotSelected(final String id, final String value) {
@@ -266,21 +247,18 @@ public class FormWebDriverSubStepImplementations extends
     }
 
 
-
-
     /**
      * Sets the value of the current element, assumed to be a radio button to...
-     * 
+     *
+     * @param checked the checked
      * @example SetRadioButton checked=true
      * @section Forms
-     * @param checked
-     *            the checked
      */
     @Step("SetRadioButton checked=([^\"]*)")
     public void setRadioButtonChecked(final String checked) {
 
         // assumes current element is not null and a radio button
-        final WebElement currentElem =  webDriverContext()
+        final WebElement currentElem = webDriverContext()
                 .getCurrentElement();
 
         AssertionWebDriverSubStepImplementations.assertElementIs(currentElem,
@@ -293,17 +271,16 @@ public class FormWebDriverSubStepImplementations extends
 
     /**
      * Sets the value of the current element, assumed to be a checkbox to...
-     * 
+     *
+     * @param checked the checked
      * @example SetCheckedBox checked=true
      * @section Forms
-     * @param checked
-     *            the checked
      */
     @Step("SetCheckedBox checked=([^\"]*)")
     public void setSetCheckedBoxChecked(final String checked) {
 
         // assumes current element is not null and a radio button
-        final WebElement currentElem =  webDriverContext()
+        final WebElement currentElem = webDriverContext()
                 .getCurrentElement();
 
         AssertionWebDriverSubStepImplementations.assertElementIs(currentElem,
@@ -314,21 +291,15 @@ public class FormWebDriverSubStepImplementations extends
     }
 
 
-
-
-
-
     /**
      * Sets the checkbox value.
-     * 
+     *
+     * @param checkboxField the checkbox field
+     * @param value         the value
      * @example
-     * @param checkboxField
-     *            the checkbox field
-     * @param value
-     *            the value
      */
     protected void setCheckboxValue(final WebElement checkboxField,
-            final boolean value) {
+                                    final boolean value) {
         logger.debug("About to set checkbox " + checkboxField + "to "
                 + (value ? "checked" : "not checked"));
         if (checkboxField.isSelected() && !value) {
@@ -346,10 +317,10 @@ public class FormWebDriverSubStepImplementations extends
     /**
      * Choose an option with the specified text in the select with the specified css class
      *
+     * @param optionText   the option text
+     * @param cssClassName the css class of the select
      * @example Select "number two option" option in class "select-marker-class"
      * @section Form
-     * @param optionText the option text
-     * @param cssClassName the css class of the select
      */
     @SubSteps.Step("Select \"([^\"]*)\" option in class \"([^\"]*)\"")
     public void selectOptionInClass(String optionText, String cssClassName) {
@@ -364,13 +335,12 @@ public class FormWebDriverSubStepImplementations extends
     /**
      * Choose an option with the specified text in the select with the given id
      *
-     * @example Select "number one option" option in Id "select_id"
-     * @section Form
-     *
      * @param optionText the option text
-     * @param id the id of the select
+     * @param id         the id of the select
      * @return the located WebElement
      * @throws InterruptedException if the wait is interupted
+     * @example Select "number one option" option in Id "select_id"
+     * @section Form
      */
     @SubSteps.Step("Select \"([^\"]*)\" option in Id \"([^\"]*)\"")
     public WebElement selectOptionInId(String optionText, String id) throws InterruptedException {
@@ -397,8 +367,7 @@ public class FormWebDriverSubStepImplementations extends
                 if (test.equals(optionText)) {
                     break;
                 }
-            }
-            catch (NotFoundException e) {
+            } catch (NotFoundException e) {
                 logger.debug("element not found " + e);
             }
 
@@ -417,11 +386,11 @@ public class FormWebDriverSubStepImplementations extends
     /**
      * Uses a value of a property in the config file, constructs a File and passes the absolute path of that file to the current element.  Useful for file upload scenarios.
      *
+     * @param filePropertyName the config property name
      * @example SendKeys pathOf property "test.filename" to current element
      * @section Form
-     *
+     * <p>
      * used to pass the path of a file for file uploads
-     * @param filePropertyName the config property name
      */
     @SubSteps.Step("SendKeys pathOf property \"([^\"]*)\" to current element")
     public void sendKeysToCurrentElement(String filePropertyName) {
@@ -443,10 +412,10 @@ public class FormWebDriverSubStepImplementations extends
     /**
      * Uses a value of a property in the config file, constructs a File and passes the absolute path of that file to the element with the specified id.  Useful for file upload scenarios.
      *
+     * @param filePropertyName the config property name
+     * @param id               the id of the element to send the absolute filename to
      * @example SendKeys pathOf property "test.filename2" to id "text-id"
      * @section Form
-     * @param filePropertyName the config property name
-     * @param id the id of the element to send the absolute filename to
      */
     @SubSteps.Step("SendKeys pathOf property \"([^\"]*)\" to id \"([^\"]*)\"")
     public void sendKeysToId(String filePropertyName, String id) {

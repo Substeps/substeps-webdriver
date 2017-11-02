@@ -1,5 +1,5 @@
 /*
- *	Copyright Technophobia Ltd 2012
+ *  Copyright Technophobia Ltd 2012
  *
  *   This file is part of Substeps.
  *
@@ -40,6 +40,9 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.not;
 
+/**
+ * set of step implementations primarily concerned with various assertions
+ */
 @StepImplementations(requiredInitialisationClasses = DefaultExecutionSetupTearDown.class)
 public class AssertionWebDriverSubStepImplementations extends AbstractWebDriverSubStepImplementations {
 
@@ -48,100 +51,87 @@ public class AssertionWebDriverSubStepImplementations extends AbstractWebDriverS
     private final FinderWebDriverSubStepImplementations finder = new FinderWebDriverSubStepImplementations();
 
 
-
-
-
     /**
      * Check that the current element has the expected text value
-     * 
+     *
+     * @param expected the expected text
      * @example AssertCurrentElement text="Hello World!"
      * @section Assertions
-     * @param expected
-     *            the expected text
      */
     @Step("AssertCurrentElement text=\"([^\"]*)\"")
     public void assertTextInCurrentElement(final String expected) {
         logger.debug("Asserting the current element has the text " + expected);
-        Assert.assertThat( webDriverContext().getCurrentElement().getText(), is(expected));
+        Assert.assertThat(webDriverContext().getCurrentElement().getText(), is(expected));
     }
 
 
     /**
      * Check that the current input field has the expected text value
-     * 
+     *
+     * @param expected the expected value
      * @example AssertCurrentInput value="Hello World!"
      * @section Assertions
-     * @param expected
-     *            the expected value
      */
     @Step("AssertCurrentInput value=\"([^\"]*)\"")
     public void assertValueInCurrentInput(final String expected) {
         logger.debug("Asserting the current input has the value" + expected);
-        Assert.assertThat( webDriverContext().getCurrentElement()
+        Assert.assertThat(webDriverContext().getCurrentElement()
                 .getAttribute("value"), is(expected));
     }
 
     /**
      * Check that the current input field contains the expected text value
      *
+     * @param expected part of the expected value
      * @example AssertCurrentInput value contains "Hello"
      * @section Assertions
-     * @param expected
-     *            part of the expected value
      */
     @Step("AssertCurrentInput value contains \"([^\"]*)\"")
     public void assertCurrentInputContainsText(final String expected) {
         logger.debug("Asserting the current input contains the value" + expected);
-        Assert.assertThat( webDriverContext().getCurrentElement()
+        Assert.assertThat(webDriverContext().getCurrentElement()
                 .getAttribute("value"), containsString(expected));
     }
 
-    
+
     /**
      * Check that the current element contains the specified text
-     * 
+     *
+     * @param expected the expected text
      * @example AssertCurrentElement text contains "Hello world"
      * @section Assertions
-     * @param expected
-     *            the expected text
      */
     @Step("AssertCurrentElement text contains \"([^\"]*)\"")
     public void assertTextInCurrentElementContains(final String expected) {
         logger.debug("Asserting current element contains the text " + expected);
-        Assert.assertThat( webDriverContext().getCurrentElement().getText(), containsString(expected));
+        Assert.assertThat(webDriverContext().getCurrentElement().getText(), containsString(expected));
     }
 
 
     /**
      * Check that the current element has the specified attribute and value
-     * 
+     *
+     * @param attribute the attribute name
+     * @param expected  the expected value of the attribute
      * @example AssertCurrentElement attribute="class" value="icon32x32"
      * @section Assertions
-     * 
-     * @param attribute
-     *            the attribute name
-     * @param expected
-     *            the expected value of the attribute
      */
     @Step("AssertCurrentElement attribute=\"([^\"]*)\" value=\"([^\"]*)\"")
     public void assertAttributeInCurrentElement(final String attribute, final String expected) {
         logger.debug("Asserting current element has the attribute " + attribute + "with value " + expected);
-       
-        final String attributeValue =  webDriverContext().getCurrentElement().getAttribute(attribute);
+
+        final String attributeValue = webDriverContext().getCurrentElement().getAttribute(attribute);
         Assert.assertNotNull("Expecting to find attribute " + attribute + " on current element", attributeValue);
         Assert.assertThat(attributeValue, is(expected));
     }
 
 
-
-
     /**
      * Check that the page title is ....
-     * 
+     *
+     * @param expectedTitle the expected title
      * @example AssertPageTitle is "My Home Page"
      * @section Assertions
-     * @param expectedTitle
-     *            the expected title
      */
     @Step("AssertPageTitle is \"([^\"]*)\"")
     public void assertPageTitle(final String expectedTitle) {
@@ -152,12 +142,11 @@ public class AssertionWebDriverSubStepImplementations extends AbstractWebDriverS
 
     /**
      * Simple text search on page source
-     * 
+     *
+     * @param expected the text you expect to find in the page source - this can
+     *                 include quotes.
      * @example AssertPageSourceContains "foobar"
      * @section Assertions
-     * @param expected
-     *            the text you expect to find in the page source - this can
-     *            include quotes.
      */
     @Step("AssertPageSourceContains \"(.*)\"$")
     public void pageSourceContains(final String expected) {
@@ -171,17 +160,16 @@ public class AssertionWebDriverSubStepImplementations extends AbstractWebDriverS
 
     /**
      * Check that the current element, a checkbox is checked or not
-     * 
+     *
+     * @param checkedString whether the radio button is checked or not
      * @example AssertCheckBox checked=true/false
      * @section Assertions
-     * @param checkedString
-     *            whether the radio button is checked or not
      */
     @Step("AssertCheckBox checked=\"?([^\"]*)\"?")
     public void assertCheckBoxIsChecked(final String checkedString) {
 
         // check that the current element is not null and is a radio btn
-        final WebElement currentElem =  webDriverContext().getCurrentElement();
+        final WebElement currentElem = webDriverContext().getCurrentElement();
 
         assertElementIs(currentElem, "input", "checkbox");
 
@@ -197,17 +185,16 @@ public class AssertionWebDriverSubStepImplementations extends AbstractWebDriverS
 
     /**
      * Check that the current element, a radio button, is checked or not
-     * 
+     *
+     * @param checkedString whether the radio button is checked or not
      * @example AssertRadioButton checked=true/false
      * @section Assertions
-     * @param checkedString
-     *            whether the radio button is checked or not
      */
     @Step("AssertRadioButton checked=\"?([^\"]*)\"?")
     public void assertRadioButtonIsChecked(final String checkedString) {
 
         // check that the current element is not null and is a radio btn
-        final WebElement currentElem =  webDriverContext().getCurrentElement();
+        final WebElement currentElem = webDriverContext().getCurrentElement();
 
         assertElementIs(currentElem, "input", "radio");
 
@@ -223,18 +210,17 @@ public class AssertionWebDriverSubStepImplementations extends AbstractWebDriverS
 
     /**
      * Check that the current element has the specified attributes
-     * 
+     *
+     * @param attributeString comma separated list of attributes and quoted values
      * @example AssertCurrentElement has
-     *          attributes=[type="submit",value="Search"]
+     * attributes=[type="submit",value="Search"]
      * @section Assertions
-     * @param attributeString
-     *            comma separated list of attributes and quoted values
      */
 
     @Step("AssertCurrentElement has attributes=\\[(.*)\\]")
     public void assertCurrentElementHasAttributes(final String attributeString) {
 
-        final WebElement currentElem =  webDriverContext().getCurrentElement();
+        final WebElement currentElem = webDriverContext().getCurrentElement();
 
         final Map<String, String> expectedAttributes = StepImplementationUtils.convertToMap(attributeString);
 
@@ -246,10 +232,9 @@ public class AssertionWebDriverSubStepImplementations extends AbstractWebDriverS
 
     /**
      * Utility method to check that an element is of a particular tag and type
-     * 
-     * @param elem the element
      *
-     * @param tag the expected tag
+     * @param elem the element
+     * @param tag  the expected tag
      * @param type the expected type attribute
      */
     public static void assertElementIs(final WebElement elem, final String tag, final String type) {
@@ -267,9 +252,9 @@ public class AssertionWebDriverSubStepImplementations extends AbstractWebDriverS
 
     /**
      * Utility method to check that an element is of a particular tag
-     * 
+     *
      * @param elem the element to check
-     * @param tag the expected tag
+     * @param tag  the expected tag
      */
     public static void assertElementIs(final WebElement elem, final String tag) {
         assertElementIs(elem, tag, null);
@@ -280,13 +265,10 @@ public class AssertionWebDriverSubStepImplementations extends AbstractWebDriverS
      * Grab the text of an element (identified by id) and save it for the
      * duration of this scenario
      *
+     * @param elementId    The ID of the HTML element
+     * @param nameToSaveAs The variable name to save the text as for later retrieval
      * @section Assertions
      * @example RememberForScenario textFrom "projectName" as "savedProjectName"
-     * 
-     * @param elementId
-     *            The ID of the HTML element
-     * @param nameToSaveAs
-     *            The variable name to save the text as for later retrieval
      */
     @Step("RememberForScenario textFrom \"([^\"]*)\" as \"([^\"]*)\"")
     public void rememberForScenario(final String elementId, final String nameToSaveAs) {
@@ -300,14 +282,12 @@ public class AssertionWebDriverSubStepImplementations extends AbstractWebDriverS
     /**
      * Compare the text of an element (identified by ID) to a value previously
      * remembered
-     * 
+     *
+     * @param elementId           The ID of the HTML element
+     * @param rememberedValueName The variable name to save the text as for later retrieval
      * @example AssertDifferent rememberedValue "savedProjectName"
-     *          compareToElement "projectName"
+     * compareToElement "projectName"
      * @section Assertions
-     * @param elementId
-     *            The ID of the HTML element
-     * @param rememberedValueName
-     *            The variable name to save the text as for later retrieval
      */
     @Step("AssertDifferent rememberedValue \"([^\"]*)\" compareToElement \"([^\"]*)\"")
     public void assertDifferent(final String rememberedValueName, final String elementId) {
@@ -323,6 +303,7 @@ public class AssertionWebDriverSubStepImplementations extends AbstractWebDriverS
             }
         }
 
+        Assert.assertNotNull("remembered value is null", retrievedValue);
         Assert.assertFalse("The remembered value was different to the text of the element compared against",
                 retrievedValue.equals(text));
     }
@@ -331,14 +312,12 @@ public class AssertionWebDriverSubStepImplementations extends AbstractWebDriverS
     /**
      * Compare the text of an element (identified by ID) to a value previously
      * remembered - assert they're the same
-     * 
+     *
+     * @param elementId           The ID of the HTML element
+     * @param rememberedValueName The variable name to save the text as for later retrieval
      * @example AssertSame rememberedValue "savedProjectName" compareToElement
-     *          "projectName"
+     * "projectName"
      * @section Assertions
-     * @param elementId
-     *            The ID of the HTML element
-     * @param rememberedValueName
-     *            The variable name to save the text as for later retrieval
      */
     @Step("AssertSame rememberedValue \"([^\"]*)\" compareToElement \"([^\"]*)\"")
     public void assertSame(final String rememberedValueName, final String elementId) {
@@ -353,23 +332,19 @@ public class AssertionWebDriverSubStepImplementations extends AbstractWebDriverS
                 retrievedValue = valueFromScope;
             }
         }
+        Assert.assertNotNull("remembered value is null", retrievedValue);
 
         Assert.assertEquals("The remembered value was different to the text of the element compared against",
                 retrievedValue.toString(), text);
     }
 
 
-
-
-
-
-
     /**
      * Assert that the specified text is not found within the page source
-     * 
+     *
+     * @param text the text that shouldn't be present
      * @example AssertNotPresent text="undesirable text"
      * @section Assertions
-     * @param text the text that shouldn't be present
      */
     @Step("AssertNotPresent text=\"([^\"]*)\"")
     public void assertNotPresent(final String text) {
@@ -381,11 +356,10 @@ public class AssertionWebDriverSubStepImplementations extends AbstractWebDriverS
 
     /**
      * Wait for an element to contain some (any) text
-     * 
-     * @example
-     * @param by
-     *            WebDriver By object that identifies the element
+     *
+     * @param by WebDriver By object that identifies the element
      * @return the web element
+     * @example
      */
     public WebElement waitForElementToContainSomeText(final By by) {
 

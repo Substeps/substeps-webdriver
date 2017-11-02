@@ -1,7 +1,5 @@
 package org.substeps.webdriver;
 
-import com.technophobia.substeps.model.Configuration;
-import com.technophobia.webdriver.substeps.runner.WebdriverSubstepsPropertiesConfiguration;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import io.github.bonigarcia.wdm.ChromeDriverManager;
@@ -9,18 +7,13 @@ import io.github.bonigarcia.wdm.FirefoxDriverManager;
 import org.junit.*;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.firefox.FirefoxProfile;
-import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.substeps.config.SubstepsConfigLoader;
-import org.substeps.runner.NewSubstepsExecutionConfig;
 
-import java.util.List;
-
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.is;
 
 /**
  * Created by ian on 12/12/16.

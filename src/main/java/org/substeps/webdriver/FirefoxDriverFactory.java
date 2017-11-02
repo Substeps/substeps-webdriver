@@ -1,11 +1,8 @@
 package org.substeps.webdriver;
 
 import com.typesafe.config.Config;
-import io.github.bonigarcia.wdm.ChromeDriverManager;
 import io.github.bonigarcia.wdm.FirefoxDriverManager;
-import org.junit.Assert;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.firefox.FirefoxProfile;
@@ -16,20 +13,26 @@ import org.slf4j.LoggerFactory;
 /**
  * Created by ian on 12/12/16.
  */
-public class FirefoxDriverFactory extends BaseDriverFactory implements DriverFactory{
+public class FirefoxDriverFactory extends BaseDriverFactory implements DriverFactory {
 
     private static final Logger log = LoggerFactory.getLogger(FirefoxDriverFactory.class);
 
-    public static DriverFactoryKey KEY = new DriverFactoryKey("FIREFOX", true, FirefoxDriverFactory.class);
+    public static final DriverFactoryKey KEY = new DriverFactoryKey("FIREFOX", true, FirefoxDriverFactory.class);
 
     private static final String FIREFOXDRIVER_VERSION_KEY = "firefoxdriver.version";
 
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public DriverFactoryKey getKey() {
         return KEY;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected WebDriver createInternal(Config cfg) {
 
@@ -37,8 +40,7 @@ public class FirefoxDriverFactory extends BaseDriverFactory implements DriverFac
 
         if (cfg.hasPath(FIREFOXDRIVER_VERSION_KEY)) {
             FirefoxDriverManager.getInstance().setup(cfg.getString(FIREFOXDRIVER_VERSION_KEY));
-        }
-        else {
+        } else {
             FirefoxDriverManager.getInstance().setup();
         }
 

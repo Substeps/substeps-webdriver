@@ -53,18 +53,18 @@ public class WebdriverReuseStrategyShutdownTest {
 
         DriverFactory driverFactory = mock(DriverFactory.class);
 
-        MutableSupplier<WebDriverContext> webDriverContextSupplier = new ExecutionContextSupplier<WebDriverContext>(
+        MutableSupplier<WebDriverContext> webDriverContextSupplier = new ExecutionContextSupplier<>(
                 Scope.SUITE, WebDriverContext.EXECUTION_CONTEXT_KEY);
 
         WebDriverContext webdriverContext = mock(WebDriverContext.class);
 
-        when(webdriverContext.hasFailed()).thenReturn(Boolean.valueOf(hasFailed));
+        when(webdriverContext.hasFailed()).thenReturn(hasFailed);
 
         DriverType driverType = mock(DriverType.class);
 
         when (webdriverContext.getDriverType()).thenReturn(driverType);
 
-        when (driverType.isVisual()).thenReturn(Boolean.valueOf(isVisualDriver));
+        when (driverType.isVisual()).thenReturn(isVisualDriver);
 
         webDriverContextSupplier.set(webdriverContext);
 

@@ -15,25 +15,38 @@ import org.slf4j.LoggerFactory;
 import java.util.logging.Level;
 
 /**
+ * Collection of static helper methods concerned with the setup of Webdrivers, network settings, logginng etc.
  * Created by ian on 18/12/16.
  */
-public class WebDriverFactoryUtils implements WebdriverSubstepsConfigurationKeys{
+public abstract class WebDriverFactoryUtils implements WebdriverSubstepsConfigurationKeys {
+
+    // use the static methods
+    private WebDriverFactoryUtils(){}
 
     private static final Logger logger = LoggerFactory.getLogger(WebDriverFactoryUtils.class);
 
 
-
-    public static void setLoggingPreferences(final DesiredCapabilities chromeCapabilities, Config cfg) {
+    /**
+     * enable the logging preferences in the supplied webdriver desiredCapabilities
+     *
+     * @param desiredCapabilities the desired capabilities
+     * @param cfg                 the config in scope
+     */
+    public static void setLoggingPreferences(final DesiredCapabilities desiredCapabilities, Config cfg) {
         // TODO switch on based on properties
         final LoggingPreferences logPrefs = new LoggingPreferences();
         logPrefs.enable(LogType.BROWSER, Level.ALL);
-        chromeCapabilities.setCapability(CapabilityType.LOGGING_PREFS, logPrefs);
+        desiredCapabilities.setCapability(CapabilityType.LOGGING_PREFS, logPrefs);
     }
 
-    private static final String NETWORK_PROXY_HOST_KEY = ROOT_WEBDRIVER_KEY + ".network.proxy.host";
-    private static final String NETWORK_PROXY_PORT_KEY = ROOT_WEBDRIVER_KEY + ".network.proxy.port";
 
 
+    /**
+     * sets up the network capabilities of the driver, eg running via a proxy.
+     *
+     * @param capabilities the capabilites of the required driver
+     * @param cfg          the config in scope
+     */
     public static void setNetworkCapabilities(final DesiredCapabilities capabilities, Config cfg) {
         final String proxyHost = cfg.getString(NETWORK_PROXY_HOST_KEY);
 
@@ -47,6 +60,12 @@ public class WebDriverFactoryUtils implements WebdriverSubstepsConfigurationKeys
         }
     }
 
+    /**
+     * sets the screen size of a webdriver based on config settings
+     *
+     * @param webdriver the webdriver
+     * @param cfg       the config in scope containing the relevant keys to determine the size of the browser window or full screen.
+     */
     public static void setScreensize(WebDriver webdriver, Config cfg) {
 
         try {
@@ -55,21 +74,14 @@ public class WebDriverFactoryUtils implements WebdriverSubstepsConfigurationKeys
 
             if (windowConfig.getBoolean("maximise")) {
                 webdriver.manage().window().maximize();
-            } else {
-                if (windowConfig.hasPath("height") && windowConfig.hasPath("width")) {
-                    int h = windowConfig.getInt("height");
-                    int w = windowConfig.getInt("width");
-                    logger.debug("setting screen size to: w;h " + w + ":" + h);
-                    try {
-                        webdriver.manage().window().setSize(new Dimension(w, h));
-                    } catch (WebDriverException e) {
-                        // best efforts to do this
-                        logger.error("Failed to set screen size to w;h " + w + ":" + h, e);
-                    }
-                }
+            } else if (windowConfig.hasPath("height") && windowConfig.hasPath("width")) {
+                int h = windowConfig.getInt("height");
+                int w = windowConfig.getInt("width");
+                logger.debug("setting screen size to: w;h " + w + ":" + h);
+
+                webdriver.manage().window().setSize(new Dimension(w, h));
             }
-        }
-        catch (WebDriverException e) {
+        } catch (WebDriverException e) {
             // best efforts..
             logger.error("failed to set screen size", e);
         }

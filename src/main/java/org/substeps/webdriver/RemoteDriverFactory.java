@@ -15,17 +15,23 @@ import java.net.URL;
 /**
  * Created by ian on 12/12/16.
  */
-public class RemoteDriverFactory extends BaseDriverFactory implements DriverFactory, WebdriverSubstepsConfigurationKeys{
+public class RemoteDriverFactory extends BaseDriverFactory implements DriverFactory, WebdriverSubstepsConfigurationKeys {
 
     private static final Logger log = LoggerFactory.getLogger(RemoteDriverFactory.class);
 
-    public static DriverFactoryKey KEY = new DriverFactoryKey("REMOTE", false, RemoteDriverFactory.class);
+    public static final DriverFactoryKey KEY = new DriverFactoryKey("REMOTE", false, RemoteDriverFactory.class);
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public DriverFactoryKey getKey() {
         return KEY;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected WebDriver createInternal(Config cfg) {
 
