@@ -27,7 +27,8 @@ import com.technophobia.substeps.runner.JunitFeatureRunner.SubStepsConfiguration
  * 
  * @author imoore
  */
-@SubStepsConfiguration(featureFile = "./target/test-classes/features/self-test.feature", subStepsFile = "./target/test-classes/substeps", stepImplementations = { BaseWebdriverSubStepImplementations.class })
+@SubStepsConfiguration(featureFile = "./target/test-classes/features/test-css-stepimpls.feature",
+        subStepsFile = "./target/test-classes/substeps", stepImplementations = { BaseWebdriverSubStepImplementations.class })
 @RunWith(JunitFeatureRunner.class)
 public class SelfTests {
     // no op

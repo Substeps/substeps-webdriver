@@ -1,5 +1,5 @@
 /*
- *	Copyright Technophobia Ltd 2012
+ *  Copyright Technophobia Ltd 2012
  *
  *   This file is part of Substeps.
  *
@@ -24,26 +24,25 @@ import com.technophobia.substeps.runner.MutableSupplier;
 import com.technophobia.webdriver.util.WebDriverContext;
 
 /**
- * 
- * @author imoore
- * 
+ * Listener class used to set failure state on the WebdriverContext
  */
 public class TestFailureListener implements IExecutionListener {
 
     private final MutableSupplier<WebDriverContext> webDriverContextSupplier;
 
+    /**
+     * default constructor
+     * @param webDriverContextSupplier the supplier class of the WebdriverContext
+     */
     public TestFailureListener(final MutableSupplier<WebDriverContext> webDriverContextSupplier) {
         super();
         this.webDriverContextSupplier = webDriverContextSupplier;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.technophobia.substeps.runner.INotifier#notifyTestFailed(com.technophobia
-     * .substeps.execution.ExecutionNode, java.lang.Throwable)
+    /**
+     * {@inheritDoc}
      */
+    @Override
     public void onNodeFailed(final IExecutionNode arg0, final Throwable arg1) {
 
         final WebDriverContext webDriverContext = this.webDriverContextSupplier.get();
@@ -56,48 +55,27 @@ public class TestFailureListener implements IExecutionListener {
 
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.technophobia.substeps.runner.INotifier#notifyTestFinished(com.
-     * technophobia.substeps.execution.ExecutionNode)
+    /**
+     * {@inheritDoc}
      */
+    @Override
     public void onNodeFinished(final IExecutionNode arg0) {
         // no op
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.technophobia.substeps.runner.INotifier#notifyTestStarted(com.technophobia
-     * .substeps.execution.ExecutionNode)
+    /**
+     * {@inheritDoc}
      */
+    @Override
     public void onNodeStarted(final IExecutionNode arg0) {
         // no op
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.technophobia.substeps.runner.INotifier#notifyTestIgnored(com.technophobia
-     * .substeps.execution.ExecutionNode)
+    /**
+     * {@inheritDoc}
      */
+    @Override
     public void onNodeIgnored(final IExecutionNode node) {
-        // TODO Auto-generated method stub
-
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.technophobia.substeps.runner.INotifier#addListener(com.technophobia
-     * .substeps.runner.INotifier)
-     */
-    public void addListener(final IExecutionListener listener) {
-        // TODO Auto-generated method stub
-
+        // no op
     }
 }

@@ -18,19 +18,19 @@
  */
 package com.technophobia.webdriver.substeps.runner;
 
-import java.io.File;
-
+import com.technophobia.substeps.model.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.technophobia.substeps.model.Configuration;
 import org.substeps.webdriver.WebdriverSubstepsConfigurationKeys;
 import org.substeps.webdriver.config.WebdriverSubstepsConfig;
-import org.substeps.webdriver.runner.WebdriverReuseStategy;
 
-public enum WebdriverSubstepsPropertiesConfiguration implements WebdriverSubstepsConfiguration, WebdriverSubstepsConfigurationKeys {
+/**
+ * Enum formerly used to initialise and access webdriver substeps config.  Since v1.1.0 config is loaded using Typesafe config, but this interface is preserved
+ * for backwards compatibility
+ */
+public enum WebdriverSubstepsPropertiesConfiguration implements WebdriverSubstepsConfigurationKeys {
 
-    INSTANCE ; // uninstantiable
+    INSTANCE; // uninstantiable
 
     private final Logger LOG = LoggerFactory.getLogger(WebdriverSubstepsPropertiesConfiguration.class);
 
@@ -38,23 +38,25 @@ public enum WebdriverSubstepsPropertiesConfiguration implements WebdriverSubstep
 
         if (Configuration.INSTANCE.getConfig().hasPath("webdriver.shutdown") ||
                 Configuration.INSTANCE.getConfig().hasPath("visual.webdriver.close.on.fail") ||
-                Configuration.INSTANCE.getConfig().hasPath("webdriver.reuse") ){
+                Configuration.INSTANCE.getConfig().hasPath("webdriver.reuse")) {
 
             LOG.warn("** Webdriver shutdown properties have changed!\nwebdriver.shutdown, visual.webdriver.close.on.fail and webdriver.reuse have all been replaced by:\n" +
                     "org.substeps.webdriver {\n\treuse-strategy = \"shutdown_and_create_new\"\n}\nOther values are resuse_unless_error_keep_visuals_in_error, " +
                     " resuse_unless_error, leave_and_create_new.\nSee org.substeps.webdriver.runner.WebdriverReuseStategy for further details");
-
         }
-
-        // TODO - replace LOG.info("Using properties:\n" + Configuration.INSTANCE.getConfigurationInfo());
     }
 
-
+    /**
+     * @return the base url which can be used to prefix urls in NavigateTo methods, in this way the same tests can be used across different environments
+     */
     public String baseURL() {
 
         return WebdriverSubstepsConfig.determineBaseURL(Configuration.INSTANCE.getString(BASE_URL_KEY));
     }
 
+    /**
+     * @return the default timeout that the framework will wait for conditions or elements
+     */
     public long defaultTimeout() {
         return Configuration.INSTANCE.getInt(DEFAULT_WEBDRIVER_TIMEOUT_KEY);
     }

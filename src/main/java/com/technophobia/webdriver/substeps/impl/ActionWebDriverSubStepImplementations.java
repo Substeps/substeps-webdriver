@@ -1,5 +1,5 @@
 /*
- *	Copyright Technophobia Ltd 2012
+ *  Copyright Technophobia Ltd 2012
  *
  *   This file is part of Substeps.
  *
@@ -28,8 +28,10 @@ import com.technophobia.webdriver.substeps.runner.DefaultExecutionSetupTearDown;
 import com.technophobia.webdriver.substeps.runner.WebdriverSubstepsPropertiesConfiguration;
 import com.technophobia.webdriver.util.WebDriverSubstepsBy;
 import org.junit.Assert;
-import org.openqa.selenium.*;
-import org.openqa.selenium.WebDriver.TargetLocator;
+import org.openqa.selenium.Alert;
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.slf4j.Logger;
@@ -46,34 +48,26 @@ import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 
+/**
+ * A set of step implementations primarily concerned with navigation, clicks, some assertions etc
+ */
 @StepImplementations(requiredInitialisationClasses = DefaultExecutionSetupTearDown.class)
 public class ActionWebDriverSubStepImplementations extends AbstractWebDriverSubStepImplementations {
 
     private static final Logger logger = LoggerFactory.getLogger(ActionWebDriverSubStepImplementations.class);
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyMMddHHmm");
 
-    private final FinderWebDriverSubStepImplementations locator;
-
-
-    public ActionWebDriverSubStepImplementations() {
-        this.locator = new FinderWebDriverSubStepImplementations();
-    }
-
-
-
-
+    private final FinderWebDriverSubStepImplementations locator = new FinderWebDriverSubStepImplementations();
 
     /**
      * Navigate to a url, if the url begins with http or file, the url will be
      * used as is, if a relative url is specified then it will be prepended with
      * the base url property
-     * 
+     *
+     * @param url the url
      * @example NavigateTo /myApp (will navigate to http://localhost/myApp if
-     *          base.url is set to http://localhost)
+     * base.url is set to http://localhost)
      * @section Location
-     * 
-     * @param url
-     *            the url
      */
     @Step("NavigateTo ([^\"]*)")
     public void navigateTo(final String url) {
@@ -89,10 +83,9 @@ public class ActionWebDriverSubStepImplementations extends AbstractWebDriverSubS
     /**
      * Navigate to a url specified by a property in the config files
      *
-     * @example NavigateTo url property "login.url"
-     *
-     * @section Location
      * @param urlProperty the property to lookup
+     * @example NavigateTo url property "login.url"
+     * @section Location
      */
     @SubSteps.Step("NavigateTo url property \"([^\"]*)\"")
     public void navigateToProperty(final String urlProperty) {
@@ -117,12 +110,10 @@ public class ActionWebDriverSubStepImplementations extends AbstractWebDriverSubS
 
     /**
      * Find an element by id, then click it.
-     * 
+     *
+     * @param id the id
      * @example ClickById login
      * @section Clicks
-     * 
-     * @param id
-     *            the id
      */
     @Step("ClickById ([^\"]*)")
     public void clickById(final String id) {
@@ -134,7 +125,7 @@ public class ActionWebDriverSubStepImplementations extends AbstractWebDriverSubS
 
     /**
      * Click (the current element)
-     * 
+     *
      * @example Click
      * @section Clicks
      */
@@ -151,11 +142,11 @@ public class ActionWebDriverSubStepImplementations extends AbstractWebDriverSubS
      * @section Clicks
      */
     @SubSteps.Step("ClickWhenClickable")
-    public void clickWhenClickable(){
+    public void clickWhenClickable() {
 
         WebElement currentElement = webDriverContext().getCurrentElement();
 
-        waitUntil( ExpectedConditions.elementToBeClickable(currentElement));
+        waitUntil(ExpectedConditions.elementToBeClickable(currentElement));
 
         currentElement.click();
 
@@ -165,10 +156,9 @@ public class ActionWebDriverSubStepImplementations extends AbstractWebDriverSubS
     /**
      * Finds a button that contains the specified text, waits until the element is clickable, then clicks it.
      *
-     * @example ClickButton containing "button text"
-     *
-     * @section Clicks
      * @param text the text to partially match against the button text
+     * @example ClickButton containing "button text"
+     * @section Clicks
      */
     @SubSteps.Step("ClickButton containing \"([^\"]*)\"")
     public void clickButtonContainingText(String text) {
@@ -188,11 +178,10 @@ public class ActionWebDriverSubStepImplementations extends AbstractWebDriverSubS
 
     /**
      * Click the link "(....)" as it appears on the page
-     * 
+     *
+     * @param linkText the link text
      * @example ClickLink "Contracts"
      * @section Clicks
-     * @param linkText
-     *            the link text
      */
     @Step("ClickLink \"([^\"]*)\"")
     public void clickLink(final String linkText) {
@@ -208,10 +197,9 @@ public class ActionWebDriverSubStepImplementations extends AbstractWebDriverSubS
     /**
      * Click a button that has the text, NB surrounding quotes are optional
      *
+     * @param buttonText the button text
      * @example ClickButton "submit button"
      * @section Clicks
-     * @param buttonText
-     *            the button text
      */
     @SubSteps.Step("ClickButton \"?([^\"]*)\"?")
     public void clickButton(String buttonText) {
@@ -227,10 +215,9 @@ public class ActionWebDriverSubStepImplementations extends AbstractWebDriverSubS
     /**
      * Finds an input element with the specified value, then clicks it.
      *
+     * @param buttonText the button text
      * @section Form
      * @example ClickSubmitButton "Submit"
-     *
-     * @param buttonText the button text
      */
     @Step("ClickSubmitButton \"([^\"]*)\"")
     public void clickInput(final String buttonText) {
@@ -247,11 +234,10 @@ public class ActionWebDriverSubStepImplementations extends AbstractWebDriverSubS
 
     /**
      * Wait for the specified number of milliseconds
-     * 
+     *
+     * @param value the value
      * @example WaitFor 10
      * @section Location
-     * @param value
-     *            the value
      */
     @Step("WaitFor ([^\"]*)")
     public void waitFor(final String value) {
@@ -268,12 +254,10 @@ public class ActionWebDriverSubStepImplementations extends AbstractWebDriverSubS
 
     /**
      * Wait for the page title to change to the specified value
-     * 
+     *
+     * @param expectedTitle the expected title
      * @example WaitForPageTitle "My Home Page"
      * @section Location
-     * 
-     * @param expectedTitle
-     *            the expected title
      */
     @Step("WaitForPageTitle \"([^\"]*)\"")
     public void waitForPageTitle(final String expectedTitle) {
@@ -290,7 +274,6 @@ public class ActionWebDriverSubStepImplementations extends AbstractWebDriverSubS
 
         if (!conditionMet) {
             logger.debug(expectedTitle + " page not found");
-            // Assert.fail("Webpage was not found within the time frame set.");
         }
 
         Assert.assertTrue(conditionMet);
@@ -311,15 +294,12 @@ public class ActionWebDriverSubStepImplementations extends AbstractWebDriverSubS
     }
 
 
-
-
     /**
      * Performs a double click on the current element (set with a previous Find
      * method).
-     * 
+     *
      * @example PerformDoubleClick
      * @section Clicks
-     * 
      */
     @Step("PerformDoubleClick")
     public void doDoubleClick() {
@@ -335,10 +315,9 @@ public class ActionWebDriverSubStepImplementations extends AbstractWebDriverSubS
     /**
      * Performs a context click (typically right click, unless this has been
      * changed by the user) on the current element.
-     * 
+     *
      * @example PerformContextClick
      * @section Clicks
-     * 
      */
     @Step("PerformContextClick")
     public void performContextClick() {
@@ -352,10 +331,10 @@ public class ActionWebDriverSubStepImplementations extends AbstractWebDriverSubS
 
     /**
      * Dismisses an Alert with specific text
-     * @section Clicks
-     * @example DismissAlert with message "Popup"
      *
      * @param message the expected alert text
+     * @section Clicks
+     * @example DismissAlert with message "Popup"
      */
     @Step("DismissAlert with message \"([^\"]*)\"")
     public void dismissAlertWithMessage(final String message) {
@@ -375,14 +354,15 @@ public class ActionWebDriverSubStepImplementations extends AbstractWebDriverSubS
 
     /**
      * Asserts that the current element is visible, it will wait until this is true
+     *
      * @example AssertCurrentElement is visible
      * @section Assertions
      */
     @Step("AssertCurrentElement is visible")
-    public void assertCurrentElementIsVisible(){
+    public void assertCurrentElementIsVisible() {
         WebElement currentElement = webDriverContext().getCurrentElement();
 
-        waitUntil( ExpectedConditions.visibilityOf(currentElement));
+        waitUntil(ExpectedConditions.visibilityOf(currentElement));
     }
 
     /**
@@ -390,16 +370,14 @@ public class ActionWebDriverSubStepImplementations extends AbstractWebDriverSubS
      *
      * @example AssertCurrentElement is invisible
      * @section Assertions
-     *
      */
     @Step("AssertCurrentElement is invisible")
-    public void assertCurrentElementIsInVisible(){
+    public void assertCurrentElementIsInVisible() {
         WebElement currentElement = webDriverContext().getCurrentElement();
 
         List<WebElement> elems = new ArrayList<>();
         elems.add(currentElement);
-        waitUntil( ExpectedConditions.invisibilityOfAllElements(elems));
-
+        waitUntil(ExpectedConditions.invisibilityOfAllElements(elems));
 
 
     }
@@ -408,13 +386,12 @@ public class ActionWebDriverSubStepImplementations extends AbstractWebDriverSubS
     /**
      * Invoke the webdriver Javascript executor to run a line of javascript
      *
+     * @param js the javascript expression
      * @section Actions
      * @example ExecuteJavascript document.getElementById("id-for-js-manipulation").innerHTML = "js fiddled"
-     *
-     * @param js the javascript expression
      */
     @SubSteps.Step("ExecuteJavascript (.*)$")
-    public void executeJavaScript(String js){
+    public void executeJavaScript(String js) {
         ((JavascriptExecutor) webDriver()).executeScript(js);
 
     }
@@ -423,13 +400,12 @@ public class ActionWebDriverSubStepImplementations extends AbstractWebDriverSubS
     /**
      * Takes a screenshot and writes to a file with the specified prefix, appending a timestamp of the format (yyMMddHHmm)
      *
+     * @param filePrefix the filename prefix
      * @example TakeScreenshot with prefix "self-test"
      * @section Actions
-     *
-     * @param filePrefix the filename prefix
      */
     @SubSteps.Step("TakeScreenshot with prefix \"([^\"]*)\"")
-    public void takeScreenshot(String filePrefix){
+    public void takeScreenshot(String filePrefix) {
 
         logger.debug("taking screenshot..");
 
@@ -444,7 +420,7 @@ public class ActionWebDriverSubStepImplementations extends AbstractWebDriverSubS
         try {
             Files.write(getScreenshotBytes(), out);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Error taking screenshot", e);
         }
     }
 

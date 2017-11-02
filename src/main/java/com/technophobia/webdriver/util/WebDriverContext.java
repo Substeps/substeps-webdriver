@@ -1,5 +1,5 @@
 /*
- *	Copyright Technophobia Ltd 2012
+ *  Copyright Technophobia Ltd 2012
  *
  *   This file is part of Substeps.
  *
@@ -18,6 +18,8 @@
  */
 package com.technophobia.webdriver.util;
 
+import com.technophobia.substeps.model.Scope;
+import com.technophobia.substeps.runner.ExecutionContext;
 import com.technophobia.webdriver.substeps.runner.Condition;
 import com.technophobia.webdriver.substeps.runner.DriverType;
 import com.technophobia.webdriver.substeps.runner.WebdriverSubstepsPropertiesConfiguration;
@@ -29,13 +31,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.substeps.webdriver.DriverFactoryKey;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * A container used to hold the webdriver instance and the current element used
- * by step implementations.
- * 
+ * by step implementations.  Instances of this class will be bound to a thread local variable
+ *
  * @author imoore
  */
 public class WebDriverContext {
@@ -46,98 +45,158 @@ public class WebDriverContext {
 
     private final DriverFactoryKey driverFactoryKey;
     private final WebDriver webDriver;
-    private final WebDriverBrowserLogs browserLogs;
 
     private WebElement currentElement = null;
     private boolean failed = false;
 
-    private Map<String, WebElement> elementStash = null;
-
+    /**
+     * default constructor that accepts the DriverFactoryKey and WebDriver as parameters
+     *
+     * @param driverFactoryKey the DriverFactoryKey associated with this context
+     * @param webDriver        the driver associated with this context
+     */
     public WebDriverContext(final DriverFactoryKey driverFactoryKey, final WebDriver webDriver) {
         this.driverFactoryKey = driverFactoryKey;
         this.webDriver = webDriver;
-        browserLogs = new WebDriverBrowserLogs(webDriver);
     }
 
+    /**
+     * @return the current WebElement, asserting that it's not null
+     */
     public WebElement getCurrentElement() {
         Assert.assertNotNull("expecting current element not to be null", this.currentElement);
         return this.currentElement;
     }
 
+    /**
+     * sets the current element for subsequent use
+     *
+     * @param currentElement the currently located element
+     */
     public void setCurrentElement(final WebElement currentElement) {
         this.currentElement = currentElement;
     }
 
+    /**
+     * utility method to return the webdriver
+     *
+     * @return the webdriver
+     */
     public WebDriver getWebDriver() {
         return this.webDriver;
     }
 
+    /**
+     * @return the DriverType associated with this context
+     */
     public DriverType getDriverType() {
         return this.driverFactoryKey;
     }
 
-    public DriverFactoryKey getDriverFactoryKey(){
+    /**
+     * @return the DriverFactoryKey
+     * @deprecated not used in webdriver-substeps code. This method will be removed in future releases.  Use getDriverType() instead.
+     */
+    @Deprecated
+    public DriverFactoryKey getDriverFactoryKey() {
         return this.driverFactoryKey;
     }
 
+    /**
+     * @deprecated use the methods on DriverFactory instead
+     */
+    @Deprecated
     public void shutdownWebDriver() {
         logger.debug("Shutting WebDriver down");
         if (this.webDriver != null) {
-            browserLogs.printBrowserLogs();
+            WebDriverBrowserLogs.printBrowserLogs(webDriver);
             this.webDriver.manage().deleteAllCookies();
             this.webDriver.quit();
         }
     }
 
+    /**
+     * @deprecated use the methods on DriverFactory instead
+     */
+    @Deprecated
     public void resetWebDriver() {
         logger.debug("Resetting WebDriver");
         if (this.webDriver != null) {
-            browserLogs.printBrowserLogs();
+            WebDriverBrowserLogs.printBrowserLogs(webDriver);
             this.webDriver.manage().deleteAllCookies();
         }
     }
 
-   
-
+    /**
+     * accessor to determine if this context has failed
+     * @return true if a node using this WebDriverContext has failed
+     */
     public boolean hasFailed() {
         return this.failed;
     }
 
+    /**
+     * mutator to set the failed state of this WebDriverContext
+     */
     public void setFailed() {
         this.failed = true;
     }
 
+    /**
+     * Convenience method around ElementLocators, using the timeout from config and the webdriver associated with this context.
+     * @param by the By used to locate the element
+     * @return the Element located or null
+     */
     public WebElement waitForElement(final By by) {
         return ElementLocators.waitForElement(by, WebdriverSubstepsPropertiesConfiguration.INSTANCE.defaultTimeout(),
                 this.webDriver);
     }
 
+    /**
+     * Convenience method around ElementLocators, using the specified timeout and the webdriver associated with this context.
+     * @param by the By used to locate the element
+     * @param timeOutSeconds the timeout in seconds to wait
+     * @return the Element located or null
+     */
     public WebElement waitForElement(final By by, final long timeOutSeconds) {
         return ElementLocators.waitForElement(by, timeOutSeconds, this.webDriver);
     }
 
+    /**
+     * Convenience method to wait for the given condition.  Will iterate a few times, test the condition, if false, sleep, repeat
+     * @param condition the condition to test
+     * @return true if the condition was satisfied
+     */
     public boolean waitForCondition(final Condition condition) {
-        return ElementLocators.waitForCondition(condition, this.webDriver);
+        return ElementLocators.waitForCondition(condition);
     }
 
+    /**
+     * Convenience method to stash an element in a scenario scoped executionContext
+     * @param key the identifier under which the element should be stashed
+     * @param element the element to stash
+     */
     public void stashElement(final String key, final WebElement element) {
 
-        if (this.elementStash == null) {
-            this.elementStash = new HashMap<String, WebElement>();
-        }
+        Object existing = ExecutionContext.get(Scope.SCENARIO, key);
 
-        if (this.elementStash.containsKey(key)) {
-
+        if (existing != null){
             // do we care ?
             logger.debug("replacing existing object in stash using key: " + key);
         }
 
-        this.elementStash.put(key, element);
+        ExecutionContext.put(Scope.SCENARIO, key, element);
+
     }
 
+    /**
+     * Convenience method to retrieve an element from Scenario scoped ExecutionContext.  Null values are asserted on.
+     * @param key the key under which elements are stashed
+     * @return the stashed WebElement.
+     */
     public WebElement getElementFromStash(final String key) {
 
-        final WebElement elem = this.elementStash != null ? this.elementStash.get(key) : null;
+        WebElement elem = (WebElement)ExecutionContext.get(Scope.SCENARIO, key);
 
         Assert.assertNotNull("Attempt to retrieve a null element from the stash with key: " + key, elem);
 

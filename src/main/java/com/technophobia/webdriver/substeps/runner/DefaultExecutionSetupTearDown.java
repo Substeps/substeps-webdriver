@@ -1,5 +1,5 @@
 /*
- *	Copyright Technophobia Ltd 2012
+ *  Copyright Technophobia Ltd 2012
  *
  *   This file is part of Substeps.
  *
@@ -36,37 +36,25 @@ import org.substeps.webdriver.DriverFactory;
 import org.substeps.webdriver.config.WebdriverSubstepsConfig;
 import org.substeps.webdriver.runner.WebdriverReuseStategy;
 
+/**
+ * setup and tear down class used to set up the webdriver context, containing the webdriver
+ */
 public class DefaultExecutionSetupTearDown {
 
     private static final Logger logger = LoggerFactory.getLogger(DefaultExecutionSetupTearDown.class);
 
-
-    private final MutableSupplier<WebDriverContext> webDriverContextSupplier = new ExecutionContextSupplier<WebDriverContext>(
+    private final MutableSupplier<WebDriverContext> webDriverContextSupplier = new ExecutionContextSupplier<>(
             Scope.SUITE, WebDriverContext.EXECUTION_CONTEXT_KEY);
 
+    private final MutableSupplier<DriverFactory> webDriverFactorySupplier = new ExecutionContextSupplier(Scope.SUITE, DriverFactory.DRIVER_FACTORY_KEY);
 
-
-    private final MutableSupplier<DriverFactory> webDriverFactorySupplier  = new ExecutionContextSupplier(Scope.SUITE, DriverFactory.DRIVER_FACTORY_KEY);
-
-    private final WebdriverSubstepsConfiguration configuration;
     private long startTimeMillis;
 
-
-
-    public DefaultExecutionSetupTearDown() {
-        this(WebdriverSubstepsPropertiesConfiguration.INSTANCE);
-    }
-
-    public DefaultExecutionSetupTearDown(WebdriverSubstepsConfiguration configuration) {
-        this.configuration = configuration;
-    }
-
-
+    /**
+     * setup method called before all features, sets up the driverFactory
+     */
     @BeforeAllFeatures
     public final void beforeAllFeaturesSetup() {
-
-        // Initialise the webdriver factories
-//        FactoryInitialiser.INSTANCE.toString();
 
         final INotificationDistributor notifier = (INotificationDistributor) ExecutionContext.get(Scope.SUITE,
                 INotificationDistributor.NOTIFIER_DISTRIBUTOR_KEY);
@@ -92,26 +80,29 @@ public class DefaultExecutionSetupTearDown {
 
     }
 
+    /**
+     * final tear down after all features, to remove the final webdriver if being reused
+     */
     @Annotations.AfterAllFeatures
-    public final void afterAllFeatures(){
+    public final void afterAllFeatures() {
         // a final tear down if we're reusing webdrivers - otherwise will be left hanging around if re-use
 
         final WebDriverContext webDriverContext = webDriverContextSupplier.get();
-        if (webDriverContext != null){
+        if (webDriverContext != null) {
             DriverFactory driverFactory = this.webDriverFactorySupplier.get();
             driverFactory.shutdownWebDriver(webDriverContext);
             webDriverContextSupplier.set(null);
         }
     }
 
-
+    /**
+     * Before scenario setup, will initialise the webdriver if required
+     */
     @BeforeEveryScenario
     public final void basePreScenarioSetup() {
         startTimeMillis = System.currentTimeMillis();
 
         final WebDriverContext webDriverContext = webDriverContextSupplier.get();
-
-//        boolean createNewWebDriver = shouldStartup(webDriverContext);
 
         if (webDriverContext == null) {
             logger.debug("no webdriver in context, creating..");
@@ -120,29 +111,27 @@ public class DefaultExecutionSetupTearDown {
             Config cfg = Configuration.INSTANCE.getConfig();
 
             webDriverContextSupplier.set(new WebDriverContext(driverFactory.getKey(), driverFactory.create(cfg)));
-        }
-        else {
+        } else {
             logger.debug("re-using webdriver from previous scenario");
         }
     }
 
-
+    /**
+     * After scenario tear down, will clean up the webdriver if configured to do so in re-use scenarios or close the driver in the event of an error
+     */
     @AfterEveryScenario
     public final void basePostScenariotearDown() {
-
 
         final WebDriverContext webDriverContext = webDriverContextSupplier.get();
 
         if (webDriverContext != null) {
-            WebdriverReuseStategy reuseStrategy = WebdriverReuseStategy.fromConfig(Configuration.INSTANCE.getConfig());//this.configuration.getReuseStrategy();
+            WebdriverReuseStategy reuseStrategy = WebdriverReuseStategy.fromConfig(Configuration.INSTANCE.getConfig());
 
             DriverFactory factory = this.webDriverFactorySupplier.get();
 
             reuseStrategy.afterScenario(factory, webDriverContextSupplier);
-
         }
         logScenarioDuration();
-
     }
 
     private void logScenarioDuration() {

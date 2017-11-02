@@ -1,5 +1,5 @@
 /*
- *	Copyright Technophobia Ltd 2012
+ *  Copyright Technophobia Ltd 2012
  *
  *   This file is part of Substeps.
  *
@@ -19,30 +19,27 @@
 package com.technophobia.webdriver.substeps.impl;
 
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.text.IsEqualIgnoringCase.equalToIgnoringCase;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.junit.Assert;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
-
-import com.google.common.base.Supplier;
 import com.technophobia.substeps.model.SubSteps.Step;
 import com.technophobia.substeps.model.SubSteps.StepImplementations;
 import com.technophobia.substeps.model.SubSteps.StepParameter;
 import com.technophobia.substeps.model.parameter.IntegerConverter;
 import com.technophobia.webdriver.substeps.runner.DefaultExecutionSetupTearDown;
-import com.technophobia.webdriver.util.WebDriverContext;
 import com.technophobia.webdriver.util.WebDriverSubstepsBy;
+import org.junit.Assert;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.text.IsEqualIgnoringCase.equalToIgnoringCase;
+
+/**
+ * HTML Table related substeps, locating values in columns / rows etc
+ */
 @StepImplementations(requiredInitialisationClasses = DefaultExecutionSetupTearDown.class)
 public class TableSubStepImplementations extends AbstractWebDriverSubStepImplementations {
-
-
-
 
     /*
      * TODO
@@ -68,20 +65,17 @@ public class TableSubStepImplementations extends AbstractWebDriverSubStepImpleme
      * located Row 1 is the first
      * &lt;tr&gt;
      * beneath a &lt;tbody&gt;
-     * 
+     *
+     * @param row 1 based row index
+     * @return the web element
      * @example FindTableBodyRow row 3
      * @section Table
-     *
-     * @param row
-     *            1 based row index
-     * @return
-     *  the web element
      */
     @Step("FindTableBodyRow row ([^\"]*)")
     public WebElement findTableBodyRow(@StepParameter(converter = IntegerConverter.class) final Integer row) {
 
         // assumes current element is already set
-        final WebElement currentElem =  webDriverContext().getCurrentElement();
+        final WebElement currentElem = webDriverContext().getCurrentElement();
 
         AssertionWebDriverSubStepImplementations.assertElementIs(currentElem, "table");
 
@@ -97,68 +91,30 @@ public class TableSubStepImplementations extends AbstractWebDriverSubStepImpleme
     }
 
 
-    // TODO can't implement this until worked out how to pass single rows
-    // through
-
-    // @Step("AssertTable row ([^\"]*) contains values")
-    // public void assertTableRowContainsValues(@StepParameter(converter =
-    // IntegerConverter.class)final Integer row,
-    // final List<Map<String, String>> expectedResults){
-    //
-    // Assert.assertNotNull("expecting a table of results to be specified",
-    // expectedResults);
-    // Assert.assertThat("only expecting 1 row in table data",
-    // expectedResults.size(), is(1));
-    // //
-    //
-    // final WebElement tableRow = findTableBodyRow(row);
-    //
-    //
-    // final List<WebElement> columnElements =
-    // tableRow.findElements(By.tagName("td"));
-    //
-    // if (columnElements != null) {
-    //
-    // if (table == null) {
-    // table = new ArrayList<Map<String, String>>();
-    // }
-    // final Map<String, String> rowMap = new HashMap<String, String>();
-    // table.add(rowMap);
-    //
-    // for (int i = 0; i < columnElements.size(); i++) {
-    // rowMap.put(columnHeadings[i], columnElements.get(i).getText());
-    // }
-    // }
-    // }
-
     /**
      * Check that a table cell contains the specified text using a 1 based
      * index. Row 1 is the first
      * &lt;tr&gt;
      * beneath a &lt;tbody&gt;
-     * 
+     *
+     * @param column 1 based column index
+     * @param row    1 based row index
+     * @param text   the expected text
      * @example AssertTableValue column 2, row 3 contains text "Hello Bob"
      * @section Table
-     * 
-     * @param column
-     *            1 based column index
-     * @param row
-     *            1 based row index
-     * @param text
-     *            the expected text
      */
     @Step("AssertTableValue column ([^\"]*), row ([^\"]*) contains text \"([^\"]*)\"")
     public void assertTableValue(@StepParameter(converter = IntegerConverter.class) final Integer column,
-            @StepParameter(converter = IntegerConverter.class) final Integer row, final String text) {
+                                 @StepParameter(converter = IntegerConverter.class) final Integer row, final String text) {
 
         // assumes current element is already set
-        final WebElement currentElem =  webDriverContext().getCurrentElement();
+        final WebElement currentElem = webDriverContext().getCurrentElement();
 
         AssertionWebDriverSubStepImplementations.assertElementIs(currentElem, "table");
 
         final WebElement tbody = getResultsTableBodyElement(currentElem);
 
-        final String cellText = getValueInResultsTable(tbody, column.intValue(), row.intValue());
+        final String cellText = getValueInResultsTable(tbody, column, row);
         Assert.assertNotNull("expecting some cell text", cellText);
 
         Assert.assertTrue("expecting cell text to contain: " + text + " actual: " + cellText, cellText.contains(text));
@@ -167,16 +123,17 @@ public class TableSubStepImplementations extends AbstractWebDriverSubStepImpleme
 
     /**
      * Step implementation to be used after a table and specific row, assert that the given column has the specified  text
+     *
+     * @param column the column number (1 based)
+     * @param text   the expected text
      * @example AssertColumn 2 text = "Mr A. Person"
      * @section Table
-     * @param column the column number (1 based)
-     * @param text the expected text
      */
     @Step("AssertColumn (\\d+) text = \"([^\"]*)\"")
-    public void assertColumnText(@StepParameter(converter = IntegerConverter.class) final Integer column, final String text){
+    public void assertColumnText(@StepParameter(converter = IntegerConverter.class) final Integer column, final String text) {
 
         // assumes current element is already set
-        final WebElement rowElem =  webDriverContext().getCurrentElement();
+        final WebElement rowElem = webDriverContext().getCurrentElement();
 
         AssertionWebDriverSubStepImplementations.assertElementIs(rowElem, "tr");
 
@@ -188,7 +145,7 @@ public class TableSubStepImplementations extends AbstractWebDriverSubStepImpleme
 
         Assert.assertNotNull("expecting some cell text", cellText);
 
-        Assert.assertThat("expecting cell text to = " + text , cellText, is(text));
+        Assert.assertThat("expecting cell text to = " + text, cellText, is(text));
 
 
     }
@@ -221,15 +178,16 @@ public class TableSubStepImplementations extends AbstractWebDriverSubStepImpleme
     }
 
 
+    /**
+     * utility method to obtain a value from a column and row out of a table
+     * @param tbody the table body element
+     * @param col the column index, starting at 1
+     * @param row the row index, starting at 1
+     * @return the text of the table cell
+     */
     public String getValueInResultsTable(final WebElement tbody, final int col, final int row) {
 
         final WebElement rowElement = getTableRow(tbody, row);
-
-//        final List<WebElement> columnElements = rowElement.findElements(By.tagName("td"));
-//        Assert.assertNotNull("expecting columnElements", columnElements);
-//
-//        Assert.assertTrue("expecting more than " + col + " columns in the table, got: " + columnElements.size(),
-//                columnElements.size() >= col);
 
         final WebElement tdElem = getCell(rowElement, col);
 
@@ -238,7 +196,7 @@ public class TableSubStepImplementations extends AbstractWebDriverSubStepImpleme
         return tdElem.getText();
     }
 
-    private WebElement getCell(WebElement rowElement, final int col){
+    private WebElement getCell(WebElement rowElement, final int col) {
         final List<WebElement> columnElements = rowElement.findElements(By.tagName("td"));
         Assert.assertNotNull("expecting columnElements", columnElements);
 
@@ -251,24 +209,20 @@ public class TableSubStepImplementations extends AbstractWebDriverSubStepImpleme
     }
 
 
-    //
-
     /**
      * Find a row in a table where columns exist that contain the specified
      * text. Not all columns of the table need to specified, however the order
      * is important. Finding multiple matching results will result in an error.
-     * 
+     * <p>
      * Once the row has been located, other FindInRow methods can be used that
      * may in turn refer to and set the 'Current Element', this method does not
      * set the current element for that reason.
-     * 
+     *
+     * @param columnText A comma delimitted list of column values, each column can be
+     *                   double quoted
      * @example FindTableRowWithColumnsThatContainText
-     *          ["My Name","Where it all began...","December 19 2012"]
+     * ["My Name","Where it all began...","December 19 2012"]
      * @section Table
-     * 
-     * @param columnText
-     *            A comma delimitted list of column values, each column can be
-     *            double quoted
      */
     @Step("FindTableRowWithColumnsThatContainText \\[(.*)\\]")
     public void findRowInTableWithText(final String columnText) {
@@ -279,7 +233,7 @@ public class TableSubStepImplementations extends AbstractWebDriverSubStepImpleme
                 equalToIgnoringCase("table"));
 
         final String[] columnValues = columnText.split(",");
-        final List<String> columnValList = new ArrayList<String>();
+        final List<String> columnValList = new ArrayList<>();
         for (final String s : columnValues) {
             columnValList.add(s.replaceAll("\"", "").trim());
         }
@@ -315,7 +269,7 @@ public class TableSubStepImplementations extends AbstractWebDriverSubStepImpleme
 
             if (found) {
                 if (matchingRows == null) {
-                    matchingRows = new ArrayList<WebElement>();
+                    matchingRows = new ArrayList<>();
                 }
                 matchingRows.add(row);
             }
@@ -332,14 +286,12 @@ public class TableSubStepImplementations extends AbstractWebDriverSubStepImpleme
 
     /**
      * Find an element within a table row by tag and attributes.
-     * 
+     *
+     * @param tag             the tag
+     * @param attributeString the attribute string
      * @example FindElementInRow ByTagAndAttributes tag="a"
-     *          attributes=[class="link-class",....]
+     * attributes=[class="link-class",....]
      * @section Table
-     * @param tag
-     *            the tag
-     * @param attributeString
-     *            the attribute string
      */
     @Step("FindElementInRow ByTagAndAttributes tag=\"?([^\"]*)\"? attributes=\\[(.*)\\]")
     public void findLinkInRowByTagAndAttributes(final String tag, final String attributeString) {
@@ -353,11 +305,10 @@ public class TableSubStepImplementations extends AbstractWebDriverSubStepImpleme
     /**
      * Find a link (anchor) element within a table row using the link text as a
      * discriminator.
-     * 
+     *
+     * @param linkText the text of the link to find
      * @example FindElementInRow linkText="View"
      * @section Table
-     * @param linkText
-     *            the text of the link to find
      */
     @Step("FindElementInRow linkText=\"([^\"]*)\"")
     public void findLinkInRow(final String linkText) {
@@ -391,7 +342,7 @@ public class TableSubStepImplementations extends AbstractWebDriverSubStepImpleme
             if (foundElements != null && !foundElements.isEmpty()) {
 
                 if (matchingElements == null) {
-                    matchingElements = new ArrayList<WebElement>();
+                    matchingElements = new ArrayList<>();
                 }
                 matchingElements.addAll(foundElements);
             }

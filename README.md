@@ -12,6 +12,14 @@ There is also a [Substeps Google group](http://groups.google.com/group/substeps?
 Substeps.org Release Notes
 ==========================
 
+1.1.3
+-----
+* Javadocs throughout, sonar changes
+* Removed WebdriverSubstepsConfiguration interface - no longer required
+* WebDriverBrowserLogs methods now static
+* Separated the Bys into their own files to make more manageable
+* Sonar fixes and javadocs
+
 1.1.2
 -----
 * Changed the way that webdriver factories are specified (now in config) to making it easier to override

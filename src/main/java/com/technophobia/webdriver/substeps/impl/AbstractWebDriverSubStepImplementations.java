@@ -1,5 +1,5 @@
 /*
- *	Copyright Technophobia Ltd 2012
+ *  Copyright Technophobia Ltd 2012
  *
  *   This file is part of Substeps.
  *
@@ -18,76 +18,53 @@
  */
 package com.technophobia.webdriver.substeps.impl;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import com.google.common.collect.MapDifference;
+import com.google.common.collect.Maps;
 import com.technophobia.substeps.model.Scope;
 import com.technophobia.substeps.runner.ExecutionContextSupplier;
 import com.technophobia.substeps.runner.MutableSupplier;
+import com.technophobia.substeps.runner.ProvidesScreenshot;
 import com.technophobia.webdriver.substeps.runner.WebdriverSubstepsPropertiesConfiguration;
+import com.technophobia.webdriver.util.WebDriverContext;
 import org.junit.Assert;
 import org.openqa.selenium.*;
-
-import com.google.common.base.Supplier;
-import com.google.common.collect.MapDifference;
-import com.google.common.collect.Maps;
-import com.technophobia.substeps.runner.ProvidesScreenshot;
-import com.technophobia.webdriver.substeps.runner.DefaultExecutionSetupTearDown;
-import com.technophobia.webdriver.util.WebDriverContext;
 import org.openqa.selenium.support.ui.ExpectedCondition;
-import org.openqa.selenium.support.ui.FluentWait;
-import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import static java.util.concurrent.TimeUnit.SECONDS;
+import java.util.HashMap;
+import java.util.Map;
 
+/**
+ * Abstract base class for webdriver based step implementations, provides number of utility methods for waiting for elements,
+ * accessing the webdriver context and the webdriver
+ */
 public abstract class AbstractWebDriverSubStepImplementations implements ProvidesScreenshot {
 
 
-    private final MutableSupplier<WebDriverContext> webDriverContextSupplier = new ExecutionContextSupplier<WebDriverContext>(
-            Scope.SUITE, WebDriverContext.EXECUTION_CONTEXT_KEY);
+    private final MutableSupplier<WebDriverContext> webDriverContextSupplier = new ExecutionContextSupplier<>(
+        Scope.SUITE, WebDriverContext.EXECUTION_CONTEXT_KEY);
 
-
-//    public AbstractWebDriverSubStepImplementations() {
-//        this(DefaultExecutionSetupTearDown.currentWebDriverContext());
-//    }
-
-
-//    public AbstractWebDriverSubStepImplementations(final Supplier<WebDriverContext> webDriverContextSupplier) {
-//        this.webDriverContextSupplier = webDriverContextSupplier;
-//    }
-
+    /**
+     * Wait for an element located using the By, asserting that the element is not null
+     *
+     * @param by       the By to locate the element by
+     * @param messages to be used in the assertion message
+     * @return the found WebElement
+     */
     protected WebElement waitFor(By by, String... messages) {
-        this.webDriverContext().setCurrentElement(null);
-
-        WebElement elem = this.webDriverContext().waitForElement(by);
-
-        StringBuilder buf = new StringBuilder();
-
-        for (String s : messages) {
-            buf.append(s).append(" ");
-        }
-
-        Assert.assertNotNull(buf.toString(), elem);
-        this.webDriverContext().setCurrentElement(elem);
-
-        return elem;
+        long timeout = WebdriverSubstepsPropertiesConfiguration.INSTANCE.defaultTimeout();
+        return waitFor(by, timeout, messages);
     }
 
 
-    protected <T> T waitUntil(ExpectedCondition<T> ec) {
-
-        WebDriverWait wait = new WebDriverWait(webDriver(), WebdriverSubstepsPropertiesConfiguration.INSTANCE.defaultTimeout());
-
-        return wait.until(new java.util.function.Function<WebDriver, T>(){
-
-            @Override
-            public T apply(WebDriver webDriver) {
-                return ec.apply(webDriver);
-            }
-        });
-    }
-
+    /**
+     * Wait for an element located using the By with the specified timeout, asserting that the element is not null
+     *
+     * @param by       the By to locate the element by
+     * @param timeout  the timeout in seconds
+     * @param messages to be used in the assertion message
+     * @return the found WebElement
+     */
     protected WebElement waitFor(By by, long timeout, String... messages) {
         this.webDriverContext().setCurrentElement(null);
 
@@ -106,8 +83,36 @@ public abstract class AbstractWebDriverSubStepImplementations implements Provide
     }
 
 
+    /**
+     * Utility generic method to wait until the ExpectedCondition
+     *
+     * @param ec  the expected condition
+     * @param <T> the generic type of the expected condition
+     * @return the T returned by the ExpectedCondition.apply method
+     */
+    protected <T> T waitUntil(ExpectedCondition<T> ec) {
+
+        WebDriverWait wait = new WebDriverWait(webDriver(), WebdriverSubstepsPropertiesConfiguration.INSTANCE.defaultTimeout());
+
+        return wait.until(new java.util.function.Function<WebDriver, T>() {
+
+            @Override
+            public T apply(WebDriver webDriver) {
+                return ec.apply(webDriver);
+            }
+        });
+    }
+
+
+    /**
+     * Utility method to check that the specified WebElement has the expected attributes
+     *
+     * @param e                  the element who's attributes we want to check
+     * @param expectedAttributes a map of the expected attributes
+     * @return true or false
+     */
     protected boolean elementHasExpectedAttributes(final WebElement e, final Map<String, String> expectedAttributes) {
-        final Map<String, String> actualValues = new HashMap<String, String>();
+        final Map<String, String> actualValues = new HashMap<>();
 
         for (final String key : expectedAttributes.keySet()) {
             final String elementVal = e.getAttribute(key);
@@ -115,7 +120,6 @@ public abstract class AbstractWebDriverSubStepImplementations implements Provide
             // if no attribute will this throw an exception or just return
             // null ??
             actualValues.put(key, elementVal);
-
         }
 
         final MapDifference<String, String> difference = Maps.difference(expectedAttributes, actualValues);
@@ -123,16 +127,31 @@ public abstract class AbstractWebDriverSubStepImplementations implements Provide
     }
 
 
+    /**
+     * Utility method to return the webdriver from the ExecutionContext
+     *
+     * @return the webdriver bound to the current scope and thread
+     */
     protected WebDriver webDriver() {
         return this.webDriverContextSupplier.get().getWebDriver();
     }
 
 
+    /**
+     * Utility method to return the webdriver context from the ExecutionContext in scope and bound to the local thread
+     *
+     * @return the WebDriverContext
+     */
     protected WebDriverContext webDriverContext() {
         return this.webDriverContextSupplier.get();
     }
 
 
+    /**
+     * Utility method to get a screenshot from the webdriver, if it supports it
+     *
+     * @return the screenshot bytes
+     */
     public byte[] getScreenshotBytes() {
 
         final WebDriver webDriver = webDriver();

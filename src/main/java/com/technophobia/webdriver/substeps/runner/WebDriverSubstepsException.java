@@ -1,5 +1,5 @@
 /*
- *	Copyright Technophobia Ltd 2012
+ *  Copyright Technophobia Ltd 2012
  *
  *   This file is part of Substeps.
  *
@@ -19,18 +19,8 @@
 package com.technophobia.webdriver.substeps.runner;
 
 /**
- * @author imoore
- * 
+ * Simple marker class for Webdriver substeps exception, extending RuntimeException
  */
 public class WebDriverSubstepsException extends RuntimeException {
-
-    public WebDriverSubstepsException() {
-        super();
-    }
-
-
-    public WebDriverSubstepsException(final String msg) {
-        super(msg);
-
-    }
+    // no op
 }

@@ -1,5 +1,5 @@
 /*
- *	Copyright Technophobia Ltd 2012
+ *  Copyright Technophobia Ltd 2012
  *
  *   This file is part of Substeps.
  *
@@ -19,46 +19,40 @@
 package com.technophobia.webdriver.substeps.impl;
 
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.junit.Assert;
-import org.openqa.selenium.By;
-import org.openqa.selenium.TimeoutException;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.pagefactory.ByChained;
-import org.openqa.selenium.StaleElementReferenceException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.google.common.base.Supplier;
 import com.technophobia.substeps.model.SubSteps.Step;
 import com.technophobia.substeps.model.SubSteps.StepImplementations;
 import com.technophobia.substeps.model.SubSteps.StepParameter;
 import com.technophobia.substeps.model.parameter.IntegerConverter;
 import com.technophobia.webdriver.substeps.runner.DefaultExecutionSetupTearDown;
-import com.technophobia.webdriver.util.WebDriverContext;
 import com.technophobia.webdriver.util.WebDriverSubstepsBy;
+import org.junit.Assert;
+import org.openqa.selenium.By;
+import org.openqa.selenium.StaleElementReferenceException;
+import org.openqa.selenium.TimeoutException;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.pagefactory.ByChained;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.List;
 
-
+/**
+ * set of step implementations concerned with finding elements by various means, ids, attributes, children of, xpaths, tag name, text etc
+ */
 @StepImplementations(requiredInitialisationClasses = DefaultExecutionSetupTearDown.class)
 public class FinderWebDriverSubStepImplementations extends AbstractWebDriverSubStepImplementations {
 
     private static final Logger logger = LoggerFactory.getLogger(FinderWebDriverSubStepImplementations.class);
 
 
-
-
     /**
      * Find an element by it's ID
-     * 
+     *
+     * @param id the id
+     * @return the web element
      * @example FindById username
      * @section Location
-     * 
-     * @param id
-     *            the id
-     * @return the web element
      */
     @Step("FindById ([^\"]*)")
     public WebElement findById(final String id) {
@@ -76,15 +70,12 @@ public class FinderWebDriverSubStepImplementations extends AbstractWebDriverSubS
 
     /**
      * Find an element by it's ID with the specified timeout
-     * 
+     *
+     * @param id      the id
+     * @param timeout the timeout
+     * @return the web element
      * @example FindByIdTimeout username timeout = 15 secs
      * @section Location
-     * 
-     * @param id
-     *            the id
-     * @param timeout
-     *            the timeout
-     * @return the web element
      */
     @Step("FindByIdTimeout ([^\"]*) timeout = ([^\"]*) secs")
     public WebElement findById(final String id, final String timeout) {
@@ -99,7 +90,6 @@ public class FinderWebDriverSubStepImplementations extends AbstractWebDriverSubS
     }
 
 
-
     // xpath query //*[contains(@id, 'f41_txt')]
     // $x("//*[@id='sogei_mapping_left_container']")
 
@@ -112,11 +102,10 @@ public class FinderWebDriverSubStepImplementations extends AbstractWebDriverSubS
      * Finds an element using an xpath expression, the expression may contain quotes, unlike an earlier implementation.
      * Xpath expressions should search rather than full paths to elements
      *
-     *  @example FindByXpath //li[a/i[contains(@class, "NOT_RUN")]]
-     *  @section Finders
-     *
      * @param xpath the xpath expression
      * @return the web element found
+     * @example FindByXpath //li[a/i[contains(@class, "NOT_RUN")]]
+     * @section Finders
      */
 
     @Step("FindByXpath (.*)$")
@@ -132,13 +121,11 @@ public class FinderWebDriverSubStepImplementations extends AbstractWebDriverSubS
 
     /**
      * Find an element using the name attribute of the element
-     * 
+     *
+     * @param name the name
+     * @return the web element
      * @example FindByName "named field"
      * @section Location
-     * 
-     * @param name
-     *            the name
-     * @return the web element
      */
     @Step("FindByName \"?([^\"]*)\"?")
     public WebElement findByName(final String name) {
@@ -151,18 +138,14 @@ public class FinderWebDriverSubStepImplementations extends AbstractWebDriverSubS
     }
 
 
-    
-
     /**
      * Finds an element on the page with the specified tag and containing the specified text
-     * 
+     *
+     * @param tag  the tag
+     * @param text the text
      * @example FindFirstTagElementContainingText tag="ul"
-     *          text="list item itext"
+     * text="list item itext"
      * @section Location
-     * @param tag
-     *            the tag
-     * @param text
-     *            the text
      */
     @Step("FindFirstTagElementContainingText tag=\"([^\"]*)\" text=\"([^\"]*)\"")
     public void findFirstTagElementContainingText(final String tag, final String text) {
@@ -179,51 +162,14 @@ public class FinderWebDriverSubStepImplementations extends AbstractWebDriverSubS
     }
 
 
-//    /**
-//     * Finds an element on the page with the specified tag and text
-//     *
-//     * @example FindTagElementContainingText tag="ul" text="list item itext"
-//     * @section Location
-//     * @param tag
-//     *            the tag
-//     * @param text
-//     *            the text
-//     */
-//    @Step("FindTagElementWithExactText tag=\"([^\"]*)\" text=\"([^\"]*)\"")
-//    public void findTagElementWithExactText(final String tag, final String text) {
-//        logger.debug("Finding tag element " + tag + "and asserting has exact text " + text);
-//
-//        webDriverContext().setCurrentElement(null);
-//        final List<WebElement> elementsWithTagName = webDriver().findElements(By.tagName(tag));
-//
-//        WebElement matchingElement = null;
-//        for (final WebElement element : elementsWithTagName) {
-//
-//            if (element.getText().equals(text)) {
-//
-//                if (matchingElement == null) {
-//                    matchingElement = element;
-//                } else {
-//                    Assert.fail("expected one element with tag " + tag + " and text " + text + " but found multiple");
-//                }
-//            }
-//        }
-//
-//        Assert.assertNotNull("expecting element with tag " + tag + " and text " + text, matchingElement);
-//        webDriverContext().setCurrentElement(matchingElement);
-//    }
-    
-    
     /**
      * Finds an element that is a child of the current element using the name
      * attribute, another Find method should be used first
-     * 
+     *
+     * @param name the name
+     * @return the web element
      * @example FindChild ByName name="child name"
      * @section Location
-     * 
-     * @param name
-     *            the name
-     * @return the web element
      */
     @Step("FindChild ByName name=\"?([^\"]*)\"?")
     public WebElement findChildByName(final String name) {
@@ -240,16 +186,13 @@ public class FinderWebDriverSubStepImplementations extends AbstractWebDriverSubS
     /**
      * Finds an element that is a child of the current element using the tag
      * name and specified attributes, another Find method should be used first
-     * 
-     * @example FindChild ByTagAndAttributes tag="input"
-     *          attributes=[type="submit",value="Search"]
-     * @section Location
-     * 
-     * @param tag
-     *            the tag
-     * @param attributeString
-     *            the attribute string
+     *
+     * @param tag             the tag
+     * @param attributeString the attribute string
      * @return the web element
+     * @example FindChild ByTagAndAttributes tag="input"
+     * attributes=[type="submit",value="Search"]
+     * @section Location
      */
     @Step("FindChild ByTagAndAttributes tag=\"?([^\"]*)\"? attributes=\\[(.*)\\]")
     public WebElement findChildByTagAndAttributes(final String tag, final String attributeString) {
@@ -260,7 +203,7 @@ public class FinderWebDriverSubStepImplementations extends AbstractWebDriverSubS
 
 
     private WebElement findChildByTagAndAttributes(final String tag, final String attributeString,
-            final MatchingElementResultHandler resultHandler) {
+                                                   final MatchingElementResultHandler resultHandler) {
 
         final WebElement currentElement = webDriverContext().getCurrentElement();
 
@@ -279,22 +222,18 @@ public class FinderWebDriverSubStepImplementations extends AbstractWebDriverSubS
         return elem;
     }
 
-    
+
     /**
      * Finds an element that is a child of the current element using the tag
      * name, specified attributes and text, another Find method should be used first
-     * 
-     * @example FindChild ByTagAndAttributes tag="input"
-     *          attributes=[type="submit",value="Search"] with text="bob"
-     * @section Location
-     * 
-     * @param tag
-     *            the tag
-     * @param attributeString
-     *            the attribute string
-     * @param text
-     *            the text to look for
+     *
+     * @param tag             the tag
+     * @param attributeString the attribute string
+     * @param text            the text to look for
      * @return the web element
+     * @example FindChild ByTagAndAttributes tag="input"
+     * attributes=[type="submit",value="Search"] with text="bob"
+     * @section Location
      */
     @Step("FindChild ByTagAndAttributes tag=\"?([^\"]*)\"? attributes=\\[(.*)\\] with text=\"([^\"]*)\"")
     public WebElement findChildByTagAndAttributesWithText(final String tag, final String attributeString, final String text) {
@@ -305,7 +244,7 @@ public class FinderWebDriverSubStepImplementations extends AbstractWebDriverSubS
 
 
     private WebElement findChildByTagAndAttributes(final String tag, final String attributeString, final String text,
-            final MatchingElementResultHandler resultHandler) {
+                                                   final MatchingElementResultHandler resultHandler) {
 
         Assert.assertNotNull("expecting a current element", webDriverContext().getCurrentElement());
 
@@ -324,21 +263,18 @@ public class FinderWebDriverSubStepImplementations extends AbstractWebDriverSubS
         webDriverContext().setCurrentElement(elem);
 
         return elem;
-    }    
+    }
 
     /**
      * Finds the first child element of the 'current' element using the tag name
      * and specified attributes, another Find method should be used first
-     * 
-     * @example FindFirstChild ByTagAndAttributes tag="input"
-     *          attributes=[type="submit",value="Search"]
-     * @section Location
-     * 
-     * @param tag
-     *            the tag
-     * @param attributeString
-     *            the attribute string
+     *
+     * @param tag             the tag
+     * @param attributeString the attribute string
      * @return the web element
+     * @example FindFirstChild ByTagAndAttributes tag="input"
+     * attributes=[type="submit",value="Search"]
+     * @section Location
      */
     @Step("FindFirstChild ByTagAndAttributes tag=\"?([^\"]*)\"? attributes=\\[(.*)\\]")
     public WebElement findFirstChildByTagAndAttributes(final String tag, final String attributeString) {
@@ -353,22 +289,18 @@ public class FinderWebDriverSubStepImplementations extends AbstractWebDriverSubS
     /**
      * Finds a checkbox that is a child of the specified tag, that contains the
      * specified text; eg.
+     * <p>
+     * &lt;pre&gt;
+     * &lt;label&gt;
+     * &lt;input type=&quot;checkbox&quot; name=&quot;checkbox_name&quot; value=&quot;yeah&quot;/&gt;a checkbox &lt;span&gt;label&lt;/span&gt;
+     * &lt;/label&gt;
+     * &lt;/pre&gt;
      *
-     &lt;pre&gt;
-     &lt;label&gt;
-     &lt;input type=&quot;checkbox&quot; name=&quot;checkbox_name&quot; value=&quot;yeah&quot;/&gt;a checkbox &lt;span&gt;label&lt;/span&gt;
-     &lt;/label&gt;
-     &lt;/pre&gt;
-     * 
-     * @example FindCheckbox inside tag="label" with label="a checkbox label"
-     * 
-     * @section Location
-     * 
-     * @param tag
-     *            the tag
-     * @param label
-     *            the checkbox label
+     * @param tag   the tag
+     * @param label the checkbox label
      * @return the web element
+     * @example FindCheckbox inside tag="label" with label="a checkbox label"
+     * @section Location
      */
     @Step("FindCheckbox inside tag=\"?([^\"]*)\"? with label=\"([^\"]*)\"")
     public WebElement findCheckBox(final String tag, final String label) {
@@ -383,22 +315,18 @@ public class FinderWebDriverSubStepImplementations extends AbstractWebDriverSubS
     /**
      * Finds a radiobutton that is a child of the specified tag, that contains
      * the specified text; eg.
+     * <p>
+     * &lt;pre&gt;
+     * &lt;label&gt;
+     * &lt;input type=&quot;radio&quot; name=&quot;radio_name&quot; value=&quot;yeah&quot;/&gt;a radio &lt;span&gt;label&lt;/span&gt;
+     * &lt;/label&gt;
+     * &lt;/pre&gt;
      *
-     &lt;pre&gt;
-     &lt;label&gt;
-     &lt;input type=&quot;radio&quot; name=&quot;radio_name&quot; value=&quot;yeah&quot;/&gt;a radio &lt;span&gt;label&lt;/span&gt;
-     &lt;/label&gt;
-     &lt;/pre&gt;
-     *
-     * @example FindRadioButton inside tag="label" with label="a radio label"
-     * 
-     * @section Location
-     * 
-     * @param tag
-     *            the tag
-     * @param label
-     *            the radio button label
+     * @param tag   the tag
+     * @param label the radio button label
      * @return the web element
+     * @example FindRadioButton inside tag="label" with label="a radio label"
+     * @section Location
      */
     @Step("FindRadioButton inside tag=\"?([^\"]*)\"? with label=\"([^\"]*)\"")
     public WebElement findRadioButton(final String tag, final String label) {
@@ -408,8 +336,10 @@ public class FinderWebDriverSubStepImplementations extends AbstractWebDriverSubS
 
 
     /**
-     * @param label the label of the input
-     * @param tag the tag
+     * Find and input of the specified type within the specified tag that has the specified text
+     *
+     * @param label     the label of the input
+     * @param tag       the tag
      * @param inputType the input type
      * @return the web element
      */
@@ -444,7 +374,7 @@ public class FinderWebDriverSubStepImplementations extends AbstractWebDriverSubS
                         if (type != null && type.compareToIgnoreCase(inputType) == 0) {
                             // bingo
                             if (matchingElems == null) {
-                                matchingElems = new ArrayList<WebElement>();
+                                matchingElems = new ArrayList<>();
                             }
                             matchingElems.add(inputElement);
                         }
@@ -462,7 +392,9 @@ public class FinderWebDriverSubStepImplementations extends AbstractWebDriverSubS
 
 
     /**
-     * @param msg the assertion message
+     * checks that the list of elements is not null or empty
+     *
+     * @param msg      the assertion message
      * @param tagElems the element list to be checked for empty or null
      */
     public void checkElements(final String msg, final List<WebElement> tagElems) {
@@ -474,14 +406,12 @@ public class FinderWebDriverSubStepImplementations extends AbstractWebDriverSubS
     /**
      * Find an element by tag name and a set of attributes and corresponding
      * values
-     * 
-     * @param tag
-     *            the tag
-     * @param attributeString
-     *            the attribute string
+     *
+     * @param tag             the tag
+     * @param attributeString the attribute string
      * @return the web element
      * @example FindByTagAndAttributes tag="input"
-     *          attributes=[type="submit",value="Search"]
+     * attributes=[type="submit",value="Search"]
      * @section Location
      */
     @Step("FindByTagAndAttributes tag=\"?([^\"]*)\"? attributes=\\[(.*)\\]")
@@ -493,7 +423,7 @@ public class FinderWebDriverSubStepImplementations extends AbstractWebDriverSubS
 
 
     private WebElement findByTagAndAttributes(final String tag, final String attributeString,
-            final MatchingElementResultHandler handler) {
+                                              final MatchingElementResultHandler handler) {
 
         webDriverContext().setCurrentElement(null);
 
@@ -514,14 +444,12 @@ public class FinderWebDriverSubStepImplementations extends AbstractWebDriverSubS
     /**
      * Finds the first element by tag name and a set of attributes and
      * corresponding values
-     * 
-     * @param tag
-     *            the tag
-     * @param attributeString
-     *            the attribute string
+     *
+     * @param tag             the tag
+     * @param attributeString the attribute string
      * @return the web element
      * @example FindFirstByTagAndAttributes tag="input"
-     *          attributes=[type="submit",value="Search"]
+     * attributes=[type="submit",value="Search"]
      * @section Location
      */
     @Step("FindFirstByTagAndAttributes tag=\"?([^\"]*)\"? attributes=\\[(.*)\\]")
@@ -535,21 +463,18 @@ public class FinderWebDriverSubStepImplementations extends AbstractWebDriverSubS
     /**
      * Finds the n th element by tag name and a set of attributes and
      * corresponding values
-     * 
-     * @param nth
-     *            the nth matching element we wish to find
-     * @param tag
-     *            the tag
-     * @param attributeString
-     *            the attribute string
+     *
+     * @param nth             the nth matching element we wish to find
+     * @param tag             the tag
+     * @param attributeString the attribute string
      * @return the web element
      * @example FindNthByTagAndAttributes n=2 tag="input"
-     *          attributes=[type="submit",value="Search"]
+     * attributes=[type="submit",value="Search"]
      * @section Location
      */
     @Step("FindNthByTagAndAttributes n=\"?([^\"]*)\"? tag=\"?([^\"]*)\"? attributes=\\[(.*)\\]")
     public WebElement findNthByTagAndAttributes(@StepParameter(converter = IntegerConverter.class) final Integer nth,
-            final String tag, final String attributeString) {
+                                                final String tag, final String attributeString) {
         logger.debug("Looking for nth item with tag " + tag + " and attributes " + attributeString);
 
         webDriverContext().setCurrentElement(null);
@@ -558,7 +483,7 @@ public class FinderWebDriverSubStepImplementations extends AbstractWebDriverSubS
 
         final By by = WebDriverSubstepsBy.NthByTagAndAttributes(tag, attributeString, nth);
 
-        final String msg = "failed to locate the " + nth.intValue() + "th element with tag: " + tag
+        final String msg = "failed to locate the " + nth + "th element with tag: " + tag
                 + " and attributes: " + attributeString;
 
         final MatchingElementResultHandler.NthElement handler = new MatchingElementResultHandler.NthElement(nth);
@@ -575,25 +500,20 @@ public class FinderWebDriverSubStepImplementations extends AbstractWebDriverSubS
      * Finds an element by tag name and a set of attributes and corresponding
      * values, that has a child tag element of the specified type and having the
      * specified text
-     * 
-     * @param tag
-     *            the parent tag
-     * @param attributeString
-     *            the parent attribute string
-     * @param childTag
-     *            the child tag
-     * @param childText
-     *            the child's text
-     * 
+     *
+     * @param tag             the parent tag
+     * @param attributeString the parent attribute string
+     * @param childTag        the child tag
+     * @param childText       the child's text
      * @return the web element
      * @example FindParentByTagAndAttributes tag="table"
-     *          attributes=[class="mytable"] ThatHasChild tag="caption"
-     *          text="wahoo"
+     * attributes=[class="mytable"] ThatHasChild tag="caption"
+     * text="wahoo"
      * @section Location
      */
     @Step("FindParentByTagAndAttributes tag=\"?([^\"]*)\"? attributes=\\[(.*)\\] ThatHasChild tag=\"?([^\"]*)\"? text=\"([^\"]*)\"")
     public WebElement findParentByTagAndAttributesThatHasChildWithTagAndText(final String tag,
-            final String attributeString, final String childTag, final String childText) {
+                                                                             final String attributeString, final String childTag, final String childText) {
 
         webDriverContext().setCurrentElement(null);
 
@@ -626,19 +546,18 @@ public class FinderWebDriverSubStepImplementations extends AbstractWebDriverSubS
      * @return
      */
     private WebElement findParentByWithChildBy(final By by, final By childBy, final String assertionMessage,
-            final String findParentAssertionMessage, final String multipleChildrenMessage) {
-        
+                                               final String findParentAssertionMessage, final String multipleChildrenMessage) {
+
         boolean repeat = true;
         WebElement rtn = null;
-        while (repeat){
-            
+        while (repeat) {
+
             repeat = false;
             try {
                 rtn = findParentWithChildByInternal(by, childBy, assertionMessage, findParentAssertionMessage,
-                    multipleChildrenMessage);
-            }
-            catch (StaleElementReferenceException e){
-                
+                        multipleChildrenMessage);
+            } catch (StaleElementReferenceException e) {
+
                 logger.debug("stale element exception caught, retrying..");
                 repeat = true;
             }
@@ -650,7 +569,7 @@ public class FinderWebDriverSubStepImplementations extends AbstractWebDriverSubS
 
 
     private WebElement findParentWithChildByInternal(final By by, final By childBy, final String assertionMessage,
-            final String findParentAssertionMessage, final String multipleChildrenMessage) {
+                                                     final String findParentAssertionMessage, final String multipleChildrenMessage) {
         WebElement rtn;
         List<WebElement> matchingElements = null;
 
@@ -665,10 +584,10 @@ public class FinderWebDriverSubStepImplementations extends AbstractWebDriverSubS
 
             // do we care if there are more than one matching child ? lets go
             // with no..
-            if (children!= null && !children.isEmpty()) {
+            if (children != null && !children.isEmpty()) {
 
                 if (matchingElements == null) {
-                    matchingElements = new ArrayList<WebElement>();
+                    matchingElements = new ArrayList<>();
                 }
                 matchingElements.add(parent);
                 if (children.size() > 1) {
@@ -685,25 +604,20 @@ public class FinderWebDriverSubStepImplementations extends AbstractWebDriverSubS
      * Finds an element by tag name and a set of attributes and corresponding
      * values, that has a child tag element of the specified type that has the
      * specified attributes..
-     * 
-     * @param tag
-     *            the parent tag
-     * @param attributeString
-     *            the parent attribute string
-     * @param childTag
-     *            the child tag
-     * @param childAttributeString
-     *            the child's attribute string
-     * 
+     *
+     * @param tag                  the parent tag
+     * @param attributeString      the parent attribute string
+     * @param childTag             the child tag
+     * @param childAttributeString the child's attribute string
      * @return the web element
      * @example FindParentByTagAndAttributes tag="table"
-     *          attributes=[class="mytable"] ThatHasChild tag="caption"
-     *          attributes=[class="childClass"]
+     * attributes=[class="mytable"] ThatHasChild tag="caption"
+     * attributes=[class="childClass"]
      * @section Location
      */
     @Step("FindParentByTagAndAttributes tag=\"?([^\"]*)\"? attributes=\\[(.*)\\] ThatHasChild tag=\"?([^\"]*)\"? attributes=\\[(.*)\\]")
     public WebElement findParentByTagAndAttributesThatHasChildWithTagAndAttributes(final String tag,
-            final String attributeString, final String childTag, final String childAttributeString) {
+                                                                                   final String attributeString, final String childTag, final String childAttributeString) {
 
         webDriverContext().setCurrentElement(null);
 
@@ -728,15 +642,11 @@ public class FinderWebDriverSubStepImplementations extends AbstractWebDriverSubS
     }
 
 
-
-
     /**
      * Gets the element with text.
-     * 
-     * @param type
-     *            the type
-     * @param text
-     *            the text
+     *
+     * @param type the type
+     * @param text the text
      * @return the element with text
      */
     public WebElement findElementWithText(final String type, final String text) {
@@ -757,13 +667,11 @@ public class FinderWebDriverSubStepImplementations extends AbstractWebDriverSubS
 
     /**
      * Find the element with id that has the text ....
-     * 
+     *
+     * @param id       the id
+     * @param expected the expected
      * @example FindById msg_id and text = "Hello World"
      * @section Location
-     * @param id
-     *            the id
-     * @param expected
-     *            the expected
      */
     @Step("FindById ([^\"]*) and text = \"([^\"]*)\"")
     public void findByIdAndText(final String id, final String expected) {
@@ -789,14 +697,12 @@ public class FinderWebDriverSubStepImplementations extends AbstractWebDriverSubS
     /**
      * From the current element, apply the xpath selecting the first child that
      * has the text ...
-     * 
+     *
+     * @param xpath the xpath expression, NB this is quoted and can't contain double quotes
+     * @param text  the text
      * @example FindFirstChildElementContainingText xpath="li//a" text =
-     *          "Log Out"
+     * "Log Out"
      * @section Location
-     * @param xpath
-     *            the xpath expression, NB this is quoted and can't contain double quotes
-     * @param text
-     *            the text
      */
     @Step("FindFirstChildElementContainingText xpath=\"([^\"]*)\" text=\"([^\"]*)\"")
     public void findChildElementContainingText(final String xpath, final String text) {
@@ -818,13 +724,11 @@ public class FinderWebDriverSubStepImplementations extends AbstractWebDriverSubS
 
     /**
      * Finds the first html tag that starts with the specified text
-     * 
+     *
+     * @param tag  the tag
+     * @param text the text
      * @example FindTagElementStartingWithText tag="ul" text="list item itext"
      * @section Location
-     * @param tag
-     *            the tag
-     * @param text
-     *            the text
      */
     @Step("FindFirstTagElementStartingWithText tag=\"([^\"]*)\" text=\"([^\"]*)\"")
     public void findFirstTagElementStartingWithText(final String tag, final String text) {
@@ -841,15 +745,13 @@ public class FinderWebDriverSubStepImplementations extends AbstractWebDriverSubS
         webDriverContext().setCurrentElement(elem);
 
     }
-    
+
     /**
      * Find an element by tag name and a set of attributes and expected text
-     * 
-     * @param tag
-     *            the tag
-     * @param attributeString
-     *            the attribute string
-     * @param text the expected text
+     *
+     * @param tag             the tag
+     * @param attributeString the attribute string
+     * @param text            the expected text
      * @return the web element
      * @example FindByTagAndAttributesWithText tag="input" attributes=[type="submit",value="Search"] with text="abc"
      * @section Location
@@ -861,7 +763,7 @@ public class FinderWebDriverSubStepImplementations extends AbstractWebDriverSubS
     }
 
     private WebElement findByTagAndAttributesWithText(final String tag, final String attributeString,
-            final String text, final MatchingElementResultHandler handler) {
+                                                      final String text, final MatchingElementResultHandler handler) {
 
         webDriverContext().setCurrentElement(null);
 
@@ -883,12 +785,10 @@ public class FinderWebDriverSubStepImplementations extends AbstractWebDriverSubS
     /**
      * Finds and waits for if necessary, an element by Id containing the specified text
      *
+     * @param elementId HTML ID of element
+     * @param text      the expected text
      * @example FindById id containing text="abc"
      * @section Finders
-     * @param elementId
-     *            HTML ID of element
-     * @param text
-     *            the expected text
      */
     @Step("FindById ([^\"]*) containing text=\"([^\"]*)\"")
     public void assertEventuallyContains(final String elementId, final String text) {
