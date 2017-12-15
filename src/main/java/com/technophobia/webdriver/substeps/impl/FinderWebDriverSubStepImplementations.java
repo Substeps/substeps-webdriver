@@ -51,8 +51,8 @@ public class FinderWebDriverSubStepImplementations extends AbstractWebDriverSubS
      *
      * @param id the id
      * @return the web element
-     * @example FindById username
-     * @section Location
+     * @org.substeps.step.example FindById username
+     * @org.substeps.step.section Location
      */
     @Step("FindById ([^\"]*)")
     public WebElement findById(final String id) {
@@ -74,8 +74,8 @@ public class FinderWebDriverSubStepImplementations extends AbstractWebDriverSubS
      * @param id      the id
      * @param timeout the timeout
      * @return the web element
-     * @example FindByIdTimeout username timeout = 15 secs
-     * @section Location
+     * @org.substeps.step.example FindByIdTimeout username timeout = 15 secs
+     * @org.substeps.step.section Location
      */
     @Step("FindByIdTimeout ([^\"]*) timeout = ([^\"]*) secs")
     public WebElement findById(final String id, final String timeout) {
@@ -104,8 +104,8 @@ public class FinderWebDriverSubStepImplementations extends AbstractWebDriverSubS
      *
      * @param xpath the xpath expression
      * @return the web element found
-     * @example FindByXpath //li[a/i[contains(@class, "NOT_RUN")]]
-     * @section Finders
+     * @org.substeps.step.example FindByXpath //li[a/i[contains(@class, "NOT_RUN")]]
+     * @org.substeps.step.section Finders
      */
 
     @Step("FindByXpath (.*)$")
@@ -124,8 +124,8 @@ public class FinderWebDriverSubStepImplementations extends AbstractWebDriverSubS
      *
      * @param name the name
      * @return the web element
-     * @example FindByName "named field"
-     * @section Location
+     * @org.substeps.step.example FindByName "named field"
+     * @org.substeps.step.section Location
      */
     @Step("FindByName \"?([^\"]*)\"?")
     public WebElement findByName(final String name) {
@@ -143,9 +143,9 @@ public class FinderWebDriverSubStepImplementations extends AbstractWebDriverSubS
      *
      * @param tag  the tag
      * @param text the text
-     * @example FindFirstTagElementContainingText tag="ul"
+     * @org.substeps.step.example FindFirstTagElementContainingText tag="ul"
      * text="list item itext"
-     * @section Location
+     * @org.substeps.step.section Location
      */
     @Step("FindFirstTagElementContainingText tag=\"([^\"]*)\" text=\"([^\"]*)\"")
     public void findFirstTagElementContainingText(final String tag, final String text) {
@@ -168,8 +168,8 @@ public class FinderWebDriverSubStepImplementations extends AbstractWebDriverSubS
      *
      * @param name the name
      * @return the web element
-     * @example FindChild ByName name="child name"
-     * @section Location
+     * @org.substeps.step.example FindChild ByName name="child name"
+     * @org.substeps.step.section Location
      */
     @Step("FindChild ByName name=\"?([^\"]*)\"?")
     public WebElement findChildByName(final String name) {
@@ -190,9 +190,9 @@ public class FinderWebDriverSubStepImplementations extends AbstractWebDriverSubS
      * @param tag             the tag
      * @param attributeString the attribute string
      * @return the web element
-     * @example FindChild ByTagAndAttributes tag="input"
+     * @org.substeps.step.example FindChild ByTagAndAttributes tag="input"
      * attributes=[type="submit",value="Search"]
-     * @section Location
+     * @org.substeps.step.section Location
      */
     @Step("FindChild ByTagAndAttributes tag=\"?([^\"]*)\"? attributes=\\[(.*)\\]")
     public WebElement findChildByTagAndAttributes(final String tag, final String attributeString) {
@@ -231,9 +231,9 @@ public class FinderWebDriverSubStepImplementations extends AbstractWebDriverSubS
      * @param attributeString the attribute string
      * @param text            the text to look for
      * @return the web element
-     * @example FindChild ByTagAndAttributes tag="input"
+     * @org.substeps.step.example FindChild ByTagAndAttributes tag="input"
      * attributes=[type="submit",value="Search"] with text="bob"
-     * @section Location
+     * @org.substeps.step.section Location
      */
     @Step("FindChild ByTagAndAttributes tag=\"?([^\"]*)\"? attributes=\\[(.*)\\] with text=\"([^\"]*)\"")
     public WebElement findChildByTagAndAttributesWithText(final String tag, final String attributeString, final String text) {
@@ -272,9 +272,9 @@ public class FinderWebDriverSubStepImplementations extends AbstractWebDriverSubS
      * @param tag             the tag
      * @param attributeString the attribute string
      * @return the web element
-     * @example FindFirstChild ByTagAndAttributes tag="input"
+     * @org.substeps.step.example FindFirstChild ByTagAndAttributes tag="input"
      * attributes=[type="submit",value="Search"]
-     * @section Location
+     * @org.substeps.step.section Location
      */
     @Step("FindFirstChild ByTagAndAttributes tag=\"?([^\"]*)\"? attributes=\\[(.*)\\]")
     public WebElement findFirstChildByTagAndAttributes(final String tag, final String attributeString) {
@@ -299,8 +299,8 @@ public class FinderWebDriverSubStepImplementations extends AbstractWebDriverSubS
      * @param tag   the tag
      * @param label the checkbox label
      * @return the web element
-     * @example FindCheckbox inside tag="label" with label="a checkbox label"
-     * @section Location
+     * @org.substeps.step.example FindCheckbox inside tag="label" with label="a checkbox label"
+     * @org.substeps.step.section Location
      */
     @Step("FindCheckbox inside tag=\"?([^\"]*)\"? with label=\"([^\"]*)\"")
     public WebElement findCheckBox(final String tag, final String label) {
@@ -325,8 +325,8 @@ public class FinderWebDriverSubStepImplementations extends AbstractWebDriverSubS
      * @param tag   the tag
      * @param label the radio button label
      * @return the web element
-     * @example FindRadioButton inside tag="label" with label="a radio label"
-     * @section Location
+     * @org.substeps.step.example FindRadioButton inside tag="label" with label="a radio label"
+     * @org.substeps.step.section Location
      */
     @Step("FindRadioButton inside tag=\"?([^\"]*)\"? with label=\"([^\"]*)\"")
     public WebElement findRadioButton(final String tag, final String label) {
@@ -410,9 +410,9 @@ public class FinderWebDriverSubStepImplementations extends AbstractWebDriverSubS
      * @param tag             the tag
      * @param attributeString the attribute string
      * @return the web element
-     * @example FindByTagAndAttributes tag="input"
+     * @org.substeps.step.example FindByTagAndAttributes tag="input"
      * attributes=[type="submit",value="Search"]
-     * @section Location
+     * @org.substeps.step.section Location
      */
     @Step("FindByTagAndAttributes tag=\"?([^\"]*)\"? attributes=\\[(.*)\\]")
     public WebElement findByTagAndAttributes(final String tag, final String attributeString) {
@@ -448,9 +448,9 @@ public class FinderWebDriverSubStepImplementations extends AbstractWebDriverSubS
      * @param tag             the tag
      * @param attributeString the attribute string
      * @return the web element
-     * @example FindFirstByTagAndAttributes tag="input"
+     * @org.substeps.step.example FindFirstByTagAndAttributes tag="input"
      * attributes=[type="submit",value="Search"]
-     * @section Location
+     * @org.substeps.step.section Location
      */
     @Step("FindFirstByTagAndAttributes tag=\"?([^\"]*)\"? attributes=\\[(.*)\\]")
     public WebElement findFirstByTagAndAttributes(final String tag, final String attributeString) {
@@ -468,9 +468,9 @@ public class FinderWebDriverSubStepImplementations extends AbstractWebDriverSubS
      * @param tag             the tag
      * @param attributeString the attribute string
      * @return the web element
-     * @example FindNthByTagAndAttributes n=2 tag="input"
+     * @org.substeps.step.example FindNthByTagAndAttributes n=2 tag="input"
      * attributes=[type="submit",value="Search"]
-     * @section Location
+     * @org.substeps.step.section Location
      */
     @Step("FindNthByTagAndAttributes n=\"?([^\"]*)\"? tag=\"?([^\"]*)\"? attributes=\\[(.*)\\]")
     public WebElement findNthByTagAndAttributes(@StepParameter(converter = IntegerConverter.class) final Integer nth,
@@ -506,10 +506,10 @@ public class FinderWebDriverSubStepImplementations extends AbstractWebDriverSubS
      * @param childTag        the child tag
      * @param childText       the child's text
      * @return the web element
-     * @example FindParentByTagAndAttributes tag="table"
+     * @org.substeps.step.example FindParentByTagAndAttributes tag="table"
      * attributes=[class="mytable"] ThatHasChild tag="caption"
      * text="wahoo"
-     * @section Location
+     * @org.substeps.step.section Location
      */
     @Step("FindParentByTagAndAttributes tag=\"?([^\"]*)\"? attributes=\\[(.*)\\] ThatHasChild tag=\"?([^\"]*)\"? text=\"([^\"]*)\"")
     public WebElement findParentByTagAndAttributesThatHasChildWithTagAndText(final String tag,
@@ -610,10 +610,10 @@ public class FinderWebDriverSubStepImplementations extends AbstractWebDriverSubS
      * @param childTag             the child tag
      * @param childAttributeString the child's attribute string
      * @return the web element
-     * @example FindParentByTagAndAttributes tag="table"
+     * @org.substeps.step.example FindParentByTagAndAttributes tag="table"
      * attributes=[class="mytable"] ThatHasChild tag="caption"
      * attributes=[class="childClass"]
-     * @section Location
+     * @org.substeps.step.section Location
      */
     @Step("FindParentByTagAndAttributes tag=\"?([^\"]*)\"? attributes=\\[(.*)\\] ThatHasChild tag=\"?([^\"]*)\"? attributes=\\[(.*)\\]")
     public WebElement findParentByTagAndAttributesThatHasChildWithTagAndAttributes(final String tag,
@@ -670,8 +670,8 @@ public class FinderWebDriverSubStepImplementations extends AbstractWebDriverSubS
      *
      * @param id       the id
      * @param expected the expected
-     * @example FindById msg_id and text = "Hello World"
-     * @section Location
+     * @org.substeps.step.example FindById msg_id and text = "Hello World"
+     * @org.substeps.step.section Location
      */
     @Step("FindById ([^\"]*) and text = \"([^\"]*)\"")
     public void findByIdAndText(final String id, final String expected) {
@@ -700,9 +700,9 @@ public class FinderWebDriverSubStepImplementations extends AbstractWebDriverSubS
      *
      * @param xpath the xpath expression, NB this is quoted and can't contain double quotes
      * @param text  the text
-     * @example FindFirstChildElementContainingText xpath="li//a" text =
+     * @org.substeps.step.example FindFirstChildElementContainingText xpath="li//a" text =
      * "Log Out"
-     * @section Location
+     * @org.substeps.step.section Location
      */
     @Step("FindFirstChildElementContainingText xpath=\"([^\"]*)\" text=\"([^\"]*)\"")
     public void findChildElementContainingText(final String xpath, final String text) {
@@ -727,8 +727,8 @@ public class FinderWebDriverSubStepImplementations extends AbstractWebDriverSubS
      *
      * @param tag  the tag
      * @param text the text
-     * @example FindTagElementStartingWithText tag="ul" text="list item itext"
-     * @section Location
+     * @org.substeps.step.example FindTagElementStartingWithText tag="ul" text="list item itext"
+     * @org.substeps.step.section Location
      */
     @Step("FindFirstTagElementStartingWithText tag=\"([^\"]*)\" text=\"([^\"]*)\"")
     public void findFirstTagElementStartingWithText(final String tag, final String text) {
@@ -753,8 +753,8 @@ public class FinderWebDriverSubStepImplementations extends AbstractWebDriverSubS
      * @param attributeString the attribute string
      * @param text            the expected text
      * @return the web element
-     * @example FindByTagAndAttributesWithText tag="input" attributes=[type="submit",value="Search"] with text="abc"
-     * @section Location
+     * @org.substeps.step.example FindByTagAndAttributesWithText tag="input" attributes=[type="submit",value="Search"] with text="abc"
+     * @org.substeps.step.section Location
      */
     @Step("FindByTagAndAttributesWithText tag=\"?([^\"]*)\"? attributes=\\[(.*)\\] with text=\"([^\"]*)\"")
     public WebElement findByTagAndAttributesWithText(final String tag, final String attributeString, final String text) {
@@ -787,8 +787,8 @@ public class FinderWebDriverSubStepImplementations extends AbstractWebDriverSubS
      *
      * @param elementId HTML ID of element
      * @param text      the expected text
-     * @example FindById id containing text="abc"
-     * @section Finders
+     * @org.substeps.step.example FindById id containing text="abc"
+     * @org.substeps.step.section Finders
      */
     @Step("FindById ([^\"]*) containing text=\"([^\"]*)\"")
     public void assertEventuallyContains(final String elementId, final String text) {

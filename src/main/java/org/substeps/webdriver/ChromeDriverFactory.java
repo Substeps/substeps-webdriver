@@ -1,9 +1,12 @@
 package org.substeps.webdriver;
 
+import com.technophobia.webdriver.util.WebDriverContext;
 import com.typesafe.config.Config;
 import io.github.bonigarcia.wdm.ChromeDriverManager;
+import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +31,7 @@ public class ChromeDriverFactory extends BaseDriverFactory implements DriverFact
         log.debug("creating chrome driver");
 
         if (cfg.hasPath(CHROMEDRIVER_VERSION_KEY)) {
-            ChromeDriverManager.getInstance().setup(cfg.getString(CHROMEDRIVER_VERSION_KEY));
+            ChromeDriverManager.getInstance().version(cfg.getString(CHROMEDRIVER_VERSION_KEY)).setup();
         } else {
             ChromeDriverManager.getInstance().setup();
         }
@@ -38,7 +41,14 @@ public class ChromeDriverFactory extends BaseDriverFactory implements DriverFact
 
         WebDriverFactoryUtils.setLoggingPreferences(chromeCapabilities, cfg);
 
-        return new ChromeDriver(chromeCapabilities);
+//        Map<String, String> mobileEmulation = new HashMap<>();
+//        mobileEmulation.put("deviceName", "Nexus 5");
+
+
+        ChromeOptions chromeOptions = new ChromeOptions().merge(chromeCapabilities);
+//        chromeOptions.setExperimentalOption("mobileEmulation", mobileEmulation);
+
+        return new ChromeDriver(chromeOptions);
     }
 
     /**
@@ -47,5 +57,11 @@ public class ChromeDriverFactory extends BaseDriverFactory implements DriverFact
     @Override
     public DriverFactoryKey getKey() {
         return KEY;
+    }
+
+
+    @Override
+    public void shutdownWebDriver(WebDriverContext webDriverContext) {
+        super.shutdownWebDriver(webDriverContext);
     }
 }

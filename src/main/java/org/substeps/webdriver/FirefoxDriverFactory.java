@@ -39,7 +39,7 @@ public class FirefoxDriverFactory extends BaseDriverFactory implements DriverFac
         log.debug("creating firefox driver");
 
         if (cfg.hasPath(FIREFOXDRIVER_VERSION_KEY)) {
-            FirefoxDriverManager.getInstance().setup(cfg.getString(FIREFOXDRIVER_VERSION_KEY));
+            FirefoxDriverManager.getInstance().version(cfg.getString(FIREFOXDRIVER_VERSION_KEY)).setup();
         } else {
             FirefoxDriverManager.getInstance().setup();
         }

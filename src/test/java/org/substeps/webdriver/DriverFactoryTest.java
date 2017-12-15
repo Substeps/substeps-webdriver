@@ -1,5 +1,7 @@
 package org.substeps.webdriver;
 
+import com.technophobia.substeps.model.Configuration;
+import com.technophobia.webdriver.util.WebDriverContext;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import io.github.bonigarcia.wdm.ChromeDriverManager;
@@ -12,6 +14,10 @@ import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.substeps.config.SubstepsConfigLoader;
+import org.substeps.runner.NewSubstepsExecutionConfig;
+import org.substeps.webdriver.config.WebdriverSubstepsConfig;
+
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 
@@ -37,6 +43,7 @@ public class DriverFactoryTest {
         }
     }
 
+    @Ignore("manual test")
     @Test
     public void testWebdriverManagerOverride(){
         Config cfg = SubstepsConfigLoader.loadResolvedConfig();
@@ -47,10 +54,26 @@ public class DriverFactoryTest {
 
         String wdmProps = System.getProperty("wdm.properties");
 
-        Assert.assertThat(wdmProps, is("substeps-webdrivermanager.properties"));
+        Assert.assertThat(wdmProps, is("/substeps-webdrivermanager.properties"));
     }
 
 
+    @Ignore
+    @Test
+    public void testDriverCreation(){
+
+        Config cfg = SubstepsConfigLoader.loadResolvedConfig();
+
+        System.out.println(SubstepsConfigLoader.render(cfg));
+
+        List<Config> splits = SubstepsConfigLoader.splitMasterConfig(cfg);
+
+        DriverFactory driverFactory = WebdriverSubstepsConfig.getDriverFactory(splits.get(0));
+
+        WebDriver webDriver = driverFactory.create(cfg);
+
+        webDriver.quit();
+    }
 
 
     @Ignore("this is a local dev test only")

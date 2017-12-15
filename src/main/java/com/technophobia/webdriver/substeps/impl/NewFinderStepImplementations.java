@@ -30,8 +30,8 @@ public class NewFinderStepImplementations extends AbstractWebDriverSubStepImplem
      * @param id    the id to locate
      * @param regex the regex to test the element's text
      * @return the found web element
-     * @example FindById "span-id-with-regex" with text matching regex \w* xyzabc.*
-     * @section Finders
+     * @org.substeps.step.example FindById "span-id-with-regex" with text matching regex \w* xyzabc.*
+     * @org.substeps.step.section Finders
      */
     @SubSteps.Step("FindById \"([^\"]*)\" with text matching regex (.*)$")
     public WebElement findByIdWithRegex(String id, String regex) {
@@ -53,8 +53,8 @@ public class NewFinderStepImplementations extends AbstractWebDriverSubStepImplem
      * @param xpath  an expression surrounded by $x(" &lt; xpath &gt; ")
      * @param tokens the tokens if any to be substituted into the xpath string using String format specifiers.  NB. If calling this directly in code, the tokens need to be quoted
      * @return the web element
-     * @example FindBy xpath with token replacement $x("//li[a/i[contains(@class, '%s')]]") "FAILED"
-     * @section Finders
+     * @org.substeps.step.example FindBy xpath with token replacement $x("//li[a/i[contains(@class, '%s')]]") "FAILED"
+     * @org.substeps.step.section Finders
      */
     @SubSteps.Step("FindBy xpath with token replacement \\$x\\(\"([^\"]*)\"\\)(.*)$")
     public WebElement findByXpathWithTokenReplacement(String xpath, String tokens) {
@@ -94,8 +94,8 @@ public class NewFinderStepImplementations extends AbstractWebDriverSubStepImplem
      * Waits for the element with the specified id to become invisible (either visibility or display CSS attributes)
      *
      * @param id the id of the element
-     * @example WaitFor id "invisible-div" to be invisible
-     * @section Finders
+     * @org.substeps.step.example WaitFor id "invisible-div" to be invisible
+     * @org.substeps.step.section Finders
      */
     @SubSteps.Step("WaitFor id \"([^\"]*)\" to hide")
     public void waitForElementToHide(String id) {
@@ -110,8 +110,8 @@ public class NewFinderStepImplementations extends AbstractWebDriverSubStepImplem
      * Waits for the element with the specified id to become visible (either visibility or display CSS attributes)
      *
      * @param id the id of the element
-     * @example WaitFor id "visible-div" to be visible
-     * @section Finders
+     * @org.substeps.step.example WaitFor id "visible-div" to be visible
+     * @org.substeps.step.section Finders
      */
     @SubSteps.Step("WaitFor id \"([^\"]*)\" to be visible")
     public void waitForElementToBeVisible(String id) {
@@ -123,8 +123,8 @@ public class NewFinderStepImplementations extends AbstractWebDriverSubStepImplem
     /**
      * A step implementation to use when sketching out features and substep defs
      *
-     * @example NotImplemented
-     * @section Miscellaneous
+     * @org.substeps.step.example NotImplemented
+     * @org.substeps.step.section Miscellaneous
      */
     @SubSteps.Step("NotImplemented")
     public void notImplementedNotFailing() {
@@ -137,8 +137,8 @@ public class NewFinderStepImplementations extends AbstractWebDriverSubStepImplem
      *
      * @param tag  the tag to find
      * @param text the text to match on
-     * @example FindByTag "div" with text "some text"
-     * @section Finders
+     * @org.substeps.step.example FindByTag "div" with text "some text"
+     * @org.substeps.step.section Finders
      */
 
     @SubSteps.Step("FindByTag \"([^\"]*)\" with text \"([^\"]*)\"")
@@ -155,8 +155,8 @@ public class NewFinderStepImplementations extends AbstractWebDriverSubStepImplem
      *
      * @param tag  the tag to find
      * @param text the text to partially match on
-     * @example FindByTag "span" containing text "xyzabc"
-     * @section Finders
+     * @org.substeps.step.example FindByTag "span" containing text "xyzabc"
+     * @org.substeps.step.section Finders
      */
     @SubSteps.Step("FindByTag \"([^\"]*)\" containing text \"([^\"]*)\"")
     public void findByTagContainingText(final String tag, String text) {

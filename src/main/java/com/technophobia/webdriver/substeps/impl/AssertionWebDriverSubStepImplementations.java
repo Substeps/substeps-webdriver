@@ -55,8 +55,8 @@ public class AssertionWebDriverSubStepImplementations extends AbstractWebDriverS
      * Check that the current element has the expected text value
      *
      * @param expected the expected text
-     * @example AssertCurrentElement text="Hello World!"
-     * @section Assertions
+     * @org.substeps.step.example AssertCurrentElement text="Hello World!"
+     * @org.substeps.step.section Assertions
      */
     @Step("AssertCurrentElement text=\"([^\"]*)\"")
     public void assertTextInCurrentElement(final String expected) {
@@ -69,8 +69,8 @@ public class AssertionWebDriverSubStepImplementations extends AbstractWebDriverS
      * Check that the current input field has the expected text value
      *
      * @param expected the expected value
-     * @example AssertCurrentInput value="Hello World!"
-     * @section Assertions
+     * @org.substeps.step.example AssertCurrentInput value="Hello World!"
+     * @org.substeps.step.section Assertions
      */
     @Step("AssertCurrentInput value=\"([^\"]*)\"")
     public void assertValueInCurrentInput(final String expected) {
@@ -83,8 +83,8 @@ public class AssertionWebDriverSubStepImplementations extends AbstractWebDriverS
      * Check that the current input field contains the expected text value
      *
      * @param expected part of the expected value
-     * @example AssertCurrentInput value contains "Hello"
-     * @section Assertions
+     * @org.substeps.step.example AssertCurrentInput value contains "Hello"
+     * @org.substeps.step.section Assertions
      */
     @Step("AssertCurrentInput value contains \"([^\"]*)\"")
     public void assertCurrentInputContainsText(final String expected) {
@@ -98,8 +98,8 @@ public class AssertionWebDriverSubStepImplementations extends AbstractWebDriverS
      * Check that the current element contains the specified text
      *
      * @param expected the expected text
-     * @example AssertCurrentElement text contains "Hello world"
-     * @section Assertions
+     * @org.substeps.step.example AssertCurrentElement text contains "Hello world"
+     * @org.substeps.step.section Assertions
      */
     @Step("AssertCurrentElement text contains \"([^\"]*)\"")
     public void assertTextInCurrentElementContains(final String expected) {
@@ -113,8 +113,8 @@ public class AssertionWebDriverSubStepImplementations extends AbstractWebDriverS
      *
      * @param attribute the attribute name
      * @param expected  the expected value of the attribute
-     * @example AssertCurrentElement attribute="class" value="icon32x32"
-     * @section Assertions
+     * @org.substeps.step.example AssertCurrentElement attribute="class" value="icon32x32"
+     * @org.substeps.step.section Assertions
      */
     @Step("AssertCurrentElement attribute=\"([^\"]*)\" value=\"([^\"]*)\"")
     public void assertAttributeInCurrentElement(final String attribute, final String expected) {
@@ -130,8 +130,8 @@ public class AssertionWebDriverSubStepImplementations extends AbstractWebDriverS
      * Check that the page title is ....
      *
      * @param expectedTitle the expected title
-     * @example AssertPageTitle is "My Home Page"
-     * @section Assertions
+     * @org.substeps.step.example AssertPageTitle is "My Home Page"
+     * @org.substeps.step.section Assertions
      */
     @Step("AssertPageTitle is \"([^\"]*)\"")
     public void assertPageTitle(final String expectedTitle) {
@@ -145,8 +145,8 @@ public class AssertionWebDriverSubStepImplementations extends AbstractWebDriverS
      *
      * @param expected the text you expect to find in the page source - this can
      *                 include quotes.
-     * @example AssertPageSourceContains "foobar"
-     * @section Assertions
+     * @org.substeps.step.example AssertPageSourceContains "foobar"
+     * @org.substeps.step.section Assertions
      */
     @Step("AssertPageSourceContains \"(.*)\"$")
     public void pageSourceContains(final String expected) {
@@ -162,8 +162,8 @@ public class AssertionWebDriverSubStepImplementations extends AbstractWebDriverS
      * Check that the current element, a checkbox is checked or not
      *
      * @param checkedString whether the radio button is checked or not
-     * @example AssertCheckBox checked=true/false
-     * @section Assertions
+     * @org.substeps.step.example AssertCheckBox checked=true/false
+     * @org.substeps.step.section Assertions
      */
     @Step("AssertCheckBox checked=\"?([^\"]*)\"?")
     public void assertCheckBoxIsChecked(final String checkedString) {
@@ -187,8 +187,8 @@ public class AssertionWebDriverSubStepImplementations extends AbstractWebDriverS
      * Check that the current element, a radio button, is checked or not
      *
      * @param checkedString whether the radio button is checked or not
-     * @example AssertRadioButton checked=true/false
-     * @section Assertions
+     * @org.substeps.step.example AssertRadioButton checked=true/false
+     * @org.substeps.step.section Assertions
      */
     @Step("AssertRadioButton checked=\"?([^\"]*)\"?")
     public void assertRadioButtonIsChecked(final String checkedString) {
@@ -212,9 +212,9 @@ public class AssertionWebDriverSubStepImplementations extends AbstractWebDriverS
      * Check that the current element has the specified attributes
      *
      * @param attributeString comma separated list of attributes and quoted values
-     * @example AssertCurrentElement has
+     * @org.substeps.step.example AssertCurrentElement has
      * attributes=[type="submit",value="Search"]
-     * @section Assertions
+     * @org.substeps.step.section Assertions
      */
 
     @Step("AssertCurrentElement has attributes=\\[(.*)\\]")
@@ -267,8 +267,8 @@ public class AssertionWebDriverSubStepImplementations extends AbstractWebDriverS
      *
      * @param elementId    The ID of the HTML element
      * @param nameToSaveAs The variable name to save the text as for later retrieval
-     * @section Assertions
-     * @example RememberForScenario textFrom "projectName" as "savedProjectName"
+     * @org.substeps.step.section Assertions
+     * @org.substeps.step.example RememberForScenario textFrom "projectName" as "savedProjectName"
      */
     @Step("RememberForScenario textFrom \"([^\"]*)\" as \"([^\"]*)\"")
     public void rememberForScenario(final String elementId, final String nameToSaveAs) {
@@ -285,9 +285,9 @@ public class AssertionWebDriverSubStepImplementations extends AbstractWebDriverS
      *
      * @param elementId           The ID of the HTML element
      * @param rememberedValueName The variable name to save the text as for later retrieval
-     * @example AssertDifferent rememberedValue "savedProjectName"
+     * @org.substeps.step.example AssertDifferent rememberedValue "savedProjectName"
      * compareToElement "projectName"
-     * @section Assertions
+     * @org.substeps.step.section Assertions
      */
     @Step("AssertDifferent rememberedValue \"([^\"]*)\" compareToElement \"([^\"]*)\"")
     public void assertDifferent(final String rememberedValueName, final String elementId) {
@@ -315,9 +315,9 @@ public class AssertionWebDriverSubStepImplementations extends AbstractWebDriverS
      *
      * @param elementId           The ID of the HTML element
      * @param rememberedValueName The variable name to save the text as for later retrieval
-     * @example AssertSame rememberedValue "savedProjectName" compareToElement
+     * @org.substeps.step.example AssertSame rememberedValue "savedProjectName" compareToElement
      * "projectName"
-     * @section Assertions
+     * @org.substeps.step.section Assertions
      */
     @Step("AssertSame rememberedValue \"([^\"]*)\" compareToElement \"([^\"]*)\"")
     public void assertSame(final String rememberedValueName, final String elementId) {
@@ -343,8 +343,8 @@ public class AssertionWebDriverSubStepImplementations extends AbstractWebDriverS
      * Assert that the specified text is not found within the page source
      *
      * @param text the text that shouldn't be present
-     * @example AssertNotPresent text="undesirable text"
-     * @section Assertions
+     * @org.substeps.step.example AssertNotPresent text="undesirable text"
+     * @org.substeps.step.section Assertions
      */
     @Step("AssertNotPresent text=\"([^\"]*)\"")
     public void assertNotPresent(final String text) {
@@ -359,7 +359,7 @@ public class AssertionWebDriverSubStepImplementations extends AbstractWebDriverS
      *
      * @param by WebDriver By object that identifies the element
      * @return the web element
-     * @example
+     * @org.substeps.step.example
      */
     public WebElement waitForElementToContainSomeText(final By by) {
 
