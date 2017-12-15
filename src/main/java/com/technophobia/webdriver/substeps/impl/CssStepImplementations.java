@@ -31,8 +31,8 @@ public class CssStepImplementations extends AbstractWebDriverSubStepImplementati
      * @param tag      the name of the HTML tag
      * @param cssRegex a regex applied to the css class attribute to restrict the selection of the tag
      * @return the located WebElement
-     * @example FindByTag "tag" with cssClassRegex ".* marker-\d .*"
-     * @section CSS
+     * @org.substeps.step.example FindByTag "tag" with cssClassRegex ".* marker-\d .*"
+     * @org.substeps.step.section CSS
      */
     @SubSteps.Step("FindByTag \"([^\"]*)\" with cssClassRegex \"([^\"]*)\"")
     public WebElement findByTagAndCssWildcard(String tag, String cssRegex) {
@@ -49,8 +49,8 @@ public class CssStepImplementations extends AbstractWebDriverSubStepImplementati
      * @param tag      the tag of the child element to find
      * @param cssRegex a regex to be matched against the class attribute of the element
      * @return the child element
-     * @example FindChildByTag "div" with cssClassRegex "nested-div-class-\d{4}"
-     * @section CSS
+     * @org.substeps.step.example FindChildByTag "div" with cssClassRegex "nested-div-class-\d{4}"
+     * @org.substeps.step.section CSS
      */
     @SubSteps.Step("FindChildByTag \"([^\"]*)\" with cssClassRegex \"([^\"]*)\"")
     public WebElement findChildByTagAndCssWildcard(String tag, String cssRegex) {
@@ -78,8 +78,8 @@ public class CssStepImplementations extends AbstractWebDriverSubStepImplementati
      * @param cssRegex a regex to test against the class attribute
      * @param text     the text to match partially against the text of the element
      * @return the found element
-     * @example FindByTag "h4" with cssClassRegex ".* markerClass-\d .*" and containing text "Another heading"
-     * @section CSS
+     * @org.substeps.step.example FindByTag "h4" with cssClassRegex ".* markerClass-\d .*" and containing text "Another heading"
+     * @org.substeps.step.section CSS
      */
     @SubSteps.Step("FindByTag \"([^\"]*)\" with cssClassRegex \"([^\"]*)\" and containing text \"([^\"]*)\"")
     public WebElement findByTagAndCssWildcard(String tag, String cssRegex, String text) {
@@ -94,8 +94,8 @@ public class CssStepImplementations extends AbstractWebDriverSubStepImplementati
      * Click on an element located by css classname if present, NB. this step implementation does not wait for the element to be present
      *
      * @param cssClassName the CSS class of the element to click
-     * @example ClickByCssClass "not-present-button" if present
-     * @section CSS
+     * @org.substeps.step.example ClickByCssClass "not-present-button" if present
+     * @org.substeps.step.section CSS
      */
     @SubSteps.Step("ClickByCssClass \"([^\"]*)\" if present")
     public void clickByCssClassNoFail(final String cssClassName) {
@@ -119,8 +119,8 @@ public class CssStepImplementations extends AbstractWebDriverSubStepImplementati
      * Find an element that has the specified CSS class (the element can have other classes that apply, but only one can be specified)
      *
      * @param cssClassName the CSS Classname
-     * @example FindByCssClass "markerClass-1"
-     * @section CSS
+     * @org.substeps.step.example FindByCssClass "markerClass-1"
+     * @org.substeps.step.section CSS
      */
     @SubSteps.Step("FindByCssClass \"([^\"]*)\"")
     public void findWithCssClass(String cssClassName) {
@@ -135,8 +135,8 @@ public class CssStepImplementations extends AbstractWebDriverSubStepImplementati
      *
      * @param cssClass the CSS Classname
      * @param text     the expected text
-     * @example FindByCssClass "somethingElse" with text "Another heading"
-     * @section CSS
+     * @org.substeps.step.example FindByCssClass "somethingElse" with text "Another heading"
+     * @org.substeps.step.section CSS
      */
     @SubSteps.Step("FindByCssClass \"([^\"]*)\" with text \"([^\"]*)\"")
     public void findByCssClassWithText(final String cssClass, final String text) {
@@ -149,8 +149,8 @@ public class CssStepImplementations extends AbstractWebDriverSubStepImplementati
      *
      * @param cssClass the CSS Class
      * @param text     the text to partially match against
-     * @example FindByCssClass "markerClass-2" containing text "Another"
-     * @section CSS
+     * @org.substeps.step.example FindByCssClass "markerClass-2" containing text "Another"
+     * @org.substeps.step.section CSS
      */
     @SubSteps.Step("FindByCssClass \"([^\"]*)\" containing text \"([^\"]*)\"")
     public void findByCssClassContainingText(final String cssClass, final String text) {
@@ -164,8 +164,8 @@ public class CssStepImplementations extends AbstractWebDriverSubStepImplementati
      * @param cssClass    the CSS class of the element to find
      * @param timeoutSecs the timeout in seconds to wait
      * @param text        the expected text
-     * @example FindByCssClass "two-divs" using timeout "500" with text "2"
-     * @section CSS
+     * @org.substeps.step.example FindByCssClass "two-divs" using timeout "500" with text "2"
+     * @org.substeps.step.section CSS
      */
     @SubSteps.Step("FindByCssClass \"([^\"]*)\" using timeout \"(\\d+)\" with text \"([^\"]*)\"")
     public void findByCssClassWithTimeoutAndText(final String cssClass, long timeoutSecs, final String text) {
@@ -180,8 +180,8 @@ public class CssStepImplementations extends AbstractWebDriverSubStepImplementati
      * @param cssClass    the CSS class of the element to find
      * @param timeoutSecs the timeout in seconds to wait
      * @param text        the text to be contained within the element
-     * @example FindByCssClass "two-divs" using timeout "500" containing "1"
-     * @section CSS
+     * @org.substeps.step.example FindByCssClass "two-divs" using timeout "500" containing "1"
+     * @org.substeps.step.section CSS
      */
     @SubSteps.Step("FindByCssClass \"([^\"]*)\" using timeout \"(\\d+)\" containing \"([^\"]*)\"")
     public void findByCssClassContainingTimeoutAndText(final String cssClass, long timeoutSecs, final String text) {
@@ -196,8 +196,8 @@ public class CssStepImplementations extends AbstractWebDriverSubStepImplementati
      * @param tagName           tag of the children to find
      * @param tagNumber         the nth child to find (1 based)
      * @param text              the expected text
-     * @example FindNthByTagAndText from parent by CSSSelector ".parent-div-class", tag name "span", tag number "2" containing text "two"
-     * @section CSS
+     * @org.substeps.step.example FindNthByTagAndText from parent by CSSSelector ".parent-div-class", tag name "span", tag number "2" containing text "two"
+     * @org.substeps.step.section CSS
      */
     @SubSteps.Step("FindNthByTagAndText from parent by CSSSelector \"([^\"]*)\", tag name \"([^\"]*)\", tag number \"(\\d+)\" containing text \"([^\"]*)\"")
     public void findNthByTagContainingText(String parentCSSSelector, String tagName, int tagNumber, String text) {
@@ -221,8 +221,8 @@ public class CssStepImplementations extends AbstractWebDriverSubStepImplementati
      * Ensures that the CSS Selector returns no results.
      *
      * @param cssSelector the CSS selector
-     * @example AssertCssSelector ".not-present-button" is not present
-     * @section CSS
+     * @org.substeps.step.example AssertCssSelector ".not-present-button" is not present
+     * @org.substeps.step.section CSS
      */
     @SubSteps.Step("AssertCssSelector \"([^\"]*)\" is not present")
     public void assertCssSelectorIsNotPresent(String cssSelector) {
@@ -234,8 +234,8 @@ public class CssStepImplementations extends AbstractWebDriverSubStepImplementati
      * Ensure that the CSS Selector returns some results
      *
      * @param cssSelector the CSS Selector
-     * @example AssertCssSelector ".two-divs" is present
-     * @section CSS
+     * @org.substeps.step.example AssertCssSelector ".two-divs" is present
+     * @org.substeps.step.section CSS
      */
     @SubSteps.Step("AssertCssSelector \"([^\"]*)\" is present")
     public void assertCssSelectorIsPresent(String cssSelector) {
@@ -248,8 +248,8 @@ public class CssStepImplementations extends AbstractWebDriverSubStepImplementati
      *
      * @param cssSelector  the CSS Selector
      * @param expectedText the expected text
-     * @example FindByCssSelector ".present-button" with text "clicked"
-     * @section CSS
+     * @org.substeps.step.example FindByCssSelector ".present-button" with text "clicked"
+     * @org.substeps.step.section CSS
      */
     @SubSteps.Step("FindByCssSelector \"([^\"]*)\" with text \"([^\"]*)\"")
     public void assertCssSelectorHasCorrectText(String cssSelector, String expectedText) {
@@ -266,8 +266,8 @@ public class CssStepImplementations extends AbstractWebDriverSubStepImplementati
      *
      * @param cssSelector the css selector
      * @return the located WebElement
-     * @example FindByCssSelector "#parent_div_id"
-     * @section CSS
+     * @org.substeps.step.example FindByCssSelector "#parent_div_id"
+     * @org.substeps.step.section CSS
      */
     @SubSteps.Step("FindByCssSelector \"([^\"]*)\"")
     public WebElement findByCssSelector(String cssSelector) {
@@ -280,8 +280,8 @@ public class CssStepImplementations extends AbstractWebDriverSubStepImplementati
      *
      * @param cssSelector  the CSS Selector
      * @param expectedSize the expected maximum size
-     * @example AssertCssSelector "two-divs" count is "2" or less
-     * @section CSS
+     * @org.substeps.step.example AssertCssSelector "two-divs" count is "2" or less
+     * @org.substeps.step.section CSS
      */
     @SubSteps.Step("AssertCssSelector \"([^\"]*)\" count is \"([^\"]*)\" or less")
     public void assertNumberOfElementsIsLessThanOrEqualToExpectedSize(String cssSelector, int expectedSize) {
@@ -295,8 +295,8 @@ public class CssStepImplementations extends AbstractWebDriverSubStepImplementati
      *
      * @param cssSelector  the CSS Selector
      * @param expectedSize the expected minimum size
-     * @example AssertCssSelector "two-divs" count is greater than "1"
-     * @section CSS
+     * @org.substeps.step.example AssertCssSelector "two-divs" count is greater than "1"
+     * @org.substeps.step.section CSS
      */
     @SubSteps.Step("AssertCssSelector \"([^\"]*)\" count is greater than \"([^\"]*)\"")
     public void assertNumberOfElementsIsGreaterThanExpectedSize(String cssSelector, int expectedSize) {
@@ -312,8 +312,8 @@ public class CssStepImplementations extends AbstractWebDriverSubStepImplementati
      * @param cssSelector1 The first CSS selector
      * @param cssSelector2 The second CSS selector
      * @return WebElement   The element that is found
-     * @example Find ByChained CSS selectors ".parent", ".nested"
-     * @section CSS
+     * @org.substeps.step.example Find ByChained CSS selectors ".parent", ".nested"
+     * @org.substeps.step.section CSS
      */
     @SubSteps.Step("Find ByChained CSS selectors \"([^\"]*)\", \"([^\"]*)\"")
     public WebElement findByChainedCss(String cssSelector1, String cssSelector2) {
@@ -335,8 +335,8 @@ public class CssStepImplementations extends AbstractWebDriverSubStepImplementati
      * Waits for an element located using the supplied CSS selector to be visible
      *
      * @param cssSelector The cssSelector used in the search
-     * @example WaitFor CSS Selector "#visible-div" to be visibile
-     * @section CSS
+     * @org.substeps.step.example WaitFor CSS Selector "#visible-div" to be visibile
+     * @org.substeps.step.section CSS
      */
     @SubSteps.Step("WaitFor CSS Selector \"([^\"]*)\" to be visibile")
     public void waitForCssSelector(String cssSelector) {
@@ -349,8 +349,8 @@ public class CssStepImplementations extends AbstractWebDriverSubStepImplementati
      * Waits for an element located using the supplied CSS selector to be invisible
      *
      * @param cssSelector the CSS selector
-     * @example WaitFor CSS Selector "#visible-div" to be invisibile
-     * @section CSS
+     * @org.substeps.step.example WaitFor CSS Selector "#visible-div" to be invisibile
+     * @org.substeps.step.section CSS
      */
     @SubSteps.Step("WaitFor CSS Selector \"([^\"]*)\" to be invisibile")
     public void waitForCssSelectorToHide(String cssSelector) {

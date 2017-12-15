@@ -26,8 +26,8 @@ public class IFrameAndWindowSubstepImplementations extends AbstractWebDriverSubS
     /**
      * Switches to the new window which has been opened
      *
-     * @example Switch to new window
-     * @section windows
+     * @org.substeps.step.example Switch to new window
+     * @org.substeps.step.section windows
      */
     @SubSteps.Step("Switch to new window")
     public void switchToNewWindow() {
@@ -43,8 +43,8 @@ public class IFrameAndWindowSubstepImplementations extends AbstractWebDriverSubS
     /**
      * Close the new window which was been opened and return the focus to the original window
      *
-     * @example Close new window
-     * @section windows
+     * @org.substeps.step.example Close new window
+     * @org.substeps.step.section windows
      */
     @SubSteps.Step("Close new window")
     public void closeWebDriver() {
@@ -62,8 +62,8 @@ public class IFrameAndWindowSubstepImplementations extends AbstractWebDriverSubS
      *
      * @param iFrameCssSelector the CSS Selector to identify the iframe to switch to
      *                          NB the found iframe cannot be returned - once it has been switched to it will be stale and can't be referenced
-     * @example Switch to new frame by CSS selector ".iframe-class"
-     * @section windows
+     * @org.substeps.step.example Switch to new frame by CSS selector ".iframe-class"
+     * @org.substeps.step.section windows
      */
     @SubSteps.Step("Switch to new frame by CSS selector \"([^\"]*)\"")
     public void switchToNewFrame(String iFrameCssSelector) {
@@ -78,8 +78,8 @@ public class IFrameAndWindowSubstepImplementations extends AbstractWebDriverSubS
      *
      * @param frameName the name attribute of the iframe to switch to
      *                  NB the found iframe cannot be returned - once it has been switched to it will be stale and can't be referenced
-     * @example Switch to new frame by name "iframe-name"
-     * @section windows
+     * @org.substeps.step.example Switch to new frame by name "iframe-name"
+     * @org.substeps.step.section windows
      */
     @SubSteps.Step("Switch to new frame by name \"([^\"]*)\"")
     public void switchToNewFrameByName(String frameName) {
@@ -95,8 +95,8 @@ public class IFrameAndWindowSubstepImplementations extends AbstractWebDriverSubS
     /**
      * Switches back to the default content
      *
-     * @example Switch to default content
-     * @section Windows
+     * @org.substeps.step.example Switch to default content
+     * @org.substeps.step.section Windows
      */
     @SubSteps.Step("Switch to default content")
     public void switchToDefaultContent() {
@@ -108,8 +108,8 @@ public class IFrameAndWindowSubstepImplementations extends AbstractWebDriverSubS
      * Transfer the focus into the current element (set with a previous Find
      * method) which should be a frame or iframe
      *
-     * @example SwitchFrameToCurrentElement
-     * @section Windows
+     * @org.substeps.step.example SwitchFrameToCurrentElement
+     * @org.substeps.step.section Windows
      */
     @SubSteps.Step("SwitchFrameToCurrentElement")
     public void switchFrameToCurrentElement() {

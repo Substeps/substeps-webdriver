@@ -59,8 +59,8 @@ public class FormWebDriverSubStepImplementations extends
      * Submit the form of the current element. NB using click is preferable as
      * javascript may be executed on click, which this method would bypass
      *
-     * @example Submit
-     * @section Clicks
+     * @org.substeps.step.example Submit
+     * @org.substeps.step.section Clicks
      */
     @Step("Submit")
     public void submit() {
@@ -74,8 +74,8 @@ public class FormWebDriverSubStepImplementations extends
      * first
      *
      * @param value the value
-     * @example SendKeys "hello"
-     * @section Forms
+     * @org.substeps.step.example SendKeys "hello"
+     * @org.substeps.step.section Forms
      */
     @Step("SendKeys \"([^\"]*)\"")
     public void sendKeys(final String value) {
@@ -89,8 +89,8 @@ public class FormWebDriverSubStepImplementations extends
      * Note this is to be used for 'special' keys defined by org.openqa.selenium.Keys
      *
      * @param key a value from {@link Keys}
-     * @example SendKey Key.RETURN
-     * @section Forms
+     * @org.substeps.step.example SendKey Key.RETURN
+     * @org.substeps.step.section Forms
      */
     @Step("SendKey Key\\.(.+)")
     public void sendKey(final String key) {
@@ -103,8 +103,8 @@ public class FormWebDriverSubStepImplementations extends
      *
      * @param id    the id
      * @param value the value
-     * @example ClearAndSendKeys "fred" to id username
-     * @section Forms
+     * @org.substeps.step.example ClearAndSendKeys "fred" to id username
+     * @org.substeps.step.section Forms
      */
     @Step("ClearAndSendKeys \"([^\"]*)\" to id ([^\"]*)")
     public void sendKeysById(final String value, final String id) {
@@ -117,8 +117,8 @@ public class FormWebDriverSubStepImplementations extends
      * Clear any text from the element, and enter text (to the current element)
      *
      * @param value the value
-     * @example ClearAndSendKeys "hello"
-     * @section Forms
+     * @org.substeps.step.example ClearAndSendKeys "hello"
+     * @org.substeps.step.section Forms
      */
     @Step("ClearAndSendKeys \"([^\"]*)\"")
     public void clearAndSendKeys(final String value) {
@@ -136,8 +136,8 @@ public class FormWebDriverSubStepImplementations extends
      *
      * @param value the value
      * @param id    the id
-     * @example ChooseOption "fred" in id usersList
-     * @section Forms
+     * @org.substeps.step.example ChooseOption "fred" in id usersList
+     * @org.substeps.step.section Forms
      */
     @Step("ChooseOption \"([^\"]*)\" in id ([^\"]*)")
     public void selectValueInId(final String value, final String id) {
@@ -173,8 +173,8 @@ public class FormWebDriverSubStepImplementations extends
      * operation is required immediatebly before
      *
      * @param value the value
-     * @example ChooseOption "fred" in current element
-     * @section Forms
+     * @org.substeps.step.example ChooseOption "fred" in current element
+     * @org.substeps.step.section Forms
      */
     @Step("ChooseOption \"([^\"]*)\" in current element")
     public void selectValueInCurrentElement(final String value) {
@@ -202,8 +202,8 @@ public class FormWebDriverSubStepImplementations extends
      *
      * @param id    the id of the select
      * @param value the text value of the option
-     * @example AssertSelect id="select_id" text="number two option" is currently selected
-     * @section Form
+     * @org.substeps.step.example AssertSelect id="select_id" text="number two option" is currently selected
+     * @org.substeps.step.section Form
      */
     @Step("AssertSelect id=\"([^\"]*)\" text=\"([^\"]*)\" is currently selected")
     public void assertOptionIsSelected(final String id, final String value) {
@@ -227,8 +227,8 @@ public class FormWebDriverSubStepImplementations extends
      *
      * @param id    the id of the select
      * @param value the text value of the option that shouldn't be selected
-     * @example AssertSelect id="select_id" text="number one option" is not currently selected
-     * @section Form
+     * @org.substeps.step.example AssertSelect id="select_id" text="number one option" is not currently selected
+     * @org.substeps.step.section Form
      */
     @Step("AssertSelect id=\"([^\"]*)\" text=\"([^\"]*)\" is not currently selected")
     public void assertOptionIsNotSelected(final String id, final String value) {
@@ -251,8 +251,8 @@ public class FormWebDriverSubStepImplementations extends
      * Sets the value of the current element, assumed to be a radio button to...
      *
      * @param checked the checked
-     * @example SetRadioButton checked=true
-     * @section Forms
+     * @org.substeps.step.example SetRadioButton checked=true
+     * @org.substeps.step.section Forms
      */
     @Step("SetRadioButton checked=([^\"]*)")
     public void setRadioButtonChecked(final String checked) {
@@ -273,8 +273,8 @@ public class FormWebDriverSubStepImplementations extends
      * Sets the value of the current element, assumed to be a checkbox to...
      *
      * @param checked the checked
-     * @example SetCheckedBox checked=true
-     * @section Forms
+     * @org.substeps.step.example SetCheckedBox checked=true
+     * @org.substeps.step.section Forms
      */
     @Step("SetCheckedBox checked=([^\"]*)")
     public void setSetCheckedBoxChecked(final String checked) {
@@ -296,7 +296,7 @@ public class FormWebDriverSubStepImplementations extends
      *
      * @param checkboxField the checkbox field
      * @param value         the value
-     * @example
+     * @org.substeps.step.example
      */
     protected void setCheckboxValue(final WebElement checkboxField,
                                     final boolean value) {
@@ -319,8 +319,8 @@ public class FormWebDriverSubStepImplementations extends
      *
      * @param optionText   the option text
      * @param cssClassName the css class of the select
-     * @example Select "number two option" option in class "select-marker-class"
-     * @section Form
+     * @org.substeps.step.example Select "number two option" option in class "select-marker-class"
+     * @org.substeps.step.section Form
      */
     @SubSteps.Step("Select \"([^\"]*)\" option in class \"([^\"]*)\"")
     public void selectOptionInClass(String optionText, String cssClassName) {
@@ -339,8 +339,8 @@ public class FormWebDriverSubStepImplementations extends
      * @param id         the id of the select
      * @return the located WebElement
      * @throws InterruptedException if the wait is interupted
-     * @example Select "number one option" option in Id "select_id"
-     * @section Form
+     * @org.substeps.step.example Select "number one option" option in Id "select_id"
+     * @org.substeps.step.section Form
      */
     @SubSteps.Step("Select \"([^\"]*)\" option in Id \"([^\"]*)\"")
     public WebElement selectOptionInId(String optionText, String id) throws InterruptedException {
@@ -387,8 +387,8 @@ public class FormWebDriverSubStepImplementations extends
      * Uses a value of a property in the config file, constructs a File and passes the absolute path of that file to the current element.  Useful for file upload scenarios.
      *
      * @param filePropertyName the config property name
-     * @example SendKeys pathOf property "test.filename" to current element
-     * @section Form
+     * @org.substeps.step.example SendKeys pathOf property "test.filename" to current element
+     * @org.substeps.step.section Form
      * <p>
      * used to pass the path of a file for file uploads
      */
@@ -414,8 +414,8 @@ public class FormWebDriverSubStepImplementations extends
      *
      * @param filePropertyName the config property name
      * @param id               the id of the element to send the absolute filename to
-     * @example SendKeys pathOf property "test.filename2" to id "text-id"
-     * @section Form
+     * @org.substeps.step.example SendKeys pathOf property "test.filename2" to id "text-id"
+     * @org.substeps.step.section Form
      */
     @SubSteps.Step("SendKeys pathOf property \"([^\"]*)\" to id \"([^\"]*)\"")
     public void sendKeysToId(String filePropertyName, String id) {

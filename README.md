@@ -20,6 +20,7 @@ Substeps.org Release Notes
 * WebDriverBrowserLogs methods now static
 * Separated the Bys into their own files to make more manageable
 * Sonar fixes and javadocs
+* Selenium lib update
 
 1.1.2
 -----

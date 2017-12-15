@@ -4,6 +4,7 @@ import com.typesafe.config.Config;
 import io.github.bonigarcia.wdm.InternetExplorerDriverManager;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.ie.InternetExplorerOptions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +38,7 @@ public class IEDriverFactory extends BaseDriverFactory implements DriverFactory 
         log.debug("creating IE driver");
 
         if (cfg.hasPath(IEDRIVER_VERSION_KEY)) {
-            InternetExplorerDriverManager.getInstance().setup(cfg.getString(IEDRIVER_VERSION_KEY));
+            InternetExplorerDriverManager.getInstance().version(cfg.getString(IEDRIVER_VERSION_KEY)).setup();
         } else {
             InternetExplorerDriverManager.getInstance().setup();
         }
@@ -53,7 +54,8 @@ public class IEDriverFactory extends BaseDriverFactory implements DriverFactory 
 
         WebDriverFactoryUtils.setNetworkCapabilities(ieCapabilities, cfg);
 
-        return new InternetExplorerDriver(ieCapabilities);
+        InternetExplorerOptions ieOptions = new InternetExplorerOptions(ieCapabilities);
+        return new InternetExplorerDriver(ieOptions);
 
     }
 }

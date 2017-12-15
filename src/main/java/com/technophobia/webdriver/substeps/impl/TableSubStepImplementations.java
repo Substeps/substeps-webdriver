@@ -68,8 +68,8 @@ public class TableSubStepImplementations extends AbstractWebDriverSubStepImpleme
      *
      * @param row 1 based row index
      * @return the web element
-     * @example FindTableBodyRow row 3
-     * @section Table
+     * @org.substeps.step.example FindTableBodyRow row 3
+     * @org.substeps.step.section Table
      */
     @Step("FindTableBodyRow row ([^\"]*)")
     public WebElement findTableBodyRow(@StepParameter(converter = IntegerConverter.class) final Integer row) {
@@ -100,8 +100,8 @@ public class TableSubStepImplementations extends AbstractWebDriverSubStepImpleme
      * @param column 1 based column index
      * @param row    1 based row index
      * @param text   the expected text
-     * @example AssertTableValue column 2, row 3 contains text "Hello Bob"
-     * @section Table
+     * @org.substeps.step.example AssertTableValue column 2, row 3 contains text "Hello Bob"
+     * @org.substeps.step.section Table
      */
     @Step("AssertTableValue column ([^\"]*), row ([^\"]*) contains text \"([^\"]*)\"")
     public void assertTableValue(@StepParameter(converter = IntegerConverter.class) final Integer column,
@@ -126,8 +126,8 @@ public class TableSubStepImplementations extends AbstractWebDriverSubStepImpleme
      *
      * @param column the column number (1 based)
      * @param text   the expected text
-     * @example AssertColumn 2 text = "Mr A. Person"
-     * @section Table
+     * @org.substeps.step.example AssertColumn 2 text = "Mr A. Person"
+     * @org.substeps.step.section Table
      */
     @Step("AssertColumn (\\d+) text = \"([^\"]*)\"")
     public void assertColumnText(@StepParameter(converter = IntegerConverter.class) final Integer column, final String text) {
@@ -220,9 +220,9 @@ public class TableSubStepImplementations extends AbstractWebDriverSubStepImpleme
      *
      * @param columnText A comma delimitted list of column values, each column can be
      *                   double quoted
-     * @example FindTableRowWithColumnsThatContainText
+     * @org.substeps.step.example FindTableRowWithColumnsThatContainText
      * ["My Name","Where it all began...","December 19 2012"]
-     * @section Table
+     * @org.substeps.step.section Table
      */
     @Step("FindTableRowWithColumnsThatContainText \\[(.*)\\]")
     public void findRowInTableWithText(final String columnText) {
@@ -289,9 +289,9 @@ public class TableSubStepImplementations extends AbstractWebDriverSubStepImpleme
      *
      * @param tag             the tag
      * @param attributeString the attribute string
-     * @example FindElementInRow ByTagAndAttributes tag="a"
+     * @org.substeps.step.example FindElementInRow ByTagAndAttributes tag="a"
      * attributes=[class="link-class",....]
-     * @section Table
+     * @org.substeps.step.section Table
      */
     @Step("FindElementInRow ByTagAndAttributes tag=\"?([^\"]*)\"? attributes=\\[(.*)\\]")
     public void findLinkInRowByTagAndAttributes(final String tag, final String attributeString) {
@@ -307,8 +307,8 @@ public class TableSubStepImplementations extends AbstractWebDriverSubStepImpleme
      * discriminator.
      *
      * @param linkText the text of the link to find
-     * @example FindElementInRow linkText="View"
-     * @section Table
+     * @org.substeps.step.example FindElementInRow linkText="View"
+     * @org.substeps.step.section Table
      */
     @Step("FindElementInRow linkText=\"([^\"]*)\"")
     public void findLinkInRow(final String linkText) {
