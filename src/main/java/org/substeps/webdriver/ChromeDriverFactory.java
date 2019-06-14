@@ -31,9 +31,9 @@ public class ChromeDriverFactory extends BaseDriverFactory implements DriverFact
         log.debug("creating chrome driver");
 
         if (cfg.hasPath(CHROMEDRIVER_VERSION_KEY)) {
-            ChromeDriverManager.getInstance().version(cfg.getString(CHROMEDRIVER_VERSION_KEY)).setup();
+            WebDriverManager.chromedriver().version(cfg.getString(CHROMEDRIVER_VERSION_KEY)).setup();
         } else {
-            ChromeDriverManager.getInstance().setup();
+            WebDriverManager.chromedriver().setup();
         }
 
         final DesiredCapabilities chromeCapabilities = DesiredCapabilities.chrome();

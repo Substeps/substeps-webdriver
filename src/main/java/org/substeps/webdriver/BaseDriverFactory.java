@@ -3,6 +3,7 @@ package org.substeps.webdriver;
 import com.google.common.base.Strings;
 import com.technophobia.webdriver.util.WebDriverContext;
 import com.typesafe.config.Config;
+import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.slf4j.Logger;
@@ -34,7 +35,9 @@ public abstract class BaseDriverFactory implements DriverFactory, WebdriverSubst
 
             // see https://github.com/bonigarcia/webdrivermanager/blob/master/src/main/resources/webdrivermanager.properties
 
-            System.setProperty("wdm.properties", cfg.getString(WEBDRIVER_MANAGER_PROPERTIES_KEY));
+//            System.setProperty("wdm.properties", cfg.getString(WEBDRIVER_MANAGER_PROPERTIES_KEY));
+
+            WebDriverManager.globalConfig().setProperties(cfg.getString(WEBDRIVER_MANAGER_PROPERTIES_KEY));
         }
 
         WebDriver webdriver = createInternal(cfg);
