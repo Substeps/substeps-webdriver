@@ -2,6 +2,7 @@ package org.substeps.webdriver;
 
 import com.typesafe.config.Config;
 import io.github.bonigarcia.wdm.FirefoxDriverManager;
+import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
@@ -39,9 +40,9 @@ public class FirefoxDriverFactory extends BaseDriverFactory implements DriverFac
         log.debug("creating firefox driver");
 
         if (cfg.hasPath(FIREFOXDRIVER_VERSION_KEY)) {
-            FirefoxDriverManager.getInstance().version(cfg.getString(FIREFOXDRIVER_VERSION_KEY)).setup();
+            WebDriverManager.firefoxdriver().version(cfg.getString(FIREFOXDRIVER_VERSION_KEY)).setup();
         } else {
-            FirefoxDriverManager.getInstance().setup();
+            WebDriverManager.firefoxdriver().setup();
         }
 
         FirefoxProfile fp = new FirefoxProfile();

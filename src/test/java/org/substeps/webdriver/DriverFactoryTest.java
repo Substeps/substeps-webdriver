@@ -6,6 +6,7 @@ import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import io.github.bonigarcia.wdm.ChromeDriverManager;
 import io.github.bonigarcia.wdm.FirefoxDriverManager;
+import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.*;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
@@ -58,7 +59,7 @@ public class DriverFactoryTest {
     }
 
 
-    @Ignore
+  //  @Ignore
     @Test
     public void testDriverCreation(){
 
@@ -81,8 +82,8 @@ public class DriverFactoryTest {
     public void testWindowSizing(){
         WebDriver cd = null;
         try {
-            ChromeDriverManager.getInstance().setup();
-            FirefoxDriverManager.getInstance().setup();
+            WebDriverManager.chromedriver().setup();
+            WebDriverManager.firefoxdriver().setup();
 
             final DesiredCapabilities firefoxCapabilities = DesiredCapabilities.firefox();
             FirefoxProfile fp = new FirefoxProfile();

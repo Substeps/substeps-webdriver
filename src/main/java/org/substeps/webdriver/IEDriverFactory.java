@@ -2,6 +2,7 @@ package org.substeps.webdriver;
 
 import com.typesafe.config.Config;
 import io.github.bonigarcia.wdm.InternetExplorerDriverManager;
+import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.ie.InternetExplorerOptions;
@@ -38,9 +39,9 @@ public class IEDriverFactory extends BaseDriverFactory implements DriverFactory 
         log.debug("creating IE driver");
 
         if (cfg.hasPath(IEDRIVER_VERSION_KEY)) {
-            InternetExplorerDriverManager.getInstance().version(cfg.getString(IEDRIVER_VERSION_KEY)).setup();
+            WebDriverManager.iedriver().version(cfg.getString(IEDRIVER_VERSION_KEY)).setup();
         } else {
-            InternetExplorerDriverManager.getInstance().setup();
+            WebDriverManager.iedriver().setup();
         }
 
 
