@@ -6,12 +6,16 @@ substeps-webdriver [![Build Status](https://travis-ci.org/Substeps/substeps-webd
 
 Webdriver based step implementations. 
 
-Substeps documentation can be found [here](http://substeps.technophobia.com/ "Substeps documentation").  
-
-There is also a [Substeps Google group](http://groups.google.com/group/substeps?hl=en-GB "Substeps Google group") if you have any queries and where new releases will ne announced.
+Substeps documentation can be found [here](http://substeps.github.io/ "Substeps documentation").  
 
 Substeps.org Release Notes
 ==========================
+1.1.6
+-----
+* Java 11 compatibility
+* Substeps framework and library updates
+* doc updates
+
 
 1.1.3
 -----

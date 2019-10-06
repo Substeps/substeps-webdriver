@@ -84,8 +84,7 @@ public class FormWebDriverSubStepImplementations extends
     }
 
     /**
-     * Enters the given key into the current element, without clearing any current content
-     * <p>
+     * Enters the given key into the current element, without clearing any current content<br/>
      * Note this is to be used for 'special' keys defined by org.openqa.selenium.Keys
      *
      * @param key a value from {@link Keys}
@@ -101,8 +100,8 @@ public class FormWebDriverSubStepImplementations extends
     /**
      * Find an element by id, clear any text from the element, and enter text
      *
-     * @param id    the id
      * @param value the value
+     * @param id    the id
      * @org.substeps.step.example ClearAndSendKeys "fred" to id username
      * @org.substeps.step.section Forms
      */
@@ -386,11 +385,10 @@ public class FormWebDriverSubStepImplementations extends
     /**
      * Uses a value of a property in the config file, constructs a File and passes the absolute path of that file to the current element.  Useful for file upload scenarios.
      *
-     * @param filePropertyName the config property name
+     * @param filePropertyName the config property name used to pass the path of a file for file uploads
      * @org.substeps.step.example SendKeys pathOf property "test.filename" to current element
      * @org.substeps.step.section Form
-     * <p>
-     * used to pass the path of a file for file uploads
+     *
      */
     @SubSteps.Step("SendKeys pathOf property \"([^\"]*)\" to current element")
     public void sendKeysToCurrentElement(String filePropertyName) {
