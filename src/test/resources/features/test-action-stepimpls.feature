@@ -48,7 +48,7 @@ Scenario: Context click test
 
 
 
-Tags: @non-visual fails-in-firefox
+Tags: @non-visual fails-in-firefox fails-in-safari
 Scenario: Double click step impls
     Given I go to the self test page
     # as of 7.02.2017 Double click doesn't work in Firefox
