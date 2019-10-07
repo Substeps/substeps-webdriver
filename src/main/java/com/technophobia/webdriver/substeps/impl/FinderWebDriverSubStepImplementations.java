@@ -289,12 +289,10 @@ public class FinderWebDriverSubStepImplementations extends AbstractWebDriverSubS
     /**
      * Finds a checkbox that is a child of the specified tag, that contains the
      * specified text; eg.
-     * <p>
-     * &lt;pre&gt;
-     * &lt;label&gt;
-     * &lt;input type=&quot;checkbox&quot; name=&quot;checkbox_name&quot; value=&quot;yeah&quot;/&gt;a checkbox &lt;span&gt;label&lt;/span&gt;
-     * &lt;/label&gt;
-     * &lt;/pre&gt;
+     * 
+     * &lt;label&gt;<br/>
+     * &lt;input type="checkbox" name="checkbox_name" value="yeah"/&gt;a checkbox &lt;span&gt;label&lt;/span&gt;<br/>
+     * &lt;/label&gt;<br/>
      *
      * @param tag   the tag
      * @param label the checkbox label
@@ -315,12 +313,10 @@ public class FinderWebDriverSubStepImplementations extends AbstractWebDriverSubS
     /**
      * Finds a radiobutton that is a child of the specified tag, that contains
      * the specified text; eg.
-     * <p>
-     * &lt;pre&gt;
-     * &lt;label&gt;
-     * &lt;input type=&quot;radio&quot; name=&quot;radio_name&quot; value=&quot;yeah&quot;/&gt;a radio &lt;span&gt;label&lt;/span&gt;
-     * &lt;/label&gt;
-     * &lt;/pre&gt;
+     *
+     * &lt;label&gt;<br/>
+     * &lt;input type="radio" name="radio_name" value="yeah"/&gt;a radio &lt;span&gt;label&lt;/span&gt;<br/>
+     * &lt;/label&gt;<br/>
      *
      * @param tag   the tag
      * @param label the radio button label
@@ -347,41 +343,8 @@ public class FinderWebDriverSubStepImplementations extends AbstractWebDriverSubS
         WebElement elem = null;
         webDriverContext().setCurrentElement(null);
 
-        // TODO - turn this into a function
-
-        // look for elems with the right tag
-        final List<WebElement> tagElems = webDriver().findElements(By.tagName(tag));
-
-        checkElements("expecting some elements of tag: " + tag, tagElems);
-
-        List<WebElement> matchingElems = null;
-
-        for (final WebElement tagElem : tagElems) {
-
-            // does this tag contain the right text ?
-            if (label.compareTo(tagElem.getText()) == 0) {
-                // yes
-                // is there a radio button inside ?
-
-                final List<WebElement> inputElements = tagElem.findElements(By.tagName("input"));
-
-                if (inputElements != null && !inputElements.isEmpty()) {
-                    // are they radio buttons ?
-
-                    for (final WebElement inputElement : inputElements) {
-                        final String type = inputElement.getAttribute("type");
-
-                        if (type != null && type.compareToIgnoreCase(inputType) == 0) {
-                            // bingo
-                            if (matchingElems == null) {
-                                matchingElems = new ArrayList<>();
-                            }
-                            matchingElems.add(inputElement);
-                        }
-                    }
-                }
-            }
-        }
+        final List<WebElement> matchingElems =
+        webDriver().findElements(        By.xpath("//" + tag + "[normalize-space(.)='" + label + "']//input[@type='" + inputType + "']"));
 
         elem = MatchingElementResultHandler.checkForOneMatchingElement("expecting an input of type " + inputType + " inside tag [" + tag
                 + "] with label [" + label + "]", matchingElems);

@@ -1,7 +1,7 @@
 
 Feature: A feature to test iframe and window related step impls
 
-Tags: @non-visual
+Tags: @non-visual fails-in-safari
 
 Scenario: Test iframe and window step implementations
     NavigateTo url property "iframe.test.page"
@@ -25,6 +25,7 @@ Scenario: Test iframe and window step implementations
 
 Tags: @visual
 Scenario: A feature to test window related step impls
+    NavigateTo url property "iframe.test.page"
     Switch to default content
     ClickById open-new-window-button
 

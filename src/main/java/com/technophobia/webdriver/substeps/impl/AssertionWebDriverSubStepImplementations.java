@@ -283,8 +283,8 @@ public class AssertionWebDriverSubStepImplementations extends AbstractWebDriverS
      * Compare the text of an element (identified by ID) to a value previously
      * remembered
      *
-     * @param elementId           The ID of the HTML element
      * @param rememberedValueName The variable name to save the text as for later retrieval
+     * @param elementId           The ID of the HTML element
      * @org.substeps.step.example AssertDifferent rememberedValue "savedProjectName"
      * compareToElement "projectName"
      * @org.substeps.step.section Assertions
