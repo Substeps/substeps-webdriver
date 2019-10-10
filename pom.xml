@@ -570,7 +570,37 @@
 				</executions>
 			</plugin>
 
-			<plugin>
+
+            <plugin>
+                <groupId>org.substeps</groupId>
+                <artifactId>substeps-maven-plugin</artifactId>
+                <version>${substeps.framework.version}</version>
+
+                <executions>
+                    <execution>
+                        <id>Build SubSteps Glossary</id>
+                        <phase>process-test-resources</phase>
+                        <goals>
+                            <goal>generate-docs</goal>
+                        </goals>
+                    </execution>
+
+                </executions>
+
+                <dependencies>
+
+                    <dependency>
+                        <groupId>org.slf4j</groupId>
+                        <artifactId>slf4j-log4j12</artifactId>
+                        <version>${slf4j.version}</version>
+                    </dependency>
+
+                </dependencies>
+            </plugin>
+
+
+
+            <plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-failsafe-plugin</artifactId>
 				<version>2.22.2</version>
