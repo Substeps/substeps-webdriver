@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.substeps</groupId>
 	<artifactId>webdriver-substeps</artifactId>
-	<version>1.1.7</version>
+	<version>1.1.8-SNAPSHOT</version>
 
 	<packaging>jar</packaging>
 	<name>Webdriver Substeps</name>
@@ -15,7 +15,7 @@
         <developerConnection>scm:git:git@github.com:Substeps/substeps-webdriver.git</developerConnection>
         <url>https://github.com/Substeps/substeps-webdriver.git</url>
 
-        <tag>1.1.7</tag>
+        <tag>HEAD</tag>
     </scm>
 
 
