@@ -655,7 +655,7 @@
                     <tags>
                         <javaVersion>r${java.version}</javaVersion>
                     </tags>
-
+			<autoDropAfterRelease>true</autoDropAfterRelease>
                     <autoReleaseAfterClose>true</autoReleaseAfterClose>
                 </configuration>
             </plugin>
