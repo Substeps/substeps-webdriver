@@ -123,7 +123,7 @@
         <webdrivermanager.version>3.6.1</webdrivermanager.version>
 
 		<hamcrest.version>2.1</hamcrest.version>
-		<junit.version>4.12</junit.version>
+		<junit.version>4.13.1</junit.version>
 
         <substeps.framework.version>1.1.8</substeps.framework.version>
 
