@@ -129,7 +129,7 @@
 
         <slf4j.version>1.7.26</slf4j.version>
 
-		<guava.version>28.1-jre</guava.version>
+		<guava.version>29.0-jre</guava.version>
 		<mockito.version>3.0.0</mockito.version>
 
  		<sonar.jacoco.reportPath>${basedir}/jacoco.exec</sonar.jacoco.reportPath>
